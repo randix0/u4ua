@@ -1031,6 +1031,11 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     background: url(./../img/buttons/btn-close.png) 0 0 no-repeat;
 }
 
+.p-idea .modal-window-close {
+    top: 10px;
+    right: 10px;
+}
+
 .modal-window.p-ideas {
     background: none;
     position: relative;
@@ -1038,7 +1043,7 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     padding: 0;
     box-shadow: none;
 }
-.p-idea {background-color: #fff; padding: 16px; box-shadow: 0 0 10px rgba(0,0,0,0.5);}
+.p-idea {background-color: #fff; padding: 16px; box-shadow: 0 0 10px rgba(0,0,0,0.5); position: relative;}
 .p-idea.active {
     padding: 30px;
 }
