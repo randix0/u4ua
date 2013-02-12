@@ -209,7 +209,7 @@ textarea {
     zoom: 1;
     font-size: 14px;
     color: #0669a9;
-    margin: 5px;
+    line-height: 21px;
 }
 .b-header-video-author {
     color: #405f77;
@@ -343,6 +343,27 @@ textarea {
     margin: 0 20px 0 0;
 }
 
+.b-notice {
+    background-color: #e5f3fd;
+    position: relative;
+    color: #547185;
+    font-size: 22px;
+    text-transform: uppercase;
+    margin: 0 0 20px 0;
+}
+.b-notice-content {
+    padding: 25px;
+    text-align: center;
+}
+.b-notice .close {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 18px;
+    height: 16px;
+    background: url(./../img/misc/close.png);
+}
+
 .b-section {}
 
 .b-section-header {overflow: hidden; height: 38px; line-height: 38px; margin: 0 0 20px 0; padding: 0 0 7px 0;}
@@ -364,6 +385,7 @@ textarea {
     height: 38px;
     line-height: 38px;
     color: #ff8814;
+    text-transform: uppercase;
 }
 .b-section-header-filters-item .accent {
     position: absolute;
@@ -645,6 +667,8 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     position: relative;
     background-color: #a4a4a4;
     margin: 0 0 20px 0;
+    background-position: 50% 50%;
+    background-size: 100%;
 }
 
 .b-idea-item-video .play {
@@ -736,10 +760,17 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 .b-partnersBlock-next {right: 20px; background-position: -34px 50%;}
 .b-partnersBlock-prev:hover {background-position: -1 50%;}
 .b-partnersBlock-next:hover {background-position: -51px 50%;}
+
+.b-partnersBlock-body {overflow: hidden; position: relative; margin: 0 48px; height: 100px;}
 .b-partnersBlock-wrap {
-    overflow: hidden;
-    margin: 0 48px;
+    width: 200000px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
+.b-partnersBlock-sizer {display: block; float: left;}
 .b-partnersBlock-item {
     float: left;
     display: block;

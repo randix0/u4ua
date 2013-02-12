@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="js/vendor/jquery-1.8.3.min.js"></script>
     </head>
     <body class="body-main">
         <!--[if lt IE 7]>
@@ -64,7 +65,7 @@
                         </a>
                         <div class="b-header-video-desc">
                             <a class="b-header-video-viewAll" href="">Посмотреть все видео</a>
-                            <a class="b-header-video-iname" href=""><i>Давай</i><i>изменим</i><i>этот</i><i>мир</i><i>к</i><i>лучшему</i><i>вместе!</i></a>
+                            <a class="b-header-video-iname" href="#">Давай изменим этот мир к лучшему вместе!</a>
                         </div>
                         <a class="b-header-video-author" href="">Святослав вакарчук</a>
                     </div>
@@ -73,23 +74,45 @@
             <div class="b-header-footer">
                 <div class="b-partnersBlock">
                     <div class="b-partnersBlock-header">партнеры</div>
-                    <a class="b-partnersBlock-prev" href=""></a>
-                    <a class="b-partnersBlock-next" href=""></a>
-                    <div class="b-partnersBlock-wrap">
-                        <a class="b-partnersBlock-item" style="background-image: url(./img/partners/pinchuk.jpg);" href=""></a>
-                        <a class="b-partnersBlock-item" style="background-image: url(./img/partners/eastlabs.jpg);" href=""></a>
-                        <a class="b-partnersBlock-item" style="background-image: url(./img/partners/microsoft.jpg);" href=""></a>
-                        <a class="b-partnersBlock-item" style="background-image: url(./img/partners/google.jpg);" href=""></a>
+                    <a class="b-partnersBlock-prev"></a>
+                    <a class="b-partnersBlock-next"></a>
+
+                    <div class="b-partnersBlock-body">
+                        <div class="b-partnersBlock-wrap">
+                            <div class="b-partnersBlock-sizer">
+                                <a class="b-partnersBlock-item" style="background-image: url(./img/partners/pinchuk.jpg);" href="/partners"></a>
+                                <a class="b-partnersBlock-item" style="background-image: url(./img/partners/eastlabs.jpg);" href="/partners"></a>
+                                <a class="b-partnersBlock-item" style="background-image: url(./img/partners/microsoft.jpg);" href="/partners"></a>
+                                <a class="b-partnersBlock-item" style="background-image: url(./img/partners/google.jpg);" href="/partners"></a>
+                                <a class="b-partnersBlock-item" style="background-image: url(./img/partners/microsoft.jpg);" href="/partners"></a>
+                                <a class="b-partnersBlock-item" style="background-image: url(./img/partners/google.jpg);" href="/partners"></a>
+                            </div>
+                        </div>
                     </div>
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            U4ua.partnersSlider.init();
+                        });
+                    </script>
                 </div>
             </div>
         </header>
         <section class="b-section b-section-ideas">
+            <div class="b-notice layout w976px">
+                <a class="close" href=""></a>
+                <div class="b-notice-content p37pxi">
+                    ТОЛЬКО ОТ ТЕБЯ ЗАВИСИТ УСПЕХ ТВОЕЙ ИДЕИИ!<br>
+                    ИСПОЛЬЗУЙ ВСЕ СРЕДСТВА ДЛЯ ЕЕ ПРОДВИЖЕНИЯ!
+            	</div>
+            </div>
+        
+        
             <div class="b-section-header layout w976px">
                 <div class="b-section-header-iname">СВЕЖИЕ ИДЕИ</div>
                 <div class="b-section-header-filters">
                     <a class="b-section-header-filters-item active" href="">ПОСЛЕДНИЕ<div class="accent"></div></a>
                     <a class="b-section-header-filters-item" href="">ПОПУЛЯРНЫЕ<div class="accent"></div></a>
+                    <a class="b-section-header-filters-item" href="">примеры видео<div class="accent"></div></a>
                 </div>
             </div>
             <div class="b-section-body b-ideas layout w1010px">
@@ -150,16 +173,16 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
         -->
-        <script src="js/vendor/jquery-1.8.3.min.js"></script>
+        
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
+        <!--script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
+        </script-->
     </body>
 </html>
