@@ -119,8 +119,8 @@ textarea {
     height: 60px;
 }
 .b-header-body {
-    background: #e5f3fd url(./../img/misc/header-body.jpg) 50% 0 no-repeat;
-    height: 340px;
+    background: #e5f3fd url(./../img/misc/header-body.jpg?2) 50% 0 no-repeat;
+    height: 494px;
     padding: 20px 0;
 }
 .b-header-footer {
@@ -141,6 +141,22 @@ textarea {
     color: #000;
     font-weight: bold;
 }
+
+.b-header-btn-span0 {
+    position: absolute;
+    top: 352px;
+    left: -50px;
+    font-weight: bold;
+    font-size: 25px;
+}
+.b-header-btn-span1 {
+    position: absolute;
+    top: 352px;
+    left: 36px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
 .b-header-button:hover {text-decoration: none;}
 .b-header-video {
     float: right;
@@ -172,13 +188,21 @@ textarea {
     margin: 17px 0 0 0;
 }
 .b-header-video-iname {
-    background: #ffe505;
-    padding: 5px 7px;
     color: #000;
     font-size: 16px;
     line-height: 17px;
     font-weight: bold;
 }
+
+.b-header-video-iname i {
+    background: #ffe505;
+    font-style: normal;
+    display: inline-block;
+    zoom: 1;
+    margin: 0 -5px 0 0;
+    padding: 5px;
+}
+
 .b-header-video-viewAll {
     float: right;
     display: inline-block;
@@ -426,6 +450,9 @@ textarea {
     margin: 0 0 10px 0;
     outline: 0;
     border-radius: 0 0 4px 4px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: cover;
 }
 
 .b-ideas-item-play {
@@ -458,6 +485,7 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 }
 
 .b-ideas-item-vote {
+    display: block;
     background-color: #ffde16;
     margin: 0 -12px 10px -12px;
     padding: 7px 27px;
@@ -468,6 +496,17 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     font-weight: bold;
     text-transform: uppercase;
     text-align: center;
+    box-shadow: none;
+    -webkit-transition: box-shadow .2s ease;
+    -moz-transition: box-shadow .2s ease;
+    -ms-transition: box-shadow .2s ease;
+    -o-transition: box-shadow .2s ease;
+    transition: box-shadow .2s ease;
+}
+
+.b-ideas-item-vote:hover {
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    text-decoration: none;
 }
 
 .b-ideas-item-rating {
