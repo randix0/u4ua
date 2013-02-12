@@ -294,6 +294,9 @@ textarea {
     margin: 1px 10px 1px 0;
     background: rgba(255,255,255,0.7);
 }
+
+.b-login-avatar img {vertical-align: top;}
+
 .b-login-iname {
     display: inline-block;
     color: #b8bec3;
