@@ -119,7 +119,7 @@ textarea {
     height: 60px;
 }
 .b-header-body {
-    background: #e5f3fd url(./../img/misc/header-body.jpg?2) 50% 0 no-repeat;
+    background: #e5f3fd url(./../img/misc/header-body.jpg?4) 50% 0 no-repeat;
     height: 494px;
     padding: 20px 0;
 }
@@ -144,17 +144,17 @@ textarea {
 
 .b-header-btn-span0 {
     position: absolute;
-    top: 352px;
-    left: -50px;
+    top: 343px;
+    left: -40px;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 22px;
 }
 .b-header-btn-span1 {
     position: absolute;
-    top: 352px;
-    left: 36px;
+    top: 343px;
+    left: 43px;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 22px;
 }
 
 .b-header-button:hover {text-decoration: none;}
@@ -320,8 +320,8 @@ textarea {
     display: inline-block;
     zoom: 1;
     line-height: 60px;
-    height: 60px;
-    margin: 0 0 -10px 50px;
+    height: 63px;
+    margin: 0 0 -13px 50px;
     padding: 0 0 10px 0;
     text-transform: uppercase;
     font-weight: bold;
@@ -331,7 +331,7 @@ textarea {
     color: #a2a7b4;
 }
 
-.body-main .b-header-nav-item.active {background: url(./../img/misc/nav_accent.png) 50% 100% no-repeat;}
+.body-main .b-header-nav-item.active {background: url(./../img/misc/nav_accent.png?1) 50% 100% no-repeat;}
 
 .b-header-nav-item.active:hover {text-decoration: none;}
 .b-logo {
