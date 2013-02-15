@@ -66,7 +66,7 @@ class Mysmarty extends Smarty
 		}
 		
 		$params['ATTACHED_TPL'] = '';
-		//$params['LOGGED'] = $this->CI->user->logged();
+		$params['LOGGED'] = $this->CI->user->logged();
 		$params['USER_DATA'] = array();
 		
 		$params['BASE_URL'] = $this->CI->config->item('base_url');
@@ -75,13 +75,13 @@ class Mysmarty extends Smarty
 		$params['FB_APP_ID'] = $this->CI->config->item('facebook_app_id');
 		$params['GL_APP_ID'] = $this->CI->config->item('google_app_id');
 
-        /*
+
 		if($params['LOGGED']) {
 			$params['USER_DATA'] = &$this->CI->user->getUserData();
 		} else {
 			
 		}
-        */
+
 		
 		$acls = &$this->CI->config->item('access_levels');
 		if(is_array($acls)) {

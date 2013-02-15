@@ -9,7 +9,7 @@
                     <div class="b-rules-step-img"></div>
                     <div class="b-rules-step-wrap">
                         <div class="b-rules-step-number">1</div>
-                        <div class="b-rules-step-idesc">Тисні на <br> «<a href="/newidea/">Поділись своєю ідеєю</a>»</div>
+                        <div class="b-rules-step-idesc">Тисні на <br> «<a href="/idea/add/">Поділись своєю ідеєю</a>»</div>
                     </div>
                 </div>
                 <div class="b-rules-step step1">
@@ -46,11 +46,12 @@
         </div>
     </div>
     <div class="b-section-body b-ideas layout w1010px">
+        {foreach from=$ideas item=item}
         <div class="b-ideas-item">
-            <a class="b-ideas-item-img" onclick="Window.load('prizes.html');">
+            <a class="b-ideas-item-img" style="background-image: url({$item.youtube_img});">
                 <div class="b-ideas-item-play"></div>
             </a>
-            <a class="b-ideas-item-iname">Предлагаю создать стартап по пржению игровых дял степени сравнение </a>
+            <a class="b-ideas-item-iname">{$item.iname}</a>
             <time class="b-ideas-item-time">10 минут тому</time>
             <a class="b-ideas-item-vote">
                 ПІДТРИМУЙ!
@@ -59,44 +60,6 @@
                 <div class="b-ideas-item-rating">Судьи: <div class="b-ideas-item-ratingStars s1"></div></div>
             </div>
         </div>
-        <div class="b-ideas-item">
-            <a class="b-ideas-item-img">
-                <div class="b-ideas-item-play"></div>
-            </a>
-            <a class="b-ideas-item-iname">Предлагаю создать стартап по пржению игровых дял степени сравнение </a>
-            <time class="b-ideas-item-time">10 минут тому</time>
-            <a class="b-ideas-item-vote">
-                Поддержи!
-            </a>
-            <div class="tCenter">
-                <div class="b-ideas-item-rating">Судьи: <div class="b-ideas-item-ratingStars s1"></div></div>
-            </div>
-        </div>
-        <div class="b-ideas-item">
-            <a class="b-ideas-item-img">
-                <div class="b-ideas-item-play"></div>
-            </a>
-            <a class="b-ideas-item-iname">Предлагаю создать стартап по пржению игровых дял степени сравнение </a>
-            <time class="b-ideas-item-time">10 минут тому</time>
-            <a class="b-ideas-item-vote">
-                Поддержи!
-            </a>
-            <div class="tCenter">
-                <div class="b-ideas-item-rating">Судьи: <div class="b-ideas-item-ratingStars s1"></div></div>
-            </div>
-        </div>
-        <div class="b-ideas-item">
-            <a class="b-ideas-item-img">
-                <div class="b-ideas-item-play"></div>
-            </a>
-            <a class="b-ideas-item-iname">Предлагаю создать стартап по пржению игровых дял степени сравнение </a>
-            <time class="b-ideas-item-time">10 минут тому</time>
-            <a class="b-ideas-item-vote">
-                Поддержи!
-            </a>
-            <div class="tCenter">
-                <div class="b-ideas-item-rating">Судьи: <div class="b-ideas-item-ratingStars s1"></div></div>
-            </div>
-        </div>
+        {/foreach}
     </div>
 </section>

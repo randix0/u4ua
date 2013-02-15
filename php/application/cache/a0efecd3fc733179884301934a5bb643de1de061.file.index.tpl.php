@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2013-02-14 18:48:22
+<?php /* Smarty version Smarty-3.1.13, created on 2013-02-15 16:24:52
          compiled from "application/views/std/header/index.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:1312430522511cdda6b9e730-20913457%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,7 +7,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'a0efecd3fc733179884301934a5bb643de1de061' => 
     array (
       0 => 'application/views/std/header/index.tpl',
-      1 => 1360860502,
+      1 => 1360938272,
       2 => 'file',
     ),
   ),
@@ -26,6 +26,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '__PAGE' => 0,
     '_LANG' => 0,
     'LOGGED' => 0,
+    'USER_DATA' => 0,
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
@@ -48,6 +49,8 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 css/normalize.css">
     <link rel="stylesheet" href="<?php echo $_smarty_tpl->tpl_vars['RESOURCES_URL']->value;?>
 css/main.css">
+    <link rel="stylesheet" href="<?php echo $_smarty_tpl->tpl_vars['RESOURCES_URL']->value;?>
+css/window.css">
     <script src="<?php echo $_smarty_tpl->tpl_vars['RESOURCES_URL']->value;?>
 js/vendor/modernizr-2.6.2.min.js"></script>
     <script src="<?php echo $_smarty_tpl->tpl_vars['RESOURCES_URL']->value;?>
@@ -85,11 +88,19 @@ js/window.js"></script>
             </div>
             <div class="b-login">
                 <?php if (isset($_smarty_tpl->tpl_vars['LOGGED']->value)&&$_smarty_tpl->tpl_vars['LOGGED']->value){?>
-                    <a class="b-login-avatar" style=""></a>
-                    <a class="b-login-iname">Василий Пупкин</a>
-                    <a class="b-login-logout" href=""><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
+                    <a class="b-login-avatar" style=""><img src="https://graph.facebook.com/<?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['facebook_id'];?>
+/picture" width=24 height=24 /></a>
+                    <a class="b-login-iname"><?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['first_name'];?>
+ <?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['last_name'];?>
+</a>
+                    <a class="b-login-logout" href="/auth/logout"><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
 вийти<?php $_block_content = ob_get_clean(); $_block_repeat=false; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), $_block_content, $_smarty_tpl, $_block_repeat); } array_pop($_smarty_tpl->smarty->_tag_stack);?>
 <i class="i-logout"></i></a>
+
+                    <div style="display: none;">
+                    <?php echo var_dump($_smarty_tpl->tpl_vars['USER_DATA']->value);?>
+
+                    </div>
                 <?php }else{ ?>
                     <a class="b-login-login" onclick="Auth.facebook(); return false;"><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
 увійти<?php $_block_content = ob_get_clean(); $_block_repeat=false; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), $_block_content, $_smarty_tpl, $_block_repeat); } array_pop($_smarty_tpl->smarty->_tag_stack);?>
@@ -136,7 +147,7 @@ js/window.js"></script>
     <div class="b-header-body">
         <div class="layout w976px relative">
             <a class="b-header-button" href="/<?php echo $_smarty_tpl->tpl_vars['_LANG']->value;?>
-/newidea/"><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
+/idea/add/"><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
 Поділись своєю ідеєю<?php $_block_content = ob_get_clean(); $_block_repeat=false; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), $_block_content, $_smarty_tpl, $_block_repeat); } array_pop($_smarty_tpl->smarty->_tag_stack);?>
 </a>
             <div class="b-header-btn-span0"><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>

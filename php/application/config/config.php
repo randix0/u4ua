@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= '/';
+$config['base_url']	= 'http://db.devils.com.ua/';
 
 /*
 |--------------------------------------------------------------------------
@@ -369,3 +369,8 @@ $config['facebook_app_id'] = '339999716100637';
 $config['facebook_app_secret'] = 'ed5893c0ad33cb6f92808d2007068fe2';
 $config['google_app_id'] = '1';
 $config['google_app_secret'] = '1';
+$config['access_levels'] = array(
+    'ACL_EDIT' => 50,
+    'ACL_ADMIN' => 80
+);
+$config['full_account_creation_needed'] = false;

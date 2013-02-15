@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="{$RESOURCES_URL}css/normalize.css">
     <link rel="stylesheet" href="{$RESOURCES_URL}css/main.css">
+    <link rel="stylesheet" href="{$RESOURCES_URL}css/window.css">
     <script src="{$RESOURCES_URL}js/vendor/modernizr-2.6.2.min.js"></script>
     <script src="{$RESOURCES_URL}js/vendor/jquery-1.8.3.min.js"></script>
     <script src="{$RESOURCES_URL}js/plugins.js"></script>
@@ -42,9 +43,13 @@
             </div>
             <div class="b-login">
                 {if isset($LOGGED) && $LOGGED}
-                    <a class="b-login-avatar" style=""></a>
-                    <a class="b-login-iname">Василий Пупкин</a>
-                    <a class="b-login-logout" href="">{l}вийти{/l}<i class="i-logout"></i></a>
+                    <a class="b-login-avatar" style=""><img src="https://graph.facebook.com/{$USER_DATA.facebook_id}/picture" width=24 height=24 /></a>
+                    <a class="b-login-iname">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
+                    <a class="b-login-logout" href="/auth/logout">{l}вийти{/l}<i class="i-logout"></i></a>
+
+                    <div style="display: none;">
+                    {$USER_DATA|var_dump}
+                    </div>
                 {else}
                     <a class="b-login-login" onclick="Auth.facebook(); return false;">{l}увійти{/l}<i class="i-logout"></i></a>
                 {/if}
@@ -71,7 +76,7 @@
     {if isset($__PAGE) && $__PAGE == 'main'}
     <div class="b-header-body">
         <div class="layout w976px relative">
-            <a class="b-header-button" href="/{$_LANG}/newidea/">{l}Поділись своєю ідеєю{/l}</a>
+            <a class="b-header-button" href="/{$_LANG}/idea/add/">{l}Поділись своєю ідеєю{/l}</a>
             <div class="b-header-btn-span0">{l}АБО{/l}</div>
             <div class="b-header-btn-span1">{l}ПІДТРИМАЙ ідеї людей, <br> хто перетворює Україну на краще{/l}</div>
             <div class="b-header-video">

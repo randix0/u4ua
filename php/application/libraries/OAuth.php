@@ -45,9 +45,10 @@ class OAuth {
 		
 
 		$file = dirname(__FILE__).'/OAuth/'.ucfirst($this->handler_type).'.php';
-		if(!file_exists($file)) {
-			throw new Exception('Could not load handler', COULD_NOT_INIT_HANDLER);
-		}
+        //echo $file;
+		//if(!file_exists($file)) {
+		//	throw new Exception('Could not load handler', COULD_NOT_INIT_HANDLER);
+		//}
 		
 		
 		require_once($file);

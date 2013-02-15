@@ -288,7 +288,7 @@ class Auth extends CI_Controller {
      * @return string
      */	
 	function step1($handler = '', $reason = '') {
-		
+
 		if($reason && $reason != 'merge')
 			$reason = '';
 		
@@ -363,9 +363,8 @@ class Auth extends CI_Controller {
 		
 		if($this->user->logged() && !$merge) {
 			$result['status'] = 1;
-			$this->json->parse($result);
 			
-			return false;
+			return $this->json->parse($result);
 		}
 		
 
@@ -382,7 +381,6 @@ class Auth extends CI_Controller {
 			$this->load->model('m_users');
 			
 			$user = array();
-			
 			//if user_id was set in previous step
 			if($this->oauth->oa_user_id) {
 				//Check user exists in DB
@@ -435,10 +433,10 @@ class Auth extends CI_Controller {
 									
 									$photo = $this->oauth->getUserPhoto();
 									
-									if($photo) {
+									/*if($photo) {
 										$this->load->library('avatars');
 										$this->avatars->upload($data['site_id'], $id, $photo);
-									}
+									}*/
 										
 									$this->session->set_userdata(array('user_id' => $id));
 									$result['status'] = 1;
@@ -492,9 +490,8 @@ class Auth extends CI_Controller {
 		
 		
 		
-				
-		
-		$this->json->parse($result);
+
+        return $this->json->parse($result);
 	}
 	
 	

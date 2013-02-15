@@ -48,12 +48,30 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
-$db['default']['password'] = '';
-$db['default']['database'] = '';
+/* MASTER
+ *
+$db['default']['username'] = 'u4ua';
+$db['default']['password'] = 'uqBaaBj3Q68KmKe9';
+$db['default']['database'] = 'u4ua';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
+ */
+
+/* DEV
+ *
+$db['default']['username'] = 'ukrai531_rand';
+$db['default']['password'] = 'yueldrey0';
+$db['default']['database'] = 'ukrai531_client';
+$db['default']['dbdriver'] = 'mysql';
+$db['default']['dbprefix'] = 'u4ua_';
+ */
+
+$db['default']['hostname'] = 'localhost';
+$db['default']['username'] = 'ukrai531_rand';
+$db['default']['password'] = 'yueldrey0';
+$db['default']['database'] = 'ukrai531_client';
+$db['default']['dbdriver'] = 'mysql';
+$db['default']['dbprefix'] = 'u4ua_';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
 $db['default']['cache_on'] = FALSE;
