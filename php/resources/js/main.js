@@ -76,6 +76,103 @@ U4ua = {
                 U4ua.partnersSlider.binder();
         }
     },
+    idea: {
+        share: function(idea_id){
+            $.ajax({
+                //'/ajax/shareIdea/facebook/'+idea_id,
+                url: '/modal/shareIdea/'+idea_id,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data){
+                    if (data.status == 'success'){
+                        console.log('Idea.save: success!');
+                        if (data.goto)
+                            window.location = data.goto;
+                    } else {
+                        console.log('Idea.save: error!');
+                    }
+                }
+            });
+        },
+        vote: function(idea_id, handler_type){
+            if (typeof(idea_id) == 'undefined' || !idea_id) return;
+            if (typeof(handler_type) == 'undefined'){
+                Window.load('/modal/voteIdea/'+idea_id,'win-login','');
+            } else {
+                //Cookie.get('ac_stop');
+                console.log('id='+idea_id+' handler_type='+handler_type);
+
+                var voteAjax = function(){
+                    $.ajax({
+                        url: '/ajax/voteIdea',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: 'item[idea_id]='+idea_id+'&item[handler_type]='+handler_type,
+                        success: function(data){
+                            if (data.status == 'success'){
+                                //console.log('voting for idea#'+idea_id+' via '+handler_type+' is successful');
+                                if (LOGGED)
+                                    Window.load('/modal/alertSuccess/voteSuccess','win-alertSuccess','');
+                                else
+                                    window.location = window.location;
+                            } else {
+                                if (data.code == 'isVoted') {
+                                    //console.log('user`s already voted idea#'+idea_id+' via '+handler_type);
+                                    Window.load('/modal/alertError/'+data.code,'win-alertError','');
+                                } else {
+                                    Window.load('/modal/alertError/'+data.code,'win-alertError','');
+                                }
+                            }
+                        }
+                    });
+                };
+
+                $.ajax({
+                    url: '/ajax/isAuthNeeded/'+handler_type,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: 'item[idea_id]='+idea_id+'&item[handler_type]='+handler_type,
+                    success: function(data){
+                        if (data.status == 'success' && data.needed == 0){
+                            Window.closeAll();
+                            voteAjax();
+                            console.log('user can vote for idea#'+idea_id+' via '+handler_type);
+                        } else if (data.needed == 1){
+                            Auth.forceStop = 1;
+                            if (handler_type == 'fb' || handler_type == 'facebook') var auth_status = Auth.facebook('merge');
+                            else if (handler_type == 'vk' || handler_type == 'vkontakte') var auth_status = Auth.vkontakte('merge');
+                            else if (handler_type == 'gp' || handler_type == 'google') var auth_status = Auth.google('merge');
+                            else if (handler_type == 'tw' || handler_type == 'twitter') var auth_status = Auth.twitter('merge');
+                            else {
+                                Window.closeAll();
+                                console.log('error in check posibility voting for idea#'+idea_id+' via '+handler_type);
+                            }
+
+                            console.log('checking auth success');
+                            if (Auth.forceStop) {
+                                var auth_check = function(){
+                                    if (!Auth.forceStop) {
+                                        console.log('auth stopped)');
+                                        voteAjax();
+
+                                    } else {
+                                        console.log('Auth.forceStop still equil 1...');
+                                        setTimeout(auth_check, 1000);
+                                        return false;
+                                    }
+                                };
+                                setTimeout(auth_check, 1000);
+                            }
+                        }
+                    }
+                });
+
+                //Auth.facebook
+
+
+            }
+        }
+    },
     init: function(){}
 };
 

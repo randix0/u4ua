@@ -4,37 +4,35 @@
     </div>
     <div class="b-section-body layout w976px mB25px">
         <form id="ajaxSaveIdea" action="/ajax/saveIdea" method="post">
+            <input type="hidden" name="id" value="{$idea.id}" />
             <h3 class="b-section-h3">Добавить видео Youtube:</h3>
             <h4 class="b-section-h4">Адрес видео:</h4>
-            <div class="in-text mB25px"><input type="text" name="item[link]" placeholder="http://www.youtube.com/watch?v=YOUTUBE_CODE"></div>
+            <div class="in-text mB25px"><input type="text" name="item[link]" value="{if $idea.youtube_code}http://www.youtube.com/watch?v={$idea.youtube_code}{/if}" placeholder="http://www.youtube.com/watch?v=YOUTUBE_CODE"></div>
             <h3 class="b-section-h3">Название идеи:</h3>
-            <div class="in-text mB25px"><input type="text"  name="item[iname]"></div>
+            <div class="in-text mB25px"><input type="text"  name="item[iname]" value="{$idea.iname}"></div>
             <h3 class="b-section-h3">Кратко об идеи:</h3>
-            <div class="in-textarea h100px mB25px"><textarea  name="item[idesc]"></textarea></div>
+            <div class="in-textarea h100px mB25px"><textarea  name="item[idesc]">{$idea.idesc}</textarea></div>
             <h3 class="b-section-h3">Контакты:</h3>
             <div class="overhide mLRn5px">
                 <div class="left w236px mLR5px">
                     <h4 class="b-section-h4">Имя:</h4>
-                    <div class="in-text mB25px"><input type="text" name="item[cantact_first_name]" value="{$USER_DATA.first_name}"></div>
+                    <div class="in-text mB25px"><input type="text" name="item[contact_first_name]" value="{if $idea.contact_first_name}{$idea.contact_first_name}{else}{$USER_DATA.first_name}{/if}"></div>
                 </div>
                 <div class="left w236px mLR5px">
                     <h4 class="b-section-h4">Фамилия:</h4>
-                    <div class="in-text mB25px"><input type="text" name="item[cantact_last_name]" value="{$USER_DATA.last_name}"></div>
+                    <div class="in-text mB25px"><input type="text" name="item[contact_last_name]" value="{if $idea.contact_last_name}{$idea.contact_last_name}{else}{$USER_DATA.last_name}{/if}"></div>
                 </div>
                 <div class="left w236px mLR5px">
                     <h4 class="b-section-h4">E-mail:</h4>
-                    <div class="in-text mB25px"><input type="text" name="item[cantact_email]" value="{$USER_DATA.email}"></div>
+                    <div class="in-text mB25px"><input type="text" name="item[contact_email]" value="{if $idea.contact_email}{$idea.contact_email}{else}{$USER_DATA.email}{/if}"></div>
                 </div>
                 <div class="left w236px mLR5px">
                     <h4 class="b-section-h4">Телефон:</h4>
-                    <div class="in-text mB25px"><input type="text" name="item[cantact_phone]" placeholder="+380"></div>
+                    <div class="in-text mB25px"><input type="text" name="item[contact_phone]" placeholder="+380" value="{$idea.contact_phone}"></div>
                 </div>
             </div>
-            <div class="mB25px">
-                <a class="button" onclick="Idea.save();">Добавить</a>
-                <a class="button button_cancel" href="">Отменить</a>
-            </div>
         </form>
+    {if $idea.id}
         <h3 class="b-section-h3">Дополнительные материалы:</h3>
         <div class="overhide">
             <div class="left w210px mR10px">
@@ -46,7 +44,7 @@
             <div class="left w210px mR10px">
                 <div class="b-idea-putFile">
                     <div class="b-idea-putFile-desc">Перетяни сюда файл</div>
-                    <a class="b-idea-putFile-choose">Выбрать вручную</a>
+                    <a class="b-idea-putFile-choose" onclick="Window.load('/modal/upload/Attachments/{$idea.id}','win-upload','');">Выбрать вручную</a>
                 </div>
             </div>
         </div>
@@ -69,7 +67,19 @@
             </div>
             <a class="b-idea-addPerson left" href="">Добавить участника</a>
         </div>
-        <a class="button button_big" href="">Подать идею</a>
+    {/if}
+        {*
+            <div class="mB25px">
+                <a class="button" onclick="Idea.save();">Добавить</a>
+                <a class="button button_cancel" href="">Отменить</a>
+            </div>
+        *}
+        {if $idea.id}
+            <a class="button" Idea.save();>Сохранить</a>
+            <a class="button button_cancel" href="/">Отменить</a>
+        {else}
+            <a class="button button_big" Idea.save();>Подать идею</a>
+        {/if}
     </div>
 
 

@@ -1,3 +1,3 @@
 <?php
 //ukrainian
-$lang['fish'] = 'рибко';
+$lang['_at_oclock_'] = 'о';

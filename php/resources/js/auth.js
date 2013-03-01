@@ -25,6 +25,12 @@ Auth = {
 		return Auth.popup(url, '/auth/step2/google/'+reason);
 		
 	},
+    twitter: function(reason) {
+        if(typeof(reason) == 'undefined')
+            reason = '';
+        var url=BASE_URL+'twitter/auth/'+reason;
+        return Auth.popup(url, '/auth/twitter_step2/'+reason);
+    },
 	popup: function(url, step2) {
 		Cookie.set('sl','0','0','/');
 		
@@ -33,18 +39,20 @@ Auth = {
 		
 		var popupCheck = function() {
 		if (!Window.popupOpened) return false;
-		  try {
-			if(Window.activePopup.closed/* || !Window.activePopup.top*/) {
-			  Window.popupOpened = false;
-			  Auth.authCallback(step2); 
-			  return true;
-			}
-		  } catch(e) {
-			Window.popupOpened = false;
-			Auth.authCallback(step2);
-			return true;
-		  }
-		  setTimeout(popupCheck, 100);
+            try {
+                if(Window.activePopup.closed/* || !Window.activePopup.top*/) {
+                    Window.popupOpened = false;
+                    console.log('Auth.popup setTimeout...OK');
+                    Auth.authCallback(step2);
+                    return true;
+                }
+            } catch(e) {
+                Window.popupOpened = false;
+                Auth.authCallback(step2);
+                return true;
+            }
+            setTimeout(popupCheck, 100);
+            console.log('Auth.popup setTimeout...');
 		}
 		setTimeout(popupCheck, 100);
 		
@@ -52,7 +60,7 @@ Auth = {
 	},
 	authCallback: function(url) {
 		var state = Cookie.get('sl');
-
+        console.log('Auth.authCallback '+url+' ...');
 		if(state != null && parseInt(state) > 0) {
 			$.ajax({
 					url: url,
@@ -61,20 +69,29 @@ Auth = {
 						if(Window.params.dimmer && !Window.dimmerLoaded) {
 							Window.placeDimmer();
 						}
-						
+                        console.log('Auth.authCallback ajax ...');
 						Window.placeLoadingIndicator();
 					},
 					success: function(data) {
+                        console.log('Auth.authCallback ajax data.status='+data.status);
 						Window.removeLoadingIndicator();
 						if(data.status == 3)
 							Window.create({'header':data.header, 'body': data.body}, 'win-social-signup-msg');
-						if(data.status == 2)
-							Window.create({'header':data.header, 'body': data.body}, 'signup-social');
+						else if(data.status == 2)
+							Window.create({'header':data.header, 'body': data.body}, 'win-signup-social');
 						else if(data.status == 1) {
-							window.location = window.location;
+                            if (Auth.forceStop){
+                                Auth.forceStop = null;
+                                Auth.successful = 1;
+                                return true;
+                            }
+                            else
+							    window.location = window.location;
 						}
 					}
 				});
 			}
-	}
+	},
+    forceStop: null,
+    successful: null
 }

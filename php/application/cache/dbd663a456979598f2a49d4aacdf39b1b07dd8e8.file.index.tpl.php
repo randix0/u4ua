@@ -1,6 +1,6 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2013-02-14 16:46:26
+<?php /* Smarty version Smarty-3.1.13, created on 2013-03-01 18:12:59
          compiled from "application/views/global/prizes/index.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:1752488448511ce67a53b371-70918541%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:9664804495130d38b80c168-69997494%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
@@ -11,15 +11,15 @@ $_valid = $_smarty_tpl->decodeProperties(array (
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '1752488448511ce67a53b371-70918541',
+  'nocache_hash' => '9664804495130d38b80c168-69997494',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.13',
-  'unifunc' => 'content_511ce67a5a4146_40555322',
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.13',
+  'unifunc' => 'content_5130d38b8b4b61_53925457',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_511ce67a5a4146_40555322')) {function content_511ce67a5a4146_40555322($_smarty_tpl) {?><section class="b-section b-section-prizes">
+<?php if ($_valid && !is_callable('content_5130d38b8b4b61_53925457')) {function content_5130d38b8b4b61_53925457($_smarty_tpl) {?><section class="b-section b-section-prizes">
     <div class="b-section-header layout w976px">
         <div class="b-section-header-iname">УМОВИ КОНКУРСУ</div>
     </div>

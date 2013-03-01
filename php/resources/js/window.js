@@ -11,7 +11,7 @@ Window = {
 		'onResize': []
 	},
 	deferred: [],
-	params: {'indicator': '/resources/images/misc/ajax-loader.gif', 'width': 500, 'dimmer': true, 'zindex': 10000},
+	params: {'indicator': '/resources/img/misc/ajax-loader.gif', 'width': 500, 'dimmer': true, 'zindex': 10000},
 	instances: [],
 	wCounter: 0,
 	mwWidth: 0,
@@ -29,7 +29,7 @@ Window = {
 		}
 		return this._sbWidth;
 	},
-	calcParams: function(callback) {
+	calcParams: function() {
 				var w = window, de = document.documentElement, htmlNode = document.getElementsByTagName('html')[0],bodyNode = document.getElementsByTagName('body')[0]; 
 				var dwidth = Math.max(toint(w.innerWidth), toint(de.clientWidth));
 				var dheight = Math.max(toint(w.innerHeight), toint(de.clientHeight));
@@ -60,14 +60,9 @@ Window = {
 				$('#modal_layer_wrap').css({width:Window.mwWidth,height:Window.mwHeight});
 				$('#modal_layer').width(Window.lastInnerWidth);
 				
-				$('#layout_wrap').width(Window.lastInnerWidth);
-				$('#nav_wrap').width(Window.lastInnerWidth);
 				
-				if(typeof(callback) != 'undefined') {
-					callback.call(null, Window.mwWidth, Window.mwHeight, Window.lastInnerWidth);
-				}
-				
-				if(!this.calcInited) {
+				if (!this.calcInited)
+				{
 					this.calcInited = true;
 					for(var k in Window.deferred) {
 						Window.create.apply(this, this.deferred[k]);
@@ -99,11 +94,7 @@ Window = {
 				}
 				
 				for(var k in Window.subscribers['onResize']) {
-					if(typeof(Window.subscribers['onResize'][k]) == 'string') {
-						executeFunctionByName(Window.subscribers['onResize'][k], window);
-					} else {
-						Window.subscribers['onResize'][k].call(null);
-					}
+					executeFunctionByName(Window.subscribers['onResize'][k], window);
 				}
 	},
 	init: function() {
@@ -129,7 +120,7 @@ Window = {
 					var wClass = '';
 				else if(!Window.checkDuplicates(wClass))
 					return false;
-				
+
 				if(typeof(callback) == 'undefined')
 					callback = '';
 				
@@ -162,16 +153,16 @@ Window = {
 				});
 			}
 	},
-	create: function(d, wClass, callback, nonMiddled, header) {
+	create: function(d, wClass, callback, nonMiddled) {
 		if(typeof(d) == 'undefined')
 			return false;
-		
-		if(!this.calcInited) {
+		if (!this.calcInited)
+		{
 			this.deferred.push(arguments);
 			return false;
 		}
-		
-		Window.closeAll();
+
+		//Window.closeAll();
 		
 		//Place dimmer
 		if(!Window.dimmerLoaded) {
@@ -180,14 +171,12 @@ Window = {
 		
 		
 		if(typeof(wClass) == 'undefined')
-			var wClass = '';			
-		
-		if(typeof(header) == 'undefined')
-			var header = true;	
+			var wClass = '';
+
 		
 		var winID = 'win_' + Window.wCounter;		
-		var content = '<div id="' + winID + '" class="modal-window-container"><div class="modal-window ' + ((wClass)?' ' + wClass:'') +'">'+(header?'<div class="modal-window-header"><div class="desc"></div><a onclick="Window.close(this);" class="close">x</a></div>':'')+'<div class="modal-window-body"></div></div></div>';
-		
+		var content = '<div id="' + winID + '" class="modal-window-container"><div class="modal-window ' + ((wClass)?' ' + wClass:'') +'"><div class="modal-window-header"><div class="desc"></div><a onclick="Window.close(this)" class="modal-window-close"></a></div><div class="modal-window-body"></div></div></div>';
+
 
 			
 		$('#modal_layer').append(content);
@@ -233,7 +222,7 @@ Window = {
 		Window.wCounter++;
 		
 		if(typeof(callback) != 'undefined' && callback)
-			callback.call(this, winID);
+			callback();
 	},
 	close: function(p) {
 		if(typeof(p) == 'object') {
@@ -315,27 +304,21 @@ Window = {
 	removeLoadingIndicator: function() {
 		$('body .window-loading-indicator').remove();
 	},
-	popup: function(url, params) {
-		if(typeof(params) == 'undefined') {
-			var params = new Array;
-		}
+	popup: function(url) {
 		var popupName = '_blank';
 		var width = 554;
 		var height = 349;
-
 		var left = (Window.mwWidth - width) / 2;
 		var top = (Window.mwHeight - height) / 2;
-		var popupParams = 'location=1, scrollbars=0, resizable=1, menubar=0, left=' + left + ', top=' + top + ', width=' + width + ', height=' + height + ', toolbar=0, status=0';
+		var popupParams = 'scrollbars=0, resizable=1, menubar=0, left=' + left + ', top=' + top + ', width=' + width + ', height=' + height + ', toolbar=0, status=0';
 		Window.activePopup = window.open(url, popupName, popupParams);
 		Window.activePopup.blur();
 		Window.activePopup.focus();
-		
-		return false;
 	},
 	popupCheck: function(callback) {
 		if (!Window.popupOpened) return false;
 		  try {
-			if(Window.activePopup.closed/* || !Window.activePopup.top*/) {
+			if(!Window.activePopup['top']) {
 			  Window.popupOpened = false;
 			  callback();
 			  return true;
@@ -350,3 +333,7 @@ Window = {
 }
 
 Window.init();
+
+$(document).ready(function(){
+    Window.calcParams();
+});

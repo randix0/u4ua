@@ -30,6 +30,7 @@ class Main extends CI_Controller {
 
     public function fake()
     {
+        $this->load->helper('url');
         $user = array(
             'user_id' => '1',
             'login' => '',
@@ -48,6 +49,7 @@ class Main extends CI_Controller {
 
         $this->session->set_userdata($user);
 
+        echo '<a href="/">main</a>';
     }
 }
 

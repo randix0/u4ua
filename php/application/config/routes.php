@@ -39,7 +39,10 @@
 */
 
 $route['default_controller'] = "main";
+$route['idea/(:num)'] = "idea/index/$1";
 
+
+$route['^(en|ru|ua)/idea/(:num)$']        = "idea/index/$2";
 $route['^(en|ru|ua)/(.+)$']        = "$2";
 $route['^(en|ru|ua)$'] = $route['default_controller'];
 

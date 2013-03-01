@@ -17,10 +17,18 @@ class Mysmarty extends Smarty
 
 		$config =& get_config();
 		$this->CI =& get_instance();
+        $this->CI->load->helper('url');
 
+        $current_url = '';
         $lang = $this->CI->uri->segment(1);
-        if (!preg_match('(en|ru|ua)',$lang))
+        if (!preg_match('(en|ru|ua)',$lang)){
             $lang = 'ua';
+            $current_url = uri_string();
+        } else {
+            $URIs = $this->CI->uri->segment_array();
+            unset($URIs[1]);
+            $current_url = implode('/',$URIs);
+        }
 
         $this->CI->lang->load('', $lang);
 		
@@ -30,6 +38,8 @@ class Mysmarty extends Smarty
 		
 		$this->registerPlugin('block', 'l', array($this, 'smartyBlockTranslate'));
 		$this->registerPlugin('modifier', 'minBr', array($this, 'smartyModifierMinBr'));
+        $this->registerPlugin('modifier', 'actionTime', array($this, 'smartyActionTime'));
+
 
 		// absolute path prevents "template not found" errors
 		$this->template_dir = (!empty($config['smarty_template_dir']) ? $config['smarty_template_dir'] 
@@ -41,6 +51,7 @@ class Mysmarty extends Smarty
 		$this->assign('TABLET', $this->tablet);
 		$this->assign('TEST_MODE', (isset($config['test_mode']) && $config['test_mode'])?true:false);
         $this->assign('_LANG', $lang);
+        $this->assign('CURRENT_URL', $current_url);
 			
 		if (function_exists('site_url')) {
     		// URL helper required
@@ -81,6 +92,8 @@ class Mysmarty extends Smarty
 		} else {
 			
 		}
+
+        $params['SESSION'] = $this->CI->session->all_userdata();
 
 		
 		$acls = &$this->CI->config->item('access_levels');
@@ -157,8 +170,55 @@ class Mysmarty extends Smarty
 			
 		return $content;
 	}
-	
-	
-	
+
+    function lang($content)
+    {
+        if(isset($this->CI->lang)) {
+            $result = &$this->CI->lang->line($content);
+
+            if($result)
+                return $result;
+        }
+
+        return $content;
+    }
+
+    function smartyActionTime($time = 0, $html_tag = 'time', $html_class = 'timestamp', $html_attr = 'data-date')
+    {
+        $action_time = '';
+        $now_year = date('Y');
+        list($year,$hours,$minutes)=explode('-',date('Y-H-i',$time));
+        /*
+                list($year,$month,$day,$hours,$minutes,$seconds)=explode('-',date('Y-n-j-H-i-s',$time));
+                list($now_year,$now_month,$now_day,$now_hours,$now_minutes,$now_seconds)=explode('-',date('Y-n-j-H-i-s'));
+        */
+        $diff_time = time()-$time;
+        $diff_days = (int)($diff_time/86400);
+        $diff_hours = (int)($diff_time/3600);
+        $diff_minutes = (int)($diff_time/60);
+
+        if ($year == $now_year)
+            if ($diff_time > 43200) // day and month --12hours ness
+                $action_time = strftime('%d %b',$time).' '.$this->lang('_at_oclock_').' '.$hours.':'.$minutes;
+            elseif ($diff_hours > 1) // x hours ago -- 1hours ness
+                $action_time = $diff_hours.' '.$this->lang('ч. назад');
+            elseif ($diff_hours == 1) // about hour
+                $action_time = $this->lang('около часа назад');
+            elseif ($diff_minutes > 1) // about hour
+                $action_time = $diff_minutes.' '.$this->lang('мин. назад');
+            elseif ($diff_minutes == 1) // about hour
+                $action_time = $this->lang('около минуты назад');
+            else // about hour
+                $action_time = $this->lang('несколько секунд назад');
+        else
+            $action_time = strftime('%d %b %Y',$time);
+
+        if ($html_tag)
+            $action_time = '<'.$html_tag.' class="'.$html_class.(($diff_hours > 12)?'_nonactual':'').'" '.$html_attr.'="'.date('r',$time).'">'.$action_time.'</'.$html_tag.'>';
+        return $action_time;
+    }
+
+
+
 } // END class smarty_library
 ?>

@@ -360,10 +360,10 @@ class Auth extends CI_Controller {
 		
 		$merge = ($this->user->logged() && $reason == 'merge')?true:false;
 		
-		
+
 		if($this->user->logged() && !$merge) {
 			$result['status'] = 1;
-			
+
 			return $this->json->parse($result);
 		}
 		
@@ -417,15 +417,18 @@ class Auth extends CI_Controller {
 							$result['status']	= 2;
 							$result['header']	= '';
 							$result['body']		= $this->mysmarty->view('auth/signup/social/index.tpl', array('hItem' => &$user), false, true);
-						
 						} else {
-							
 							//TODO: if email exists
 							if(isset($user['email']) && $user['email'] && $this->m_users->isEmailExists($user['email'])) {
 								$result['status']	= 3;
 								$result['header']	= '';
 								$result['body']		= $this->mysmarty->view('auth/signup/social/email_exists.tpl', array('hItem' => &$user), false, true);
-							} else {
+                            } elseif ((!isset($user['email']) || !$user['email']) && $this->config->item('account_email_needed')){
+                                $result['status']	= 2;
+                                $result['header']	= '';
+                                $session = $this->session->all_userdata();
+                                $result['body']		= $this->mysmarty->view('auth/signup/social/callback.tpl', array('hItem' => &$user, 'session'=>$session), false, true);
+                            } else {
 								$id = $this->m_users->create($user);
 								
 								if($id) {
@@ -466,7 +469,7 @@ class Auth extends CI_Controller {
 							}
 						}
 						
-						$this->m_users->edit($this->user->uid(), $data);
+						$this->m_users->update($this->user->uid(), $data);
 						
 						$result['status'] = 1;
 					}
@@ -483,6 +486,12 @@ class Auth extends CI_Controller {
 				$this->oauth->unsetCookieData();
 				$this->_onLogin($id);
 			}
+            elseif($merge && $result['status'] === 1) {
+                $this->m_users->update($this->user->uid(), array(
+                    $this->oauth->getHandlerType().'_oa_access_token' => $this->oauth->oa_access_token,
+                    $this->oauth->getHandlerType().'_oa_valid_till' => $this->oauth->oa_valid_till
+                ));
+            }
 			
 		} catch(Exception $e) {
 			$result['error'] = $e->getMessage();
@@ -493,12 +502,6 @@ class Auth extends CI_Controller {
 
         return $this->json->parse($result);
 	}
-	
-	
-
-	
-
-
 
 
 	/**
@@ -852,9 +855,102 @@ class Auth extends CI_Controller {
 			delete_cookie('aes');
 		}
 	}
+
+    public function twitter_step2($reason = '')
+    {
+        $result = array();
+        $this->load->library('json');
+        $result['status'] = 0;
+        $merge = ($this->user->logged() && $reason == 'merge')?true:false;
+
+        if($this->user->logged() && !$merge) {
+            $result['status'] = 1;
+            return $this->json->parse($result);
+        }
+
+        $session = $this->session->all_userdata();
+
+        if (!$merge){
+            $user = array(
+                'twitter_id' => $session['twitter_user_id']
+            );
+
+            $ps = array(
+                'hItem' => &$user,
+                'session' => $session
+            );
+            setcookie('sl', 1, 0 , '/');
+
+            $result['status']	= 2;
+            $result['header']	= '';
+            $result['body']		= $this->mysmarty->view('auth/signup/social/callback.tpl', $ps, false, true);
+        } else {
+            $result['status']	= 1;
+        }
+
+        return $this->json->parse($result);
+    }
 	
 	
-	
+	public function complete_signup()
+    {
+        $result = array('status' => 'error');
+        $this->load->helper('email');
+        $this->load->library('json');
+        $data = array();
+
+        $session = $this->session->all_userdata();
+
+        $RAW = $this->input->post('item');
+
+        $email = trim($RAW['email']);
+        if (valid_email($email)) {
+            $this->load->model('m_users');
+
+            $user = $this->m_users->getByEmail($email);
+            if ($user && isset($user['id']) && $user['id']){
+                if ($RAW['twitter_id'] && $RAW['twitter_id'] > $user['twitter_id'])$data['twitter_id'] = $RAW['twitter_id'];
+                if ($RAW['vkontakte_id'] && $RAW['vkontakte_id'] > $user['vkontakte_id']) $data['vkontakte_id'] = $RAW['vkontakte_id'];
+                if ($data) {
+                    $this->m_users->update($user['id'], $data);
+                    $this->session->set_userdata(array('user_id' => $user['id']));
+                    $result['status'] = 2;
+                }
+
+            } else {
+                if ($RAW['twitter_id']) {
+                    $data['twitter_id'] = $RAW['twitter_id'];
+
+                    $data['twitter_oa_access_token'] = $session['twitter_access_token'];
+
+                    $data['first_name'] = $session['twitter_screen_name'];
+                    $data['url_friendly_name'] = $session['twitter_screen_name'];
+                }
+                if ($RAW['vkontakte_id']) {
+                    $this->load->library('OAuth', array('handler_type' => 'vkontakte'));
+                    $oa_user_id = $this->oauth->getUserID();
+                    if ($oa_user_id) {
+                        $user = $this->oauth->getUserData();
+                        $data['first_name'] = $user['first_name'];
+                        $data['last_name'] = $user['last_name'];
+                        $data['url_friendly_name'] = $user['url_friendly_name'];
+                        $data['timezone'] = $user['timezone'];
+                        $data['gender'] = $user['gender'];
+                        $data['vkontakte_id'] = $user['vkontakte_id'];
+                    }
+                }
+                if ($data) {
+                    $data['email'] = $email;
+                    $id = $this->m_users->create($data);
+                    if ($id) {
+                        $this->session->set_userdata(array('user_id' => $id));
+                        $result['status'] = 1;
+                    }
+                }
+            }
+        }
+        return $this->json->parse($result);
+    }
 	
 	/**
      * Get segments file name

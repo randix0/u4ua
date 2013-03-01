@@ -46,20 +46,49 @@
         </div>
     </div>
     <div class="b-section-body b-ideas layout w1010px">
-        {foreach from=$ideas item=item}
-        <div class="b-ideas-item">
-            <a class="b-ideas-item-img" style="background-image: url({$item.youtube_img});">
-                <div class="b-ideas-item-play"></div>
-            </a>
-            <a class="b-ideas-item-iname">{$item.iname}</a>
-            <time class="b-ideas-item-time">10 минут тому</time>
-            <a class="b-ideas-item-vote">
-                ПІДТРИМУЙ!
-            </a>
-            <div class="tCenter">
-                <div class="b-ideas-item-rating">Судьи: <div class="b-ideas-item-ratingStars s1"></div></div>
-            </div>
-        </div>
-        {/foreach}
+        {include file="global/idea/items/index.tpl"}
+    </div>
+    <div class="b-section-footer layout w1010px tCenter">
+        <a class="button block" onclick="Ideas.more();">More</a>
     </div>
 </section>
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.b-ideas').masonry({
+            itemSelector: '.b-ideas-item',
+            singleMode: true,
+            isResizable: false
+            //isAnimated: !Modernizr.csstransitions
+        });
+    });
+
+    Ideas = {
+        more: function(){
+            $.ajax({
+                url: '/ajax/getIdeas',
+                type: 'POST',
+                dataType: 'json',
+                success: function(data){
+                    if (data.status == 'success'){
+                        $('.b-ideas').append(data.html).masonry('reload');
+                    } else {
+                        console.log('Idea.save: error!');
+                    }
+                }
+            });
+        }
+    };
+/*
+    var count = 0;
+    $(window).scroll(function(){
+
+        if  ($(window).scrollTop() == ($(document).height() - $(window).height())){
+            Ideas.more();
+            count++;
+            console.log('count='+count);
+        }
+    });
+*/
+</script>

@@ -8,8 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>u4ua</title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" type="image/png" href="./favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
@@ -20,10 +19,15 @@
     <script src="{$RESOURCES_URL}js/vendor/jquery-1.8.3.min.js"></script>
     <script src="{$RESOURCES_URL}js/plugins.js"></script>
     <script src="{$RESOURCES_URL}js/main.js"></script>
+    <script src="{$RESOURCES_URL}js/modernizr-transitions.js"></script>
+    <script src="{$RESOURCES_URL}js/jquery.masonry.min.js"></script>
+
     <script>
-        var vk_app_id = {$VK_APP_ID},
-                fb_app_id = {$FB_APP_ID},
-                gl_app_id = {$GL_APP_ID};
+        var vk_app_id = '{$VK_APP_ID}',
+                fb_app_id = '{$FB_APP_ID}',
+                gl_app_id = '{$GL_APP_ID}',
+                BASE_URL = '{$BASE_URL}',
+                LOGGED = {if $LOGGED}{$LOGGED}{else}0{/if};
     </script>
     <script src="{$RESOURCES_URL}js/auth.js"></script>
     <script src="{$RESOURCES_URL}js/window.js"></script>
@@ -33,26 +37,33 @@
 <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
 <![endif]-->
 
+<div id="dimmer" class="dimmer" style="display: none;"></div>
+<div id="modal_layer_wrap" class="modal_layer_wrap" style="display: none;">
+    <div id="modal_layer" class="modal_layer"></div>
+</div>
 
 <header class="b-header">
     <div class="b-toolbar">
         <div class="b-toolbar-body layout w976px">
             <div class="b-chLang">
-                <a class="b-chLang-item {if $_LANG == 'ua'}active{/if}" href="/ua/">українська</a>
-                <a class="b-chLang-item {if $_LANG == 'en'}active{/if}" href="/en/">english</a>
+                <a class="b-chLang-item {if $_LANG == 'ua'}active{/if}" href="/ua/{$CURRENT_URL}">українська</a>
+                <a class="b-chLang-item {if $_LANG == 'en'}active{/if}" href="/en/{$CURRENT_URL}">english</a>
             </div>
             <div class="b-login">
                 {if isset($LOGGED) && $LOGGED}
                     <a class="b-login-avatar" style=""><img src="https://graph.facebook.com/{$USER_DATA.facebook_id}/picture" width=24 height=24 /></a>
                     <a class="b-login-iname">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
+                    <a class="b-login-login" onclick="Window.load('/modal/login/merge','win-login','');">{l}add social{/l}<i class="i-logout"></i></a>
                     <a class="b-login-logout" href="/auth/logout">{l}вийти{/l}<i class="i-logout"></i></a>
-
-                    <div style="display: none;">
-                    {$USER_DATA|var_dump}
-                    </div>
                 {else}
-                    <a class="b-login-login" onclick="Auth.facebook(); return false;">{l}увійти{/l}<i class="i-logout"></i></a>
+                    {* Auth.facebook(); return false; *}
+                    <a class="b-login-login" onclick="Window.load('/modal/login','win-login','');">{l}увійти{/l}<i class="i-logout"></i></a>
                 {/if}
+
+                <div style="display: none;">
+                    {$USER_DATA|var_dump}
+                    {$SESSION|var_dump}
+                </div>
             </div>
             <div class="b-share">
                 {l}Розкажи друзям{/l}
@@ -76,7 +87,7 @@
     {if isset($__PAGE) && $__PAGE == 'main'}
     <div class="b-header-body">
         <div class="layout w976px relative">
-            <a class="b-header-button" href="/{$_LANG}/idea/add/">{l}Поділись своєю ідеєю{/l}</a>
+            <a class="b-header-button" {if $LOGGED}href="/{$_LANG}/idea/add/"{else}onclick="Window.load('/modal/login','win-login','');"{/if}>{l}Поділись своєю ідеєю{/l}</a>
             <div class="b-header-btn-span0">{l}АБО{/l}</div>
             <div class="b-header-btn-span1">{l}ПІДТРИМАЙ ідеї людей, <br> хто перетворює Україну на краще{/l}</div>
             <div class="b-header-video">
