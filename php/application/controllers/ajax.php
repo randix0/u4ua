@@ -38,10 +38,11 @@ class Ajax extends CI_Controller {
         $result = array('status' => 'error', 'errors' => array());
 
         $required = array(
-            'link','iname','idesc','cantact_first_name','cantact_last_name','cantact_email','cantact_phone'
+            'link','iname','idesc','contact_first_name','contact_last_name','contact_email','contact_phone'
         );
 
         $RAW = $this->input->post('item');
+        $idea_id = $this->input->post('id');
 
         foreach($required as $r)
         {
@@ -58,10 +59,10 @@ class Ajax extends CI_Controller {
 
         $item['iname'] = $RAW['iname'];
         $item['idesc'] = $RAW['idesc'];
-        $item['cantact_first_name'] = $RAW['cantact_first_name'];
-        $item['cantact_last_name'] = $RAW['cantact_last_name'];
-        $item['cantact_email'] = $RAW['cantact_email'];
-        $item['cantact_phone'] = $RAW['cantact_phone'];
+        $item['contact_first_name'] = $RAW['contact_first_name'];
+        $item['contact_last_name'] = $RAW['contact_last_name'];
+        $item['contact_email'] = $RAW['contact_email'];
+        $item['contact_phone'] = $RAW['contact_phone'];
 
 
         $link = $RAW['link'];
@@ -81,13 +82,16 @@ class Ajax extends CI_Controller {
 
         if (!$result['errors']) {
             $this->load->model('m_ideas');
-            $idea_id = $this->m_ideas->create($item);
+            if (!$idea_id)
+                $idea_id = $this->m_ideas->create($item);
+            else
+                $this->m_ideas->update($idea_id,$item);
             $item['id'] = $idea_id;
             if ($idea_id > 0){
                 $result = array(
                     'status' => 'success',
                     'item' => $item,
-                    'goto' => '/idea/'.$idea_id
+                    'goto' => base_url('/idea/'.$idea_id)
                 );
                 $qr_name = $this->m_ideas->generateQR($idea_id);
                 $this->m_ideas->update($idea_id,array('qr_code'=>$qr_name));
@@ -208,32 +212,188 @@ class Ajax extends CI_Controller {
         $this->json->parse($result);
     }
 
-    public function uploadFile()
+    public function uploadFile($upload_type = '', $item_id = 0)
     {
-        $config['upload_path'] = './uploads/';
-        //$config['allowed_types'] = 'gif|jpg|png';
-        /*
-        $config['max_size']	= '100';
-        $config['max_width']  = '1024';
-        $config['max_height']  = '768';
-        */
-        $this->load->library('upload', $config);
+        $this->load->helper('file');
+        $result = array('status'=>'error');
 
-        if ( ! $this->upload->do_upload())
+        if (!$upload_type || !$item_id || !preg_match('/^(attachments|team)$/',$upload_type)) return $this->json->parse($result);
+
+        if (!$_FILES || !isset($_FILES['userfile']) || !$_FILES['userfile'] || !isset($_FILES['userfile']['name'])) return $this->json->parse($result);
+
+        $upload_path = 'upload/';
+        $upload_dir = FCPATH.$upload_path;
+
+        $allowed_files = array(
+            'attachments' => 'pdf|doc|docx|png|jpg',
+            'team' => 'png|jpg'
+        );
+
+
+
+        $files = array();
+
+        foreach($_FILES['userfile']['name'] as $i=>$name)
         {
-            $data = array('error' => $this->upload->display_errors());
+            $extension = '';
+            switch($_FILES['userfile']['type'][$i]) {
+                case 'image/png': $extension = 'png'; break;
+                case 'image/jpeg': $extension = 'jpg'; break;
+                case 'image/gif': $extension = 'gif'; break;
+                case 'application/pdf': $extension = 'pdf'; break;
+                case 'application/msword': $extension = 'doc'; break;
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': $extension = 'docx'; break;
+                default: $extension = 'delete'; break;
+            }
+
+            if (!preg_match('/^'.$allowed_files[$upload_type].'$/',$extension)) continue;
+
+            if ($extension == 'delete') {
+                unlink($_FILES['userfile']['tmp_name'][$i]);
+                continue;
+            }
+
+            $store_name = sha1($name.$_FILES['userfile']['tmp_name'][$i].time()).'.'.$extension;
+
+            $files[] = array(
+                'name' => $name,
+                'store_name' => $store_name,
+                'type' => $_FILES['userfile']['type'][$i],
+                'ext' => $extension,
+                'path' => $upload_path.$store_name,
+                'size' => $_FILES['userfile']['size'][$i],
+                'idea_id' => $item_id
+            );
+            if ($copy_status = copy($_FILES['userfile']['tmp_name'][$i], $upload_dir.$store_name))
+                unlink($_FILES['userfile']['tmp_name'][$i]);
+        }
+
+        //var_dump($_FILES['userfile']);
+        if ($files) {
+            $result['status'] = 'success';
+            //$result['files'] = $files;
+            $result['html'] = $this->mysmarty->view('modals/upload/'.$upload_type.'.tpl', array('files' => &$files), false, true);
+        }
+        $this->json->parse($result);
+    }
+
+    public function saveAttachments()
+    {
+       //if (!$this->user->logged()) return false;
+        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        $this->load->model('m_ideas');
+        $RAW = $this->input->post('item');
+
+        if (!$RAW || !is_array($RAW))
+            $this->json->parse($result);
+
+        $attachments = array();
+
+        $i = 0;
+        foreach($RAW as $file)
+        {
+            if ($i > 5) continue;
+            $data = array(
+                'idea_id' => (int)$file['idea_id'],
+                'type' => $file['type'],
+                'ext' => $file['ext'],
+                'user_id' => $this->user->uid(),
+                'iname' => $file['iname'],
+                'path' => $file['path'],
+                'add_date' => time()
+            );
+            $idea_attach_id = $this->m_ideas->create_attachment($data);
+            if ($idea_attach_id)
+                $attachments[] = $data;
 
         }
-        else
-        {
-
-            $data = $this->upload->data();
+        if ($attachments) {
+            $result['status'] = 'success';
+            $result['html'] = $this->mysmarty->view('global/idea/attachments/index.tpl', array('attachments' => &$attachments), false, true);
         }
+        $this->json->parse($result);
+    }
 
+    public function saveTeam()
+    {
+        //if (!$this->user->logged()) return false;
+        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        $this->load->model('m_ideas');
+        $RAW = $this->input->post('item');
 
-        var_dump($_FILES);
+        if (!$RAW || !is_array($RAW))
+            $this->json->parse($result);
 
-        var_dump($data);
+        $team = array();
+
+        $i = 0;
+        foreach($RAW as $file)
+        {
+            if ($i > 5) continue;
+            /*
+            $data = array(
+                'idea_id' => (int)$file['idea_id'],
+                'type' => $file['type'],
+                'ext' => $file['ext'],
+                'user_id' => $this->user->uid(),
+                'iname' => $file['iname'],
+                'path' => 'upload/'.$file['store_name'],
+                'add_date' => time()
+            );
+            */
+
+            if (!preg_match('/^(png|jpg)$/',$file['ext'])) continue;
+
+            $avatar = array(
+                's' => 'upload/s_'.$file['store_name'],
+                'm' => 'upload/m_'.$file['store_name'],
+                'b' => 'upload/'.$file['store_name']
+            );
+
+            $image = new Imagick(FCPATH.$avatar['b']);
+
+            $height=$image->getImageHeight();
+            $width=$image->getImageWidth();
+
+            if ($width > 800 || $height > 800){
+                if ($height < $width)
+                    $image->scaleImage(800,0);
+                else
+                    $image->scaleImage(0,600);
+            }
+
+            $image->writeImage(FCPATH.$avatar['m']);
+            $image->cropThumbnailImage(107, 107);
+            $image->writeImage(FCPATH.$avatar['s']);
+
+            unset($image);
+
+            $data = array(
+                'idea_id' => (int)$file['idea_id'],
+                'user_id'=> $this->user->uid(),
+                'first_name' => $file['first_name'],
+                'last_name' => $file['last_name'],
+                'role' => $file['role'],
+                'avatar_s' => $avatar['s'],
+                'avatar_m' => $avatar['m'],
+                'avatar_b' => $avatar['b'],
+                'add_date' => time()
+            );
+
+            $result['files'][] = $avatar['b'];
+
+            $idea_team_id = $this->m_ideas->create_team($data);
+            if ($idea_team_id)
+                $team[] = $data;
+
+        }
+        if ($team) {
+            $result['status'] = 'success';
+            $result['html'] = $this->mysmarty->view('global/idea/team/index.tpl', array('team' => &$team), false, true);
+        } else {
+            $result['errors'][] = 'array team is empty';
+        }
+        $this->json->parse($result);
     }
 }
 

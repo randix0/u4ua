@@ -625,7 +625,7 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     background: url(./../img/misc/ico_pdf.png) 1px 50% no-repeat;
 }
 
-.b-idea-getDoc {
+.b-idea-getDoc, .b-idea-getDocx {
     display: block;
     line-height: 44px;
     height: 44px;
@@ -639,6 +639,36 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     margin: 0 0 30px 0;
     padding: 0 0 0 36px;
     background: url(./../img/misc/ico_file.png) 1px 50% no-repeat;
+}
+
+.b-idea-getFile {
+    display: block;
+    line-height: 44px;
+    height: 44px;
+    background-repeat: no-repeat;
+    background-image: url(./../img/misc/ico_file.png);
+    margin: 0 0 20px 0;
+    padding: 0 0 0 36px;
+    background-position: 1px 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.b-idea-getFile.pdf {background-image: url(./../img/misc/ico_pdf.png);}
+.b-idea-getFile.doc, .b-idea-getFile.docx {background-image: url(./../img/misc/ico_doc.png);}
+
+.b-file {
+    padding: 0 0 0 36px;
+    /*background-position: 1px 50%;*/
+    background-repeat: no-repeat;
+    background-image: url(./../img/misc/ico_file.png);
+    display: block;
+}
+
+.b-file.pdf {background-image: url(./../img/misc/ico_pdf.png);}
+.b-file.doc, .b-file.docx {background-image: url(./../img/misc/ico_doc.png);}
+
+.b-idea-putFile.hover {
+    outline: 3px dashed #e7e7e7;
 }
 
 .b-idea-addPerson {
@@ -1083,6 +1113,8 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 
     /*line-height: 36px;*/
 }
+
+.in-text input[disabled] {background-color: #f1f1f1; color: #333;}
 .in-text input[type=text]:focus, .in-text input[type=password]:focus {}
 
 .in-textarea {

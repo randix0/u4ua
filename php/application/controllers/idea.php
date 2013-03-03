@@ -63,6 +63,7 @@ class Idea extends CI_Controller {
     public function edit($idea_id = 0)
     {
         if (!$idea_id) return redirect(base_url('/'));
+        if (!$this->user->logged()) return redirect(base_url('/idea/'.$idea_id));
         $idea_id = (int)$idea_id;
         $this->load->model('m_ideas');
         $idea = $this->m_ideas->getItem($idea_id, true);

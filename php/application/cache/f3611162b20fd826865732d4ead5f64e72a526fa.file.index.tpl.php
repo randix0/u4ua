@@ -1,22 +1,20 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2013-02-28 13:01:52
+<?php /* Smarty version Smarty-3.1.13, created on 2013-02-28 10:46:24
          compiled from "application/views/global/idea/item/index.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:737220333512f11b0d408a6-08364314%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:1158192691512f1960051739-88746693%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'f3611162b20fd826865732d4ead5f64e72a526fa' => 
     array (
       0 => 'application/views/global/idea/item/index.tpl',
-      1 => 1362049309,
+      1 => 1362040082,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '737220333512f11b0d408a6-08364314',
+  'nocache_hash' => '1158192691512f1960051739-88746693',
   'function' => 
   array (
   ),
-  'version' => 'Smarty-3.1.13',
-  'unifunc' => 'content_512f11b0d441a7_90667952',
   'variables' => 
   array (
     'idea' => 0,
@@ -24,13 +22,17 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     'LOGGED' => 0,
   ),
   'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.13',
+  'unifunc' => 'content_512f1960186e85_05531806',
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_512f11b0d441a7_90667952')) {function content_512f11b0d441a7_90667952($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_truncate')) include '/www/u4ua.lo/www/application/libraries/smarty/plugins/modifier.truncate.php';
+<?php if ($_valid && !is_callable('content_512f1960186e85_05531806')) {function content_512f1960186e85_05531806($_smarty_tpl) {?><?php if (!is_callable('smarty_modifier_truncate')) include '/www/u4ua.lo/www/application/libraries/smarty/plugins/modifier.truncate.php';
 if (!is_callable('smarty_modifier_date_format')) include '/www/u4ua.lo/www/application/libraries/smarty/plugins/modifier.date_format.php';
 ?><section class="b-section b-section-idea">
     <?php if ($_smarty_tpl->tpl_vars['idea']->value['is_can_edit']){?>
         <div class="b-section-header layout w976px">
             <div class="b-section-header-iname">Управление идеей</div>
+            <a class="" href="/idea/edit/<?php echo $_smarty_tpl->tpl_vars['idea']->value['id'];?>
+">edit</a>
         </div>
     <?php }?>
     <div class="b-section-wrap layout w976px b-idea">
@@ -38,18 +40,32 @@ if (!is_callable('smarty_modifier_date_format')) include '/www/u4ua.lo/www/appli
             <h3 class="b-section-h3">Qr-код:</h3>
             <img class="b-idea-qr" src="<?php echo $_smarty_tpl->tpl_vars['idea']->value['qr_code'];?>
 " />
-            <h3 class="b-section-h3"><?php if ($_smarty_tpl->tpl_vars['idea']->value['is_author']){?>твоя <?php }?>листовка:</h3>
-            <a class="b-idea-getPdf">Скачать</a>
-            <?php if ($_smarty_tpl->tpl_vars['idea']->value['is_can_edit']){?>
-                <div class="b-idea-putFile">
-                    <div class="b-idea-putFile-desc">Перетяни сюда файл</div>
-                    <a class="b-idea-putFile-choose">Выбрать вручную</a>
+            <?php if ($_smarty_tpl->tpl_vars['idea']->value['attachments']||$_smarty_tpl->tpl_vars['idea']->value['is_can_edit']){?>
+                <h3 class="b-section-h3"><?php if ($_smarty_tpl->tpl_vars['idea']->value['is_author']){?>твоя <?php }?>листовка:</h3>
+                <div id="idea_attachments" class="">
+                    <?php echo $_smarty_tpl->getSubTemplate ("global/idea/attachments/index.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array('attachments'=>$_smarty_tpl->tpl_vars['idea']->value['attachments']), 0);?>
+
                 </div>
-            <?php }?>
-            <?php if ($_smarty_tpl->tpl_vars['idea']->value['team']){?>
-                <h3 class="b-section-h3">Команда:</h3>
                 <?php if ($_smarty_tpl->tpl_vars['idea']->value['is_can_edit']){?>
-                    <a class="b-idea-addPerson" href="">Добавить участника</a>
+                    <div class="left w210px mR10px">
+                        <div class="b-idea-putFile">
+                            <div class="b-idea-putFile-desc">Upload files</div>
+                            <a class="b-idea-putFile-choose" onclick="Window.load('/modal/upload/attachments/<?php echo $_smarty_tpl->tpl_vars['idea']->value['id'];?>
+','win-upload','');">Choose</a>
+                        </div>
+                    </div>
+                <?php }?>
+            <?php }?>
+
+            <?php if ($_smarty_tpl->tpl_vars['idea']->value['team']||$_smarty_tpl->tpl_vars['idea']->value['is_can_edit']){?>
+                <h3 class="b-section-h3">Команда:</h3>
+                <div id="idea_team" class="overhide">
+                    <?php echo $_smarty_tpl->getSubTemplate ("global/idea/team/index.tpl", $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null, array('team'=>$_smarty_tpl->tpl_vars['idea']->value['team']), 0);?>
+
+                </div>
+                <?php if ($_smarty_tpl->tpl_vars['idea']->value['is_can_edit']){?>
+                    <a class="b-idea-addPerson" onclick="Window.load('/modal/upload/team/<?php echo $_smarty_tpl->tpl_vars['idea']->value['id'];?>
+','win-upload','');">Добавить участника</a>
                 <?php }?>
             <?php }?>
             <h3 class="b-section-h3">Расскажи всем:</h3>

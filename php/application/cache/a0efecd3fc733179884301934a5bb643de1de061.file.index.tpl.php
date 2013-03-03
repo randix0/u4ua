@@ -1,22 +1,22 @@
-<?php /* Smarty version Smarty-3.1.13, created on 2013-03-01 18:12:53
+<?php /* Smarty version Smarty-3.1.13, created on 2013-02-28 10:35:55
          compiled from "application/views/std/header/index.tpl" */ ?>
-<?php /*%%SmartyHeaderCode:826545252512f11186617e3-62001645%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+<?php /*%%SmartyHeaderCode:1862502459512f16d271de24-22899308%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
   'file_dependency' => 
   array (
     'a0efecd3fc733179884301934a5bb643de1de061' => 
     array (
       0 => 'application/views/std/header/index.tpl',
-      1 => 1362154371,
+      1 => 1362040553,
       2 => 'file',
     ),
   ),
-  'nocache_hash' => '826545252512f11186617e3-62001645',
+  'nocache_hash' => '1862502459512f16d271de24-22899308',
   'function' => 
   array (
   ),
   'version' => 'Smarty-3.1.13',
-  'unifunc' => 'content_512f1118849810_37421318',
+  'unifunc' => 'content_512f16d28e5fb1_20742613',
   'variables' => 
   array (
     'RESOURCES_URL' => 0,
@@ -33,7 +33,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
-<?php if ($_valid && !is_callable('content_512f1118849810_37421318')) {function content_512f1118849810_37421318($_smarty_tpl) {?><!DOCTYPE html>
+<?php if ($_valid && !is_callable('content_512f16d28e5fb1_20742613')) {function content_512f16d28e5fb1_20742613($_smarty_tpl) {?><!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -105,14 +105,14 @@ js/window.js"></script>
             </div>
             <div class="b-login">
                 <?php if (isset($_smarty_tpl->tpl_vars['LOGGED']->value)&&$_smarty_tpl->tpl_vars['LOGGED']->value){?>
-                    <a class="b-login-avatar" style=""><img src="https://graph.facebook.com/<?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['facebook_id'];?>
+                    <a class="b-login-avatar" href="/<?php echo $_smarty_tpl->tpl_vars['_LANG']->value;?>
+/my"><img src="https://graph.facebook.com/<?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['facebook_id'];?>
 /picture" width=24 height=24 /></a>
-                    <a class="b-login-iname"><?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['first_name'];?>
+                    <a class="b-login-iname" href="/<?php echo $_smarty_tpl->tpl_vars['_LANG']->value;?>
+/my"><?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['first_name'];?>
  <?php echo $_smarty_tpl->tpl_vars['USER_DATA']->value['last_name'];?>
 </a>
-                    <a class="b-login-login" onclick="Window.load('/modal/login/merge','win-login','');"><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
-add social<?php $_block_content = ob_get_clean(); $_block_repeat=false; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), $_block_content, $_smarty_tpl, $_block_repeat); } array_pop($_smarty_tpl->smarty->_tag_stack);?>
-<i class="i-logout"></i></a>
+                    
                     <a class="b-login-logout" href="/auth/logout"><?php $_smarty_tpl->smarty->_tag_stack[] = array('l', array()); $_block_repeat=true; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), null, $_smarty_tpl, $_block_repeat);while ($_block_repeat) { ob_start();?>
 вийти<?php $_block_content = ob_get_clean(); $_block_repeat=false; echo $_smarty_tpl->smarty->registered_plugins['block']['l'][0][0]->smartyBlockTranslate(array(), $_block_content, $_smarty_tpl, $_block_repeat); } array_pop($_smarty_tpl->smarty->_tag_stack);?>
 <i class="i-logout"></i></a>

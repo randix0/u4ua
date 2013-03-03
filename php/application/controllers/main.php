@@ -28,6 +28,17 @@ class Main extends CI_Controller {
         $this->mysmarty->view('global/main/index.tpl', $ps);
 	}
 
+    public function my()
+    {
+        if (!$this->user->logged()) return redirect(base_url('/'));
+        $this->load->model('m_ideas');
+        $ps = array(
+            '__PAGE' => 'my',
+            'ideas' => $this->m_ideas->getItems()
+        );
+        $this->mysmarty->view('global/my/index.tpl', $ps);
+    }
+
     public function fake()
     {
         $this->load->helper('url');

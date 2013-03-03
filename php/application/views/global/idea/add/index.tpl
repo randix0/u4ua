@@ -35,37 +35,23 @@
     {if $idea.id}
         <h3 class="b-section-h3">Дополнительные материалы:</h3>
         <div class="overhide">
-            <div class="left w210px mR10px">
-                <a class="b-idea-getPdf" href="">Бизнес-план проекта</a>
+            <div id="idea_attachments" class="inline">
+                {include file="global/idea/attachments/index.tpl" attachments=$idea.attachments}
             </div>
-            <div class="left w210px mR10px">
-                <a class="b-idea-getDoc" href="">Схема проекта</a>
-            </div>
+
             <div class="left w210px mR10px">
                 <div class="b-idea-putFile">
-                    <div class="b-idea-putFile-desc">Перетяни сюда файл</div>
-                    <a class="b-idea-putFile-choose" onclick="Window.load('/modal/upload/Attachments/{$idea.id}','win-upload','');">Выбрать вручную</a>
+                    <div class="b-idea-putFile-desc">Upload files</div>
+                    <a class="b-idea-putFile-choose" onclick="Window.load('/modal/upload/attachments/{$idea.id}','win-upload','');">Choose</a>
                 </div>
             </div>
         </div>
         <h3 class="b-section-h3">Команда:</h3>
         <div class="b-idea-team">
-            <div class="b-idea-team-item">
-                <a class="b-idea-team-item-avatar" href=""></a>
-                <a class="b-idea-team-item-iname" href="">Василий Пупкин</a>
-                <div class="b-idea-team-item-idesc">Программист</div>
+            <div id="idea_team" class="inline">
+                {include file="global/idea/team/index.tpl" team=$idea.team}
             </div>
-            <div class="b-idea-team-item">
-                <a class="b-idea-team-item-avatar" href=""></a>
-                <a class="b-idea-team-item-iname" href="">Василий Пупкин</a>
-                <div class="b-idea-team-item-idesc">Программист</div>
-            </div>
-            <div class="b-idea-team-item">
-                <a class="b-idea-team-item-avatar" href=""></a>
-                <a class="b-idea-team-item-iname" href="">Василий Пупкин</a>
-                <div class="b-idea-team-item-idesc">Программист</div>
-            </div>
-            <a class="b-idea-addPerson left" href="">Добавить участника</a>
+            <a class="b-idea-addPerson left" onclick="Window.load('/modal/upload/team/{$idea.id}','win-upload','');">Добавить участника</a>
         </div>
     {/if}
         {*
@@ -75,10 +61,10 @@
             </div>
         *}
         {if $idea.id}
-            <a class="button" Idea.save();>Сохранить</a>
+            <a class="button" onclick="Idea.save();">Сохранить</a>
             <a class="button button_cancel" href="/">Отменить</a>
         {else}
-            <a class="button button_big" Idea.save();>Подать идею</a>
+            <a class="button button_big" onclick="Idea.save();">Подать идею</a>
         {/if}
     </div>
 

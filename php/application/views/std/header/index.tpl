@@ -51,9 +51,9 @@
             </div>
             <div class="b-login">
                 {if isset($LOGGED) && $LOGGED}
-                    <a class="b-login-avatar" style=""><img src="https://graph.facebook.com/{$USER_DATA.facebook_id}/picture" width=24 height=24 /></a>
-                    <a class="b-login-iname">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
-                    <a class="b-login-login" onclick="Window.load('/modal/login/merge','win-login','');">{l}add social{/l}<i class="i-logout"></i></a>
+                    <a class="b-login-avatar" href="/{$_LANG}/my"><img src="https://graph.facebook.com/{$USER_DATA.facebook_id}/picture" width=24 height=24 /></a>
+                    <a class="b-login-iname" href="/{$_LANG}/my">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
+                    {*<a class="b-login-login" onclick="Window.load('/modal/login/merge','win-login','');">{l}add social{/l}<i class="i-logout"></i></a>*}
                     <a class="b-login-logout" href="/auth/logout">{l}вийти{/l}<i class="i-logout"></i></a>
                 {else}
                     {* Auth.facebook(); return false; *}

@@ -2,24 +2,35 @@
     {if $idea.is_can_edit}
         <div class="b-section-header layout w976px">
             <div class="b-section-header-iname">Управление идеей</div>
+            <a class="" href="/idea/edit/{$idea.id}">edit</a>
         </div>
     {/if}
     <div class="b-section-wrap layout w976px b-idea">
         <aside class="b-section-aside">
             <h3 class="b-section-h3">Qr-код:</h3>
             <img class="b-idea-qr" src="{$idea.qr_code}" />
-            <h3 class="b-section-h3">{if $idea.is_author}твоя {/if}листовка:</h3>
-            <a class="b-idea-getPdf">Скачать</a>
-            {if $idea.is_can_edit}
-                <div class="b-idea-putFile">
-                    <div class="b-idea-putFile-desc">Перетяни сюда файл</div>
-                    <a class="b-idea-putFile-choose">Выбрать вручную</a>
+            {if $idea.attachments || $idea.is_can_edit}
+                <h3 class="b-section-h3">{if $idea.is_author}твоя {/if}листовка:</h3>
+                <div id="idea_attachments" class="">
+                    {include file="global/idea/attachments/index.tpl" attachments=$idea.attachments}
                 </div>
-            {/if}
-            {if $idea.team}
-                <h3 class="b-section-h3">Команда:</h3>
                 {if $idea.is_can_edit}
-                    <a class="b-idea-addPerson" href="">Добавить участника</a>
+                    <div class="left w210px mR10px">
+                        <div class="b-idea-putFile">
+                            <div class="b-idea-putFile-desc">Upload files</div>
+                            <a class="b-idea-putFile-choose" onclick="Window.load('/modal/upload/attachments/{$idea.id}','win-upload','');">Choose</a>
+                        </div>
+                    </div>
+                {/if}
+            {/if}
+
+            {if $idea.team || $idea.is_can_edit}
+                <h3 class="b-section-h3">Команда:</h3>
+                <div id="idea_team" class="overhide">
+                    {include file="global/idea/team/index.tpl" team=$idea.team}
+                </div>
+                {if $idea.is_can_edit}
+                    <a class="b-idea-addPerson" onclick="Window.load('/modal/upload/team/{$idea.id}','win-upload','');">Добавить участника</a>
                 {/if}
             {/if}
             <h3 class="b-section-h3">Расскажи всем:</h3>

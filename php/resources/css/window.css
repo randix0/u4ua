@@ -19,7 +19,7 @@
 .modal-window .modal-window-header a.close{position:absolute; right:45px; top: 3px;}
 .modal-window .modal-window-header a.close-img{position:absolute; right:10px; top: 3px; z-index:10005;}
 .modal-window .modal-window-header .buttons a:hover{text-decoration:none;}
-.modal-window .modal-window-body {padding: 15px 15px 15px 15px; font-size: 12px; position:relative;}
+.modal-window .modal-window-body {font-size: 12px; position:relative;}
 
 
 .modal {position: fixed; top: 0; left: 0; width: 100%; min-height: 100%; overflow: auto; z-index: 10;}

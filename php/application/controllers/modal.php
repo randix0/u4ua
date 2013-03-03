@@ -60,12 +60,4 @@ class Modal extends CI_Controller {
         $this->mysmarty->view('modals/upload/index.tpl', $ps, false);
     }
 
-    public function uploadAttachments($idea_id = 0)
-    {
-        $ps = array(
-            'idea_id'=>$idea_id,
-        );
-        $this->mysmarty->view('modals/upload/attachments.tpl', $ps, false);
-    }
-
 }

@@ -10,9 +10,25 @@ class M_ideas extends CI_Model
 
     public function create($data)
     {
+        if (!$data) return false;
         $this->db->insert('ideas', $data);
         $idea_id = $this->db->insert_id();
         return $idea_id;
+    }
+
+    public function create_attachment($data)
+{
+    if (!$data) return false;
+    $this->db->insert('ideas_attachments', $data);
+    $idea_attach_id = $this->db->insert_id();
+    return $idea_attach_id;
+}
+    public function create_team($data)
+    {
+        if (!$data) return false;
+        $this->db->insert('ideas_team', $data);
+        $idea_team_id = $this->db->insert_id();
+        return $idea_team_id;
     }
 
     public function update($id, $data)
