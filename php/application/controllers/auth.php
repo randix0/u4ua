@@ -435,12 +435,13 @@ class Auth extends CI_Controller {
 									$data = $this->m_users->get($id);
 									
 									$photo = $this->oauth->getUserPhoto();
-									
-									/*if($photo) {
-										$this->load->library('avatars');
-										$this->avatars->upload($data['site_id'], $id, $photo);
-									}*/
-										
+
+									if($photo) {
+										$this->load->library('avatar');
+										$this->avatar->upload($id, $photo);
+									}
+
+                                    $this->session->set_userdata(array('photo' => $photo));
 									$this->session->set_userdata(array('user_id' => $id));
 									$result['status'] = 1;
 								}

@@ -23,6 +23,10 @@
                     <div class="in-text mB25px"><input type="text" name="item[contact_last_name]" value="{if $idea.contact_last_name}{$idea.contact_last_name}{else}{$USER_DATA.last_name}{/if}"></div>
                 </div>
                 <div class="left w236px mLR5px">
+                    <h4 class="b-section-h4">Your role in project:</h4>
+                    <div class="in-text mB25px"><input type="text" name="item[contact_role]" placeholder="Leader" value="{if $idea.contact_role}{$idea.contact_role}{else}Leader{/if}"></div>
+                </div>
+                <div class="left w236px mLR5px">
                     <h4 class="b-section-h4">E-mail:</h4>
                     <div class="in-text mB25px"><input type="text" name="item[contact_email]" value="{if $idea.contact_email}{$idea.contact_email}{else}{$USER_DATA.email}{/if}"></div>
                 </div>
@@ -62,7 +66,7 @@
         *}
         {if $idea.id}
             <a class="button" onclick="Idea.save();">Сохранить</a>
-            <a class="button button_cancel" href="/">Отменить</a>
+            <a class="button button_cancel" href="{$SITE_URL}idea/{$idea.id}">Отменить</a>
         {else}
             <a class="button button_big" onclick="Idea.save();">Подать идею</a>
         {/if}

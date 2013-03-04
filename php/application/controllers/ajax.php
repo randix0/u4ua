@@ -38,7 +38,7 @@ class Ajax extends CI_Controller {
         $result = array('status' => 'error', 'errors' => array());
 
         $required = array(
-            'link','iname','idesc','contact_first_name','contact_last_name','contact_email','contact_phone'
+            'link','iname','idesc','contact_first_name','contact_last_name','contact_email','contact_phone','contact_role'
         );
 
         $RAW = $this->input->post('item');
@@ -50,19 +50,22 @@ class Ajax extends CI_Controller {
         }
 
         $item = array(
-            'user_id' => $this->user->uid(),
-            'add_date' => time()
+            'user_id' => $this->user->uid()
         );
+
+        if ($idea_id)
+            $item['add_date'] = time();
 
         if ($result['errors'])
             return $this->json->parse($result);
 
-        $item['iname'] = $RAW['iname'];
+        $item['iname'] = strip_tags($RAW['iname']);
         $item['idesc'] = $RAW['idesc'];
-        $item['contact_first_name'] = $RAW['contact_first_name'];
-        $item['contact_last_name'] = $RAW['contact_last_name'];
-        $item['contact_email'] = $RAW['contact_email'];
-        $item['contact_phone'] = $RAW['contact_phone'];
+        $item['contact_first_name'] = strip_tags($RAW['contact_first_name']);
+        $item['contact_last_name'] = strip_tags($RAW['contact_last_name']);
+        $item['contact_email'] = strip_tags($RAW['contact_email']);
+        $item['contact_phone'] = strip_tags($RAW['contact_phone']);
+        $item['contact_role'] = strip_tags($RAW['contact_role']);
 
 
         $link = $RAW['link'];
@@ -137,33 +140,40 @@ class Ajax extends CI_Controller {
 
         if (!$this->user->logged() || !isset($RAW['handler_type']) || !$RAW['handler_type'] || !isset($RAW['idea_id']) || !$RAW['idea_id']) return $this->json->parse($result);
 
+        $user_id = $this->user->uid();
+        $is_judge = $this->user->is_judge;
+
         $idea_id = (int)$RAW['idea_id'];
         $handler_type = $RAW['handler_type'];
         $is_deleted = 0;
 
-        if (!preg_match('/^(fb|vk|gp|tw|facebook|vkontakte|google|twitter)$/',$handler_type)) return $this->json->parse($result);
+        if (!$is_judge && !preg_match('/^(fb|vk|gp|tw|facebook|vkontakte|google|twitter)$/',$handler_type)) return $this->json->parse($result);
         if (preg_match('/^(fb|vk|gp|tw)$/',$handler_type)) {
             if ($handler_type == 'fb') $handler_type = 'facebook';
             elseif ($handler_type == 'vk') $handler_type = 'vkontakte';
             elseif ($handler_type == 'gp') $handler_type = 'google';
             elseif ($handler_type == 'tw') $handler_type = 'twitter';
+            elseif ($handler_type == 'login' && $is_judge) $handler_type == 'login';
         }
 
-        if (!$this->user->$handler_type.'_id') $is_deleted = 1;
+        if (($handler_type == 'facebook' && !$this->user->facebook_id) || ($handler_type == 'vkontakte' && !$this->user->vkontakte_id) || ($handler_type == 'google' && !$this->user->google_id) || ($handler_type == 'twitter' && !$this->user->twitter_id)) $is_deleted = 1;
 
         $this->load->model('m_ideas');
 
-        $isVoted = $this->m_ideas->isVoted($idea_id, $this->user->uid());
+        $isVoted = $this->m_ideas->isVoted($idea_id, $user_id);
+        $idea = $this->m_ideas->getItem($idea_id);
 
-        if ($isVoted) {
+        if ($isVoted || $idea['isVoted']) {
             $result['code'] = 'isVoted';
             return $this->json->parse($result);
         }
 
-        $idea = $this->m_ideas->getItem($idea_id);
         if ($idea && isset($idea['is_deleted']) && !$idea['is_deleted']) {
-            $vote_id = $this->m_ideas->vote($idea_id, $handler_type, $this->user->uid(), $is_deleted);
+            $vote_id = $this->m_ideas->vote($idea_id, $handler_type, $this->user->uid(), $idea, $is_judge, $is_deleted);
             if ($vote_id) $result['status'] = 'success';
+        } elseif ($idea['user_id'] == $user_id) {
+            $result['code'] = 'isVoted';
+            return $this->json->parse($result);
         } else {
             $result['errors'][] = 'idea404';
         }
@@ -221,7 +231,7 @@ class Ajax extends CI_Controller {
 
         if (!$_FILES || !isset($_FILES['userfile']) || !$_FILES['userfile'] || !isset($_FILES['userfile']['name'])) return $this->json->parse($result);
 
-        $upload_path = 'upload/';
+        $upload_path = 'upload/'.$upload_type.'/';
         $upload_dir = FCPATH.$upload_path;
 
         $allowed_files = array(
@@ -345,9 +355,9 @@ class Ajax extends CI_Controller {
             if (!preg_match('/^(png|jpg)$/',$file['ext'])) continue;
 
             $avatar = array(
-                's' => 'upload/s_'.$file['store_name'],
-                'm' => 'upload/m_'.$file['store_name'],
-                'b' => 'upload/'.$file['store_name']
+                's' => 'upload/team/s_'.$file['store_name'],
+                'm' => 'upload/team/m_'.$file['store_name'],
+                'b' => 'upload/team/'.$file['store_name']
             );
 
             $image = new Imagick(FCPATH.$avatar['b']);

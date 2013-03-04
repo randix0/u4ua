@@ -51,8 +51,8 @@
             </div>
             <div class="b-login">
                 {if isset($LOGGED) && $LOGGED}
-                    <a class="b-login-avatar" href="/{$_LANG}/my"><img src="https://graph.facebook.com/{$USER_DATA.facebook_id}/picture" width=24 height=24 /></a>
-                    <a class="b-login-iname" href="/{$_LANG}/my">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
+                    <a class="b-login-avatar" href="{$SITE_URL}my"><img src="{$USER_DATA.avatar_s}" width=24 height=24 /></a>
+                    <a class="b-login-iname" href="{$SITE_URL}my">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
                     {*<a class="b-login-login" onclick="Window.load('/modal/login/merge','win-login','');">{l}add social{/l}<i class="i-logout"></i></a>*}
                     <a class="b-login-logout" href="/auth/logout">{l}вийти{/l}<i class="i-logout"></i></a>
                 {else}
@@ -78,16 +78,16 @@
         <a class="b-logo" href="/">
             <span class="b-logo-beta">beta</span>
         </a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'main'}active{/if}" href="/{$_LANG}/">{l}Головна{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'judges'}active{/if}" href="/{$_LANG}/judges/">{l}Судді{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'prizes'}active{/if}" href="/{$_LANG}/prizes/">{l}Умови конкурсу{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'partners'}active{/if}" href="/{$_LANG}/partners/">{l}Партнери{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'about'}active{/if}" href="/{$_LANG}/about/">{l}Про проект{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'main'}active{/if}" href="{$SITE_URL}">{l}Головна{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'judges'}active{/if}" href="{$SITE_URL}judges/">{l}Судді{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'prizes'}active{/if}" href="{$SITE_URL}prizes/">{l}Умови конкурсу{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'partners'}active{/if}" href="{$SITE_URL}partners/">{l}Партнери{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'about'}active{/if}" href="{$SITE_URL}about/">{l}Про проект{/l}</a>
     </nav>
     {if isset($__PAGE) && $__PAGE == 'main'}
     <div class="b-header-body">
         <div class="layout w976px relative">
-            <a class="b-header-button" {if $LOGGED}href="/{$_LANG}/idea/add/"{else}onclick="Window.load('/modal/login','win-login','');"{/if}>{l}Поділись своєю ідеєю{/l}</a>
+            <a class="b-header-button" {if $LOGGED}href="{$SITE_URL}idea/add/"{else}onclick="Window.load('/modal/login','win-login','');"{/if}>{l}Поділись своєю ідеєю{/l}</a>
             <div class="b-header-btn-span0">{l}АБО{/l}</div>
             <div class="b-header-btn-span1">{l}ПІДТРИМАЙ ідеї людей, <br> хто перетворює Україну на краще{/l}</div>
             <div class="b-header-video">

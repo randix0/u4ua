@@ -512,7 +512,7 @@ textarea {
     text-decoration: none;
     width: 100%;
     height: 184px;
-    background: rgba(100,0,0,0.5);
+    background: #000;
     position: relative;
     margin: 0 0 10px 0;
     outline: 0;
@@ -596,12 +596,16 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     background-repeat: no-repeat;
     background-position: -119px 50%;
 }
+.b-ideas-item-ratingStars:hover {cursor: default;}
 .b-ideas-item-ratingStars.s1 {background-position: -96px 50%;}
 .b-ideas-item-ratingStars.s2 {background-position: -72px 50%;}
 .b-ideas-item-ratingStars.s3 {background-position: -48px 50%;}
 .b-ideas-item-ratingStars.s4 {background-position: -24px 50%;}
 .b-ideas-item-ratingStars.s5 {background-position: 0 50%;}
 
+.b-ideas-item-info {padding: 0 15px;}
+.b-ideas-item-rating-users {margin: 10px 0 0 0;}
+.b-ideas-item-comments-count {margin: 10px 0 0 0;}
 /* idea */
 .b-idea {}
 .b-idea-qr {

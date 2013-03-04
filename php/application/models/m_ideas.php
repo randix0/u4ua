@@ -44,9 +44,14 @@ class M_ideas extends CI_Model
         if (!$id) return array();
         $this->db->where('id', $id);
         $query = $this->db->get('ideas', 1);
-        $idea=$query->row_array();
-
+        $user_id = $this->user->uid();
+        $idea = $query->row_array();
+        if (!$idea) return false;
         if ($fetch) {
+            $this->db->where('id', $idea['user_id']);
+            $query = $this->db->get('users', 1);
+            $idea_author=$query->row_array();
+
             $this->db->where('idea_id', $id);
             $query = $this->db->get('ideas_comments', 20);
             $idea_comments=$query->result_array();
@@ -59,15 +64,45 @@ class M_ideas extends CI_Model
             $query = $this->db->get('ideas_attachments', 20);
             $idea_attachments=$query->result_array();
 
+            $leader = array(
+                'id' =>-1,
+                'idea_id' => $id,
+                'user_id' => $idea['user_id'],
+                'first_name' => $idea['contact_first_name'],
+                'last_name' => $idea['contact_last_name'],
+                'role' => $idea['contact_role'],
+                'avatar_s' => $idea_author['avatar_s'],
+                'avatar_m' => $idea_author['avatar_m'],
+                'avatar_b' => $idea_author['avatar_b'],
+                'is_deleted' => -1
+            );
+
+            $idea_team = array_merge(array($leader),$idea_team);
+
             $idea['comments'] = $idea_comments;
             $idea['team'] = $idea_team;
             $idea['attachments'] = $idea_attachments;
+
             /*
             $qr_name = $this->m_ideas->generateQR($idea_id);
             $this->m_ideas->update($idea_id,array('qr_code'=>$qr_name));
             */
 
         }
+
+
+        $idea['rating_stars'] = $idea['rating_judges'];
+
+        if ($user_id && $user_id != $idea['user_id']){
+            $this->db->where(array( 'idea_id' => $id, 'user_id' => $user_id));
+            $query = $this->db->get('ideas_votes', 1);
+            $isVoted = $query->row_array();
+        } else {
+            $isVoted = 1;
+        }
+        $idea['isVoted'] = $isVoted;
+
+
         $idea['is_can_edit'] = 0;
         $idea['is_author'] = 0;
         if ($this->user->logged()) {
@@ -80,12 +115,31 @@ class M_ideas extends CI_Model
         return $idea;
     }
 
-    public function getItems()
+    public function getItems($where = array(), $order = array() ,$fetch = false)
     {
-        $this->db->where('is_deleted', 0);
-        $this->db->order_by("id", "desc");
+        $where['is_deleted'] = 0;
+        if (!$order)
+            $order['id'] = 'desc';
+
+
+        $this->db->where($where);
+        if ($order){
+            foreach($order as $o_key=>$o_val)
+            {
+                $this->db->order_by($o_key, $o_val);
+            }
+        }
+
         $query = $this->db->get('ideas', 16);
         $ideas=$query->result_array();
+
+        if ($ideas && $fetch) {
+            foreach($ideas as &$idea)
+            {
+                $idea['rating_stars'] = $idea['rating_judges'];
+            }
+        }
+
         return $ideas;
     }
 
@@ -93,9 +147,11 @@ class M_ideas extends CI_Model
     {
         $this->load->helper('url');
         $this->load->library('ciqrcode');
-        $config =& get_config();
 
-        $qr_name = $config['resources_path'].'img/qr/u4ua_idea_'.$idea_id.'.png';
+        $upload_path = 'upload/qr/';
+        $upload_dir = FCPATH.$upload_path;
+
+        $qr_name = $upload_path.'u4ua_idea_'.$idea_id.'.png';
 
         $params['data'] = base_url('item/'.$idea_id);
         $params['level'] = 'H';
@@ -108,14 +164,11 @@ class M_ideas extends CI_Model
 
     public function isVoted($idea_id = 0, $user_id = 0)
     {
-        if (!$idea_id || !$user_id) return true;
+        if (!$idea_id) return true;
+        if (!$user_id) return false;
         $result = true;
 
-        $where = array(
-            'idea_id' => $idea_id,
-            'user_id' => $user_id,
-        );
-
+        $where = array( 'idea_id' => $idea_id, 'user_id' => $user_id);
         $this->db->where($where);
         $query = $this->db->get('ideas_votes', 1);
         $vote=$query->row_array();
@@ -123,9 +176,10 @@ class M_ideas extends CI_Model
         return $result;
     }
 
-    public function vote($idea_id = 0, $handler_type = '', $user_id = 0, $is_deleted = 0, $is_judge = 0)
+    public function vote($idea_id = 0, $handler_type = '', $user_id = 0, &$idea, $is_judge = 0, $is_deleted = 0)
     {
-        if (!$this->user->logged() || !$handler_type || !$idea_id || !$user_id || $this->isVoted($idea_id,$user_id)) return false;
+        if (!$this->user->logged() || !$handler_type || !$idea_id || !$user_id || $this->isVoted($idea_id,$user_id) || !$idea) return false;
+
 
         $vote = array(
             'user_id' => $user_id,
@@ -140,6 +194,29 @@ class M_ideas extends CI_Model
 
         $this->db->insert('ideas_votes', $vote);
         $vote_id = $this->db->insert_id();
+
+        $idea_update = array();
+        if ($is_judge) {
+            $idea['rating_judges']++;
+            $idea_update['rating_judges'] = $idea['rating_judges'];
+        } else {
+            $tinyHandler = '';
+            if ($handler_type == 'facebook' || $handler_type == 'fb') $tinyHandler = 'fb';
+            elseif ($handler_type == 'vkontakte' || $handler_type == 'vk') $tinyHandler = 'fb';
+            elseif ($handler_type == 'google' || $handler_type == 'gp') $tinyHandler = 'gp';
+            elseif ($handler_type == 'twitter' || $handler_type == 'tw') $tinyHandler = 'tw';
+            if ($tinyHandler) {
+                $idea['rating_'.$tinyHandler]++;
+                $idea_update['rating_'.$tinyHandler] = $idea['rating_'.$tinyHandler];
+            }
+            $idea['rating']++;
+            $idea_update['rating'] = $idea['rating'];
+        }
+
+        if ($idea_update)
+            $this->update($idea_id, $idea_update);
+
+
         return $vote_id;
 
     }

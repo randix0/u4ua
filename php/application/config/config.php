@@ -15,6 +15,7 @@
 |
 */
 //$config['base_url']	= 'http://db.devils.com.ua/';
+//$config['base_url']	= 'http://u4ua.newstrategies.ua/';
 $config['base_url']	= 'http://u4ua.lo/';
 
 /*
@@ -280,7 +281,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = FALSE;
+$config['global_xss_filtering'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
@@ -373,9 +374,18 @@ $config['google_app_id'] = '239766940668.apps.googleusercontent.com';
 $config['google_app_secret'] = 'fZg58RwlFoYPXJN-6FUeQzsB';
 $config['twitter_app_id'] = '';
 $config['twitter_app_secret'] = '';
+$config['linkedin_app_id'] = 'bde94y49tt67';
+$config['linkedin_app_secret'] = 'O615zjLBO4OdjSam';
 $config['access_levels'] = array(
     'ACL_EDIT' => 50,
     'ACL_ADMIN' => 80
 );
 $config['full_account_creation_needed'] = false;
 $config['account_email_needed'] = true;
+
+/*
+API Key: bde94y49tt67
+Secret Key: O615zjLBO4OdjSam
+OAuth User Token: 965f1b08-b1b4-4b0b-9a45-c5c3aadc37e5
+OAuth User Secret: 69d7f80d-684d-4e8e-9c2e-f1e866ab5750
+*/

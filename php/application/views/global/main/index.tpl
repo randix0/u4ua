@@ -40,9 +40,9 @@
     <div class="b-section-header layout w976px">
         <div class="b-section-header-iname">ОСТАННІ ІДЕЇ</div>
         <div class="b-section-header-filters">
-            <a class="b-section-header-filters-item active" href="#">НОВІ ЗАВАНТАЖЕННЯ<div class="accent"></div></a>
-            <a class="b-section-header-filters-item" href="#">НАЙПОПУЛЯРНІШІ<div class="accent"></div></a>
-            <a class="b-section-header-filters-item" href="#">ПРИКЛАДИ<div class="accent"></div></a>
+            <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'date'}active disabled{/if}" href="/ideas/date">НОВІ ЗАВАНТАЖЕННЯ<div class="accent"></div></a>
+            <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'rating'}active disabled{/if}" href="/ideas/rating">НАЙПОПУЛЯРНІШІ<div class="accent"></div></a>
+            <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'samples'}active disabled{/if}" href="/ideas/samples">ПРИКЛАДИ<div class="accent"></div></a>
         </div>
     </div>
     <div class="b-section-body b-ideas layout w1010px">

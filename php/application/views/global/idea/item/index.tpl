@@ -2,7 +2,7 @@
     {if $idea.is_can_edit}
         <div class="b-section-header layout w976px">
             <div class="b-section-header-iname">Управление идеей</div>
-            <a class="" href="/idea/edit/{$idea.id}">edit</a>
+            <a class="" href="{$SITE_URL}idea/edit/{$idea.id}">edit</a>
         </div>
     {/if}
     <div class="b-section-wrap layout w976px b-idea">
@@ -44,20 +44,21 @@
             </div>
         </aside>
         <div class="b-section-body b-section-body__withAside">
-            <h3 class="b-section-h3">Твоя идея:</h3>
-            <div class="b-idea-notice">
-                <a class="close" href=""></a>
-                <div class="b-idea-notice-content p37pxi">
-                    ТОЛЬКО ОТ ТЕБЯ ЗАВИСИТ УСПЕХ ТВОЕЙ ИДЕИИ!<br/>
-                    ИСПОЛЬЗУЙ ВСЕ СРЕДСТВА ДЛЯ ЕЕ ПРОДВИЖЕНИЯ!
+            {if $idea.is_author}
+                <h3 class="b-section-h3">Твоя идея:</h3>
+                <div class="b-idea-notice">
+                    <a class="close" href=""></a>
+                    <div class="b-idea-notice-content p37pxi">
+                        ТОЛЬКО ОТ ТЕБЯ ЗАВИСИТ УСПЕХ ТВОЕЙ ИДЕИИ!<br/>
+                        ИСПОЛЬЗУЙ ВСЕ СРЕДСТВА ДЛЯ ЕЕ ПРОДВИЖЕНИЯ!
+                    </div>
                 </div>
-            </div>
-
+            {/if}
             <div class="b-idea-item">
                 <div class="b-idea-item-iname">{$idea.iname}</div>
                 <iframe width="644" height="483" src="http://www.youtube.com/embed/{$idea.youtube_code}" frameborder="0" allowfullscreen></iframe>
                 <div class="b-idea-item-stripe">
-                    <div class="b-idea-item-rating right">Судьи: <div class="b-idea-item-ratingStars s{$idea.rating_judges}"></div></div>
+                    <div class="b-idea-item-rating right">Судьи: <div class="b-idea-item-ratingStars s{$idea.rating_stars}"></div></div>
                     Поддержало: {$idea.rating}
                 </div>
                 <div class="b-idea-item-idesc">

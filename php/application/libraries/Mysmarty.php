@@ -55,7 +55,7 @@ class Mysmarty extends Smarty
 			
 		if (function_exists('site_url')) {
     		// URL helper required
-			$this->assign("SITE_URL", site_url()); // so we can get the full path to CI easily
+			$this->assign("SITE_URL", site_url().$lang.'/'); // so we can get the full path to CI easily
 		}	
 		
 		$this->assign("RESOURCES_URL", $config['resources_url']);

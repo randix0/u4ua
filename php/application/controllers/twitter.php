@@ -177,12 +177,13 @@ class Twitter extends CI_Controller
                             if($id) {
                                 $data = $this->m_users->get($id);
 
-                                //$photo = $this->oauth->getUserPhoto();
+                                $photo = 'https://api.twitter.com/1/users/profile_image?screen_name='.$twitter_access_token['screen_name'].'&size=bigger';
+                                //https://api.twitter.com/1/users/profile_image?screen_name=randix0&size=bigger
 
-                                /*if($photo) {
+                                if($photo) {
                                           $this->load->library('avatars');
-                                          $this->avatars->upload($data['site_id'], $id, $photo);
-                                      }*/
+                                          $this->avatars->upload($id, $photo);
+                              }
 
                                 setcookie('sl', 1, 0 , '/');
                                 $this->session->set_userdata(array('user_id' => $id, 'twitter_auth_status'=>'created'));

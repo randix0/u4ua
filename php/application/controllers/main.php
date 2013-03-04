@@ -17,27 +17,16 @@ class Main extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index()
+	public function index($order_by = '')
 	{
-		//$this->load->view('welcome_message');
         $this->load->model('m_ideas');
         $ps = array(
             '__PAGE' => 'main',
-            'ideas' => $this->m_ideas->getItems()
+            'ideas' => $this->m_ideas->getItems(array(), array('rating'=>'desc','id'=>'desc'), true),
+            'order_by' => ($order_by)? $order_by : 'date'
         );
         $this->mysmarty->view('global/main/index.tpl', $ps);
 	}
-
-    public function my()
-    {
-        if (!$this->user->logged()) return redirect(base_url('/'));
-        $this->load->model('m_ideas');
-        $ps = array(
-            '__PAGE' => 'my',
-            'ideas' => $this->m_ideas->getItems()
-        );
-        $this->mysmarty->view('global/my/index.tpl', $ps);
-    }
 
     public function fake()
     {
@@ -55,7 +44,6 @@ class Main extends CI_Controller {
             'access_level' => '100',
             'auto_login_key' => '',
             'facebook_id' => '100000667500718',
-            '' => '',
         );
 
         $this->session->set_userdata($user);

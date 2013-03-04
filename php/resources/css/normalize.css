@@ -119,6 +119,7 @@ a:hover {
     cursor: pointer;
     text-decoration: underline;
 }
+a.disabled:hover {text-decoration: none; cursor: default;}
 
 .b-hr {
     display: block;

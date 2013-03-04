@@ -40,11 +40,11 @@
 
 $route['default_controller'] = "main";
 $route['idea/(:num)'] = "idea/index/$1";
+$route['ideas/(.+)$'] = "main/index/$1";
 
 
 $route['^(en|ru|ua)/idea/(:num)$']        = "idea/index/$2";
-$route['^(en|ru|ua)/my/(:any)$']        = "main/my/$2";
-$route['^(en|ru|ua)/my$']        = "main/my";
+$route['^(en|ru|ua)/ideas/(.+)$']        = "main/index/$2";
 $route['^(en|ru|ua)/(.+)$']        = "$2";
 $route['^(en|ru|ua)$'] = $route['default_controller'];
 

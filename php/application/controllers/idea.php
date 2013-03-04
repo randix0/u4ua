@@ -23,6 +23,9 @@ class Idea extends CI_Controller {
         $idea_id = (int)$idea_id;
         $this->load->model('m_ideas');
         $idea = $this->m_ideas->getItem($idea_id, true);
+
+        if (!$idea) redirect('/');
+
         if ($idea) {
             if (!$idea['qr_code']) {
                 $idea['qr_code'] = $qr_name = $this->m_ideas->generateQR($idea_id);
@@ -51,7 +54,8 @@ class Idea extends CI_Controller {
             'contact_first_name' => '',
             'contact_last_name' => '',
             'contact_email' => '',
-            'contact_phone' => ''
+            'contact_phone' => '',
+            'contact_role' => ''
         );
         $ps = array(
             '__PAGE' => 'idea',
