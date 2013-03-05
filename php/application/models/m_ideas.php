@@ -31,9 +31,27 @@ class M_ideas extends CI_Model
         return $idea_team_id;
     }
 
+    public function create_comment($data, $idea_update = array())
+    {
+        if (!$data || !isset($data['idea_id']) || !$data['idea_id']) return false;
+
+        if (!$idea_update){
+            $idea = $this->getItem($data['idea_id']);
+            $comments_count = (int)$idea['comments_count'];
+            $idea_update = array('comments_count'=>$comments_count);
+        }
+
+        $this->db->insert('ideas_comments', $data);
+        $idea_comment_id = $this->db->insert_id();
+        if ($idea_comment_id)
+            $this->update($data['idea_id'],$idea_update);
+        return $idea_comment_id;
+    }
+
     public function update($id, $data)
     {
         if (!$data || !$id) return false;
+        $id = (int)$id;
         $this->db->update('ideas', $data, array('id'=>$id));
         return true;
     }
@@ -79,6 +97,7 @@ class M_ideas extends CI_Model
 
             $idea_team = array_merge(array($leader),$idea_team);
 
+            $idea['author'] = $idea_author;
             $idea['comments'] = $idea_comments;
             $idea['team'] = $idea_team;
             $idea['attachments'] = $idea_attachments;

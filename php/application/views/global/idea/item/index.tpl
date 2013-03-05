@@ -80,34 +80,58 @@
                 {/if}
 
                 <div class="b-comments">
-                    <div class="b-comments-header">Комментарии (<span class="b-comments-number">{$idea.comments_count}</span>)</div>
-                    <div class="b-comments-body">
+                    <div class="b-comments-header">Комментарии (<span id="comments-number" class="b-comments-number">{$idea.comments_count}</span>)</div>
+                    {if $idea.comments_count > 3}
+                        <a class="b-comments-more" onclick="$('#comments_hidden').show(); $(this).hide();">Show all {$idea.comments_count} comments</a>
+                    {/if}
+                    <div class="b-comments-body" id="idea_comments">
                         {if $idea.comments_count && $idea.comments}
-                            {foreach from=$idea.comments item=comment}
-                                <div class="b-comments-item">
-                                    <a class="b-comments-item-avatar" href="" style="background-image: none;"></a>
-                                    <div class="b-comments-item-wrap">
-                                        <a class="b-comments-item-iname" href="">Владимир Бабичев</a>
-                                        <time class="b-comments-item-time">{$comments.add_date|date_format:"%d/%m/%Y %H:%I"}</time>
-                                        <div class="b-comments-item-idesc">{$comments.idesc}</div>
-                                    </div>
-                                </div>
-                            {/foreach}
+                            {include file="global/idea/comments/index.tpl" comments = $idea.comments limit = 3}
                         {/if}
                     </div>
                     <div class="b-comments-footer">
                         {if $LOGGED}
                             <div class="mB20px">
-                                <form method="post">
+                                <form method="post" id="ajaxSaveComment">
                                     <h4 class="b-section-h4">Add comment</h4>
+                                    <input type="hidden" name="item[idea_id]" value="{$idea.id}">
                                     <div class="in-textarea mB10px"><textarea name="item[idesc]"></textarea></div>
                                     <div class="tRight">
-                                        <a class="button" onclick="">Add</a>
+                                        <a class="button" onclick="Comment.add();">Add</a>
                                     </div>
                                 </form>
+                                <script type="text/javascript">
+                                    Comment = {
+                                        count: -1,
+                                        add: function(){
+                                            $.ajax({
+                                                url: '/ajax/saveComment',
+                                                type: 'POST',
+                                                data: $('#ajaxSaveComment').serialize(),
+                                                dataType: 'json',
+                                                success: function(data){
+                                                    if (data.status == 'success' && data.html){
+                                                        $('#idea_comments').append(data.html);
+                                                        if (Comment.count < 0) {
+                                                            Comment.count = parseInt($('#comments-number').html());
+                                                        }
+                                                        Comment.count++;
+                                                        $('#comments-number').html(Comment.count);
+                                                        $('#ajaxSaveComment textarea').val('');
+                                                    } else {
+                                                        console.log('Idea.save: error!');
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    };
+                                </script>
+                            </div>
+                        {else}
+                            <div class="mB20px">
+                                You need to <a onclick="Window.load('/modal/login','win-login','');">{l}увійти{/l}</a> to post comments
                             </div>
                         {/if}
-                        <a class="b-comments-more" href="">Еще комментарии</a>
                     </div>
                 </div>
             </div>

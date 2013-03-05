@@ -159,11 +159,11 @@ class Facebook extends OAuthAbstract {
      */	
 	public function getUserPhoto() {
 		$response = $this->_connectAndGrabUserData();
-		
+
 		if($response) {
 			return 'http://graph.facebook.com/'.$response['id'].'/picture?type=large';
 		}
-		
+
 		return false;
 	}
 }

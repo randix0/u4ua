@@ -182,7 +182,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 4;
 
 /*
 |--------------------------------------------------------------------------
@@ -281,7 +281,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = TRUE;
+$config['global_xss_filtering'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
@@ -363,19 +363,36 @@ $config['proxy_ips'] = '';
 /* End of file config.php */
 /* Location: ./application/config/config.php */
 
-
+//$config['base_url']	= 'http://db.devils.com.ua/';
+//$config['base_url']	= 'http://u4ua.newstrategies.ua/';
 $config['resources_url'] = '/resources/';
 $config['resources_path'] = 'resources/';
-$config['vkontakte_app_id'] = '3453337';
-$config['vkontakte_app_secret'] = 'tQ2waxDorAJTHNRZwboD';
-$config['facebook_app_id'] = '339999716100637';
-$config['facebook_app_secret'] = 'ed5893c0ad33cb6f92808d2007068fe2';
-$config['google_app_id'] = '239766940668.apps.googleusercontent.com';
-$config['google_app_secret'] = 'fZg58RwlFoYPXJN-6FUeQzsB';
-$config['twitter_app_id'] = '';
-$config['twitter_app_secret'] = '';
-$config['linkedin_app_id'] = 'bde94y49tt67';
-$config['linkedin_app_secret'] = 'O615zjLBO4OdjSam';
+
+if ($config['base_url']	== 'http://db.devils.com.ua/') {
+
+    $config['vkontakte_app_id'] = '3453337';
+    $config['vkontakte_app_secret'] = 'tQ2waxDorAJTHNRZwboD';
+    $config['facebook_app_id'] = '339999716100637';
+    $config['facebook_app_secret'] = 'ed5893c0ad33cb6f92808d2007068fe2';
+    $config['google_app_id'] = '239766940668.apps.googleusercontent.com';
+    $config['google_app_secret'] = 'fZg58RwlFoYPXJN-6FUeQzsB';
+    $config['twitter_app_id'] = '';
+    $config['twitter_app_secret'] = '';
+    $config['linkedin_app_id'] = 'bde94y49tt67';
+    $config['linkedin_app_secret'] = 'O615zjLBO4OdjSam';
+}
+elseif ($config['base_url']	== 'http://u4ua.newstrategies.ua/' || $config['base_url']	== 'http://u4ua.lo/') {
+    $config['vkontakte_app_id'] = '3470800';
+    $config['vkontakte_app_secret'] = '76H8Q1WqSkeQCayVNqrr';
+    $config['facebook_app_id'] = '134817056690511';
+    $config['facebook_app_secret'] = '73389bee87a8fc72034eea58895bd62a';
+    $config['google_app_id'] = '914335179479.apps.googleusercontent.com';
+    $config['google_app_secret'] = 'hVdiymAnyG0LKX2qTS0P6XM9';
+    $config['twitter_app_id'] = '';
+    $config['twitter_app_secret'] = '';
+    $config['linkedin_app_id'] = '';
+    $config['linkedin_app_secret'] = '';
+}
 $config['access_levels'] = array(
     'ACL_EDIT' => 50,
     'ACL_ADMIN' => 80

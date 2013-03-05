@@ -178,7 +178,7 @@ class Ajax extends CI_Controller {
             $result['errors'][] = 'idea404';
         }
 
-        $this->json->parse($result);
+        return $this->json->parse($result);
     }
 
     public function getIdeas()
@@ -187,7 +187,7 @@ class Ajax extends CI_Controller {
         $ideas = $this->m_ideas->getItems();
         $result = array('status'=>'success');
         $result['html'] = $this->mysmarty->view('global/idea/items/index.tpl', array('ideas'=>$ideas),false,true);
-        $this->json->parse($result);
+        return $this->json->parse($result);
     }
 
     public function isAuthNeeded($handler = '')
@@ -219,7 +219,7 @@ class Ajax extends CI_Controller {
             }
         }
 
-        $this->json->parse($result);
+        return $this->json->parse($result);
     }
 
     public function uploadFile($upload_type = '', $item_id = 0)
@@ -227,7 +227,7 @@ class Ajax extends CI_Controller {
         $this->load->helper('file');
         $result = array('status'=>'error');
 
-        if (!$upload_type || !$item_id || !preg_match('/^(attachments|team)$/',$upload_type)) return $this->json->parse($result);
+        if (!$upload_type || !$item_id || !preg_match('/^(attachments|team|judges)$/',$upload_type)) return $this->json->parse($result);
 
         if (!$_FILES || !isset($_FILES['userfile']) || !$_FILES['userfile'] || !isset($_FILES['userfile']['name'])) return $this->json->parse($result);
 
@@ -236,15 +236,25 @@ class Ajax extends CI_Controller {
 
         $allowed_files = array(
             'attachments' => 'pdf|doc|docx|png|jpg',
-            'team' => 'png|jpg'
+            'team' => 'png|jpg',
+            'judges' => 'png|jpg'
         );
 
-
+        $limit = array(
+            'attachments' => 10,
+            'team' => 10,
+            'judges' => 1
+        );
 
         $files = array();
+        $files_i = 0;
 
         foreach($_FILES['userfile']['name'] as $i=>$name)
         {
+            if ($files_i >= $limit[$upload_type]) {
+                unlink($_FILES['userfile']['tmp_name'][$i]);
+                continue;
+            }
             $extension = '';
             switch($_FILES['userfile']['type'][$i]) {
                 case 'image/png': $extension = 'png'; break;
@@ -265,7 +275,7 @@ class Ajax extends CI_Controller {
 
             $store_name = sha1($name.$_FILES['userfile']['tmp_name'][$i].time()).'.'.$extension;
 
-            $files[] = array(
+            $file = array(
                 'name' => $name,
                 'store_name' => $store_name,
                 'type' => $_FILES['userfile']['type'][$i],
@@ -274,17 +284,22 @@ class Ajax extends CI_Controller {
                 'size' => $_FILES['userfile']['size'][$i],
                 'idea_id' => $item_id
             );
+
             if ($copy_status = copy($_FILES['userfile']['tmp_name'][$i], $upload_dir.$store_name))
                 unlink($_FILES['userfile']['tmp_name'][$i]);
+
+            $files[] = $file;
+            $files_i++;
         }
 
         //var_dump($_FILES['userfile']);
         if ($files) {
             $result['status'] = 'success';
-            //$result['files'] = $files;
+            $result['files'] = $files;
+            $result['upload_path'] = $upload_path;
             $result['html'] = $this->mysmarty->view('modals/upload/'.$upload_type.'.tpl', array('files' => &$files), false, true);
         }
-        $this->json->parse($result);
+        return $this->json->parse($result);
     }
 
     public function saveAttachments()
@@ -321,7 +336,7 @@ class Ajax extends CI_Controller {
             $result['status'] = 'success';
             $result['html'] = $this->mysmarty->view('global/idea/attachments/index.tpl', array('attachments' => &$attachments), false, true);
         }
-        $this->json->parse($result);
+        return $this->json->parse($result);
     }
 
     public function saveTeam()
@@ -403,7 +418,105 @@ class Ajax extends CI_Controller {
         } else {
             $result['errors'][] = 'array team is empty';
         }
-        $this->json->parse($result);
+        return $this->json->parse($result);
+    }
+
+    public function saveComment()
+    {
+        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        //if (!$this->user->logged()) return $this->json->parse($result);
+        $RAW = $this->input->post('item');
+        if (!$RAW || !isset($RAW['idea_id']) || !$RAW['idea_id'] || !isset($RAW['idesc']) || !$RAW['idesc']) return $this->json->parse($result);
+
+        $this->load->model('m_ideas');
+        $idea_id = (int)$RAW['idea_id'];
+
+        $idea = $this->m_ideas->getItem($idea_id);
+        if (!$idea) return $this->json->parse($result);
+        $comments_count = (int)$idea['comments_count'] + 1;
+        $idea_update = array('comments_count'=>$comments_count);
+
+        $data = array(
+            'idea_id' => $idea_id,
+            'user_id' => $this->user->uid(),
+            'user_full_name' => $this->user->first_name.' '.$this->user->last_name,
+            'user_avatar_m' => ($this->user->avatar_m)?$this->user->avatar_m:'',
+            'idesc' => strip_tags($RAW['idesc']),
+            'add_date' => time()
+        );
+        $idea_comment_id = $this->m_ideas->create_comment($data, $idea_update);
+
+        if ($idea_comment_id) {
+            $result['status'] = 'success';
+            $result['html'] = $this->mysmarty->view('global/idea/comments/index.tpl', array('comments' => array($data)), false, true);
+        } else {
+            $result['errors'][] = 'comment add error';
+        }
+        return $this->json->parse($result);
+    }
+
+    public function saveJudge()
+    {
+        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        $RAW = $this->input->post('item');
+        $judge_id = (int)$this->input->post('id');
+        $file = $this->input->post('file');
+        if (!$RAW || !isset($RAW['first_name']) || !$RAW['first_name'] || !isset($RAW['last_name']) || !$RAW['last_name']) return $this->json->parse($result);
+
+        $item = array(
+            'user_id' => $this->user->uid(),
+            'first_name' => strip_tags($RAW['first_name']),
+            'last_name' => strip_tags($RAW['last_name']),
+            'role' => strip_tags($RAW['role']),
+            'iname' => strip_tags($RAW['iname']),
+            'idesc' => strip_tags($RAW['idesc']),
+            'youtube_img' => '',
+            'youtube_code' => '',
+            'avatar_b' => '',
+            'avatar_m' => '',
+            'avatar_s' => '',
+        );
+
+        if ($RAW['link']) {
+            $link = $RAW['link'];
+            $link = str_replace('http://', '', $link);
+            $link = str_replace('www.', '', $link);
+            preg_match('/([^\/]+)/', $link, $matches);
+            $hoster = $matches[1];
+            $result['hoster']=$hoster;
+            $matches = array();
+            if($hoster == 'youtube.com' && preg_match('/(?:\?|\&)v\=([A-z0-9\-\_]+)/', $link, $matches)) {
+                $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
+                $item['youtube_code'] = $matches[1];
+            } else {
+                $result['errors']['link'] = 2;
+            }
+        }
+
+
+        if ($file && isset($file['store_name']) && $file['store_name'] && isset($file['upload_path']) && $file['upload_path']) {
+            $this->load->library('imagine');
+            $avatar = $this->imagine->proccessPhoto($file);
+            if ($avatar) {
+                $item['avatar_b'] = $avatar['b'];
+                $item['avatar_m'] = $avatar['m'];
+                $item['avatar_s'] = $avatar['s'];
+            }
+        }
+
+        $this->load->model('m_judges');
+        if ($judge_id)
+            $this->m_judges->update($judge_id, $item);
+        else {
+            $item['add_date'] = time();
+            $judge_id = $this->m_judges->create($item);
+        }
+        if ($judge_id) {
+            $result['status'] = 'success';
+            $result['goto'] = base_url('/judges');
+        }
+
+        return $this->json->parse($result);
     }
 }
 

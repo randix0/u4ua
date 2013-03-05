@@ -41,10 +41,14 @@
 $route['default_controller'] = "main";
 $route['idea/(:num)'] = "idea/index/$1";
 $route['ideas/(.+)$'] = "main/index/$1";
+$route['judges/(.+)$'] = "judge/judges/$1";
+$route['judges$'] = "judge/judges";
 
 
 $route['^(en|ru|ua)/idea/(:num)$']        = "idea/index/$2";
 $route['^(en|ru|ua)/ideas/(.+)$']        = "main/index/$2";
+$route['^(en|ru|ua)/judges/(.+)$']        = "judge/judges/$2";
+$route['^(en|ru|ua)/judges$']        = "judge/judges";
 $route['^(en|ru|ua)/(.+)$']        = "$2";
 $route['^(en|ru|ua)$'] = $route['default_controller'];
 

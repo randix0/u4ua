@@ -25,4 +25,5 @@ class Json {
         $this->CI =& get_instance();
         $this->CI->output->set_content_type('application/json')->set_output(json_encode($params));
     }
+
 }

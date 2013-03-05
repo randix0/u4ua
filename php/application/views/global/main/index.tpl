@@ -42,7 +42,11 @@
         <div class="b-section-header-filters">
             <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'date'}active disabled{/if}" href="/ideas/date">НОВІ ЗАВАНТАЖЕННЯ<div class="accent"></div></a>
             <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'rating'}active disabled{/if}" href="/ideas/rating">НАЙПОПУЛЯРНІШІ<div class="accent"></div></a>
-            <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'samples'}active disabled{/if}" href="/ideas/samples">ПРИКЛАДИ<div class="accent"></div></a>
+            {if $LOGGED && $USER_DATA.is_judge}
+                <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'judging'}active disabled{/if}" href="/ideas/judging">для суддів<div class="accent"></div></a>
+            {else}
+                <a class="b-section-header-filters-item {if isset($order_by) && $order_by == 'samples'}active disabled{/if}" href="/ideas/samples">ПРИКЛАДИ<div class="accent"></div></a>
+            {/if}
         </div>
     </div>
     <div class="b-section-body b-ideas layout w1010px">

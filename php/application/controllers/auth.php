@@ -429,20 +429,25 @@ class Auth extends CI_Controller {
                                 $session = $this->session->all_userdata();
                                 $result['body']		= $this->mysmarty->view('auth/signup/social/callback.tpl', array('hItem' => &$user, 'session'=>$session), false, true);
                             } else {
-								$id = $this->m_users->create($user);
-								
+                                $photo = $this->oauth->getUserPhoto();
+
+
+
+                                if($photo) {
+                                    $this->load->library('imagine');
+                                    $avatar = $this->imagine->uploadAvatar($photo);
+                                    if ($avatar && isset($avatar['avatar_b']) && $avatar['avatar_b']) {
+                                        $user['avatar_b'] = $avatar['avatar_b'];
+                                        $user['avatar_m'] = $avatar['avatar_m'];
+                                        $user['avatar_s'] = $avatar['avatar_s'];
+                                    }
+                                }
+
+                                $id = $this->m_users->create($user);
+
 								if($id) {
-									$data = $this->m_users->get($id);
-									
-									$photo = $this->oauth->getUserPhoto();
+                                    $this->session->set_userdata(array('user_id' => $id));
 
-									if($photo) {
-										$this->load->library('avatar');
-										$this->avatar->upload($id, $photo);
-									}
-
-                                    $this->session->set_userdata(array('photo' => $photo));
-									$this->session->set_userdata(array('user_id' => $id));
 									$result['status'] = 1;
 								}
 							}
@@ -479,10 +484,16 @@ class Auth extends CI_Controller {
 			
 			
 			if(!$merge && $result['status'] === 1) {
-				$this->m_users->update($id, array(
-					$this->oauth->getHandlerType().'_oa_access_token' => $this->oauth->oa_access_token,
-					$this->oauth->getHandlerType().'_oa_valid_till' => $this->oauth->oa_valid_till
-				));
+
+                $user_update = array(
+                    $this->oauth->getHandlerType().'_oa_access_token' => $this->oauth->oa_access_token,
+                    $this->oauth->getHandlerType().'_oa_valid_till' => $this->oauth->oa_valid_till
+                );
+
+                //if (isset($user_photo_update) && $user_photo_update && is_array($user_photo_update))
+                    //$user_update = array_merge($user_update,$user_photo_update);
+
+				$this->m_users->update($id, $user_update);
 				
 				$this->oauth->unsetCookieData();
 				$this->_onLogin($id);

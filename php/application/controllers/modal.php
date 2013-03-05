@@ -51,11 +51,14 @@ class Modal extends CI_Controller {
         $this->mysmarty->view('modals/alert/indexError.tpl', array('code'=>$code), false);
     }
 
-    public function upload($upload_type = '', $id = 0)
+    public function upload($upload_type = '', $id = 0, $multiple = 1)
     {
+        if ($multiple > 0) $multiple = true;
+        else $multiple = false;
         $ps = array(
             'upload_type' => $upload_type,
-            'id' => $id
+            'id' => $id,
+            'multiple'=>$multiple
         );
         $this->mysmarty->view('modals/upload/index.tpl', $ps, false);
     }

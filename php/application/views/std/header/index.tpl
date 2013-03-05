@@ -51,7 +51,7 @@
             </div>
             <div class="b-login">
                 {if isset($LOGGED) && $LOGGED}
-                    <a class="b-login-avatar" href="{$SITE_URL}my"><img src="{$USER_DATA.avatar_s}" width=24 height=24 /></a>
+                    <a class="b-login-avatar" href="{$SITE_URL}my"><img src="{if $USER_DATA.avatar_s}/{$USER_DATA.avatar_s}{/if}" width=24 height=24 /></a>
                     <a class="b-login-iname" href="{$SITE_URL}my">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
                     {*<a class="b-login-login" onclick="Window.load('/modal/login/merge','win-login','');">{l}add social{/l}<i class="i-logout"></i></a>*}
                     <a class="b-login-logout" href="/auth/logout">{l}вийти{/l}<i class="i-logout"></i></a>
