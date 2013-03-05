@@ -808,7 +808,7 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 
 .b-idea-team {overflow: hidden; margin: 0 0 15px;}
 .b-idea-team-item {display: block; float: left; width: 107px; margin: 0 23px 15px 0;}
-.b-idea-team-item-avatar {display: block; width: 107px; height: 107px; background: #a7a7a7; margin: 0 0 15px 0;}
+.b-idea-team-item-avatar {display: block; width: 107px; height: 107px; background: #a7a7a7; margin: 0 0 15px 0; background-repeat: no-repeat; background-position: 50% 50%;}
 .b-idea-team-item-iname {}
 .b-idea-team-item-idesc {margin: 5px 0 0 0;}
 
@@ -1004,6 +1004,19 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     margin: 15px 0 0 0;
 }
 
+.b-chAvatar {
+    display: block;
+    width: 107px;
+    height: 107px;
+    background-color: #eeeeee;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-image: url(./../img/misc/add_person.png);
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.b-chAvatar.active {background-size: 100%;}
+
 .b-showMore {
     background: url(./../img/misc/more_text.png) 100% 50% no-repeat;
     padding-right: 8px;
@@ -1051,12 +1064,19 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 
 .b-comments-more {
     display: block;
+    margin: 0 0 20px 0;
     text-align: center;
     color: #0669a9;
     line-height: 34px;
     height: 34px;
     border: 1px solid #e7e7e7;
+    -webkit-transition: box-shadow .2s ease;
+    -moz-transition: box-shadow .2s ease;
+    -ms-transition: box-shadow .2s ease;
+    -o-transition: box-shadow .2s ease;
+    transition: box-shadow .2s ease;
 }
+.b-comments-more:hover {text-decoration: none; box-shadow: inset 0 0 10px rgba(0,0,0,0.3);}
 
 .b-rules-steps {overflow: hidden; margin-left: -10px; margin-right: -10px;}
 .b-rules-step {float: left; width: 226px; margin: 0 10px;}

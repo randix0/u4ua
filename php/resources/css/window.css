@@ -3,6 +3,7 @@
 .win-alertSuccess {width: 300px;}
 .win-alertError {width: 300px;}
 .win-upload {width: 300px;}
+.win-upload-wide {width: 500px;}
 
 #modal_layer_wrap,#dimmer{position:fixed;top:0;left:0;}
 #dimmer{width:100%;background-color:#000;opacity: 0.2;z-index: 10000;filter: alpha(opacity=20);overflow:hidden;}
