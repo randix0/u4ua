@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Judge extends CI_Controller {
+class Video extends CI_Controller {
 
     /**
      * Index Page for this controller.
@@ -17,29 +17,30 @@ class Judge extends CI_Controller {
      * map to /index.php/welcome/<method_name>
      * @see http://codeigniter.com/user_guide/general/urls.html
      */
+
     public function index()
     {
-        $this->load->model('m_judges');
-        $judges = $this->m_judges->getItems();
+        $this->load->model('m_videos');
+        $videos = $this->m_videos->getItems();
         $ps = array(
-            '__PAGE' => 'judges',
-            'judges' => $judges
+            '__PAGE' => 'videos',
+            'videos' => $videos
         );
-        $this->mysmarty->view('global/judges/index.tpl', $ps);
+        $this->mysmarty->view('global/videos/index.tpl', $ps);
     }
 
-    public function item($judge_id = 0)
+    public function item($video_id = 0)
     {
-        $this->load->model('m_judges');
-        $judge = $this->m_judges->getItem($judge_id);
-        if (!$judge) return redirect(base_url('/judges'));
+        $this->load->model('m_videos');
+        $video = $this->m_videos->getItem($video_id);
+        if (!$video) return redirect(base_url('/videos'));
 
 
         $ps = array(
-            '__PAGE' => 'judges',
-            'judge' => $judge
+            '__PAGE' => 'videos',
+            'video' => $video
         );
-        $this->mysmarty->view('global/judge/item/index.tpl', $ps);
+        $this->mysmarty->view('global/video/item/index.tpl', $ps);
     }
 
     public function add()
@@ -47,46 +48,39 @@ class Judge extends CI_Controller {
         $this->load->helper('url');
         if (!$this->user->logged()) return redirect(base_url('/'));
 
-        $judge = array(
+        $video = array(
             'id' => 0,
             'user_id' => '',
-            'first_name' => '',
-            'last_name' => '',
-            'company_url' => '',
-            'company_iname' => '',
-            'role' => '',
             'iname' => '',
             'idesc' => '',
             'youtube_img' => '',
             'youtube_code' => '',
-            'avatar_b' => '',
-            'avatar_m' => '',
-            'avatar_s' => '',
+            'signature' => '',
             'is_deleted' => '',
             'add_date' => ''
         );
         $ps = array(
             '__PAGE' => 'idea',
-            'judge' => $judge
+            'video' => $video
         );
-        $this->mysmarty->view('global/judge/add/index.tpl', $ps);
+        $this->mysmarty->view('global/video/add/index.tpl', $ps);
     }
 
     public function edit($id)
     {
         $this->load->helper('url');
-        if (!$this->user->logged() || !$id) return redirect(base_url('/judges'));
+        if (!$this->user->logged() || !$id) return redirect(base_url('/videos'));
 
-        $this->load->model('m_judges');
-        $judge = $this->m_judges->getItem($id);
-        if (!$judge) return redirect(base_url('/judges'));
+        $this->load->model('m_videos');
+        $video = $this->m_videos->getItem($id);
+        if (!$video) return redirect(base_url('/videos'));
 
 
         $ps = array(
             '__PAGE' => 'idea',
-            'judge' => $judge
+            'video' => $video
         );
-        $this->mysmarty->view('global/judge/add/index.tpl', $ps);
+        $this->mysmarty->view('global/video/add/index.tpl', $ps);
     }
 }
 

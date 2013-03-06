@@ -35,6 +35,12 @@
                     <div class="in-text mB25px"><input type="text" name="item[contact_phone]" placeholder="+380" value="{$idea.contact_phone}"></div>
                 </div>
             </div>
+            {if isset($USER_DATA) && $USER_DATA && isset($USER_DATA.access_level) && $USER_DATA.access_level > 50}
+                <div class="in-checkbox mB25px">
+                    <label class="button button_cancel"><input type="checkbox" {if $idea.is_sample}checked="checked"{/if} name="item[is_sample]" value="1" /> Is sample</label>
+                </div>
+            {/if}
+
         </form>
     {if $idea.id}
         <h3 class="b-section-h3">Дополнительные материалы:</h3>

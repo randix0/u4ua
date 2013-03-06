@@ -20,8 +20,7 @@ class Main extends CI_Controller {
 	public function index($order_by = '')
 	{
         $this->load->model('m_ideas');
-
-        $where = array();
+        $where = array('is_sample'=>0);
         $order = array('id'=>'desc');
         if ($order_by == 'judging' && $this->user->logged() && $this->user->is_judge) {
             $where = array('comments_count >=' => 10);
@@ -29,6 +28,8 @@ class Main extends CI_Controller {
         } elseif ($order_by == 'rating')
         {
             $order = array('rating'=>'desc','id'=>'desc');
+        } elseif ($order_by == 'samples') {
+            $where = array('is_sample'=>1);
         }
 
         $ps = array(

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Judge extends CI_Controller {
+class Partner extends CI_Controller {
 
     /**
      * Index Page for this controller.
@@ -19,27 +19,27 @@ class Judge extends CI_Controller {
      */
     public function index()
     {
-        $this->load->model('m_judges');
-        $judges = $this->m_judges->getItems();
+        $this->load->model('m_partners');
+        $partners = $this->m_partners->getItems();
         $ps = array(
-            '__PAGE' => 'judges',
-            'judges' => $judges
+            '__PAGE' => 'partners',
+            'partners' => $partners
         );
-        $this->mysmarty->view('global/judges/index.tpl', $ps);
+        $this->mysmarty->view('global/partners/index.tpl', $ps);
     }
 
-    public function item($judge_id = 0)
+    public function item($partner_id = 0)
     {
-        $this->load->model('m_judges');
-        $judge = $this->m_judges->getItem($judge_id);
-        if (!$judge) return redirect(base_url('/judges'));
+        $this->load->model('m_partners');
+        $partner = $this->m_partners->getItem($partner_id);
+        if (!$partner) return redirect(base_url('/partners'));
 
 
         $ps = array(
-            '__PAGE' => 'judges',
-            'judge' => $judge
+            '__PAGE' => 'partners',
+            'partner' => $partner
         );
-        $this->mysmarty->view('global/judge/item/index.tpl', $ps);
+        $this->mysmarty->view('global/partner/item/index.tpl', $ps);
     }
 
     public function add()
@@ -47,14 +47,10 @@ class Judge extends CI_Controller {
         $this->load->helper('url');
         if (!$this->user->logged()) return redirect(base_url('/'));
 
-        $judge = array(
+        $partner = array(
             'id' => 0,
             'user_id' => '',
-            'first_name' => '',
-            'last_name' => '',
-            'company_url' => '',
-            'company_iname' => '',
-            'role' => '',
+            'url' => '',
             'iname' => '',
             'idesc' => '',
             'youtube_img' => '',
@@ -67,26 +63,26 @@ class Judge extends CI_Controller {
         );
         $ps = array(
             '__PAGE' => 'idea',
-            'judge' => $judge
+            'partner' => $partner
         );
-        $this->mysmarty->view('global/judge/add/index.tpl', $ps);
+        $this->mysmarty->view('global/partner/add/index.tpl', $ps);
     }
 
     public function edit($id)
     {
         $this->load->helper('url');
-        if (!$this->user->logged() || !$id) return redirect(base_url('/judges'));
+        if (!$this->user->logged() || !$id) return redirect(base_url('/partners'));
 
-        $this->load->model('m_judges');
-        $judge = $this->m_judges->getItem($id);
-        if (!$judge) return redirect(base_url('/judges'));
+        $this->load->model('m_partners');
+        $partner = $this->m_partners->getItem($id);
+        if (!$partner) return redirect(base_url('/partners'));
 
 
         $ps = array(
             '__PAGE' => 'idea',
-            'judge' => $judge
+            'partner' => $partner
         );
-        $this->mysmarty->view('global/judge/add/index.tpl', $ps);
+        $this->mysmarty->view('global/partner/add/index.tpl', $ps);
     }
 }
 

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class M_judges extends CI_Model
+class M_partners extends CI_Model
 {
 
     public function __construct()
@@ -11,16 +11,16 @@ class M_judges extends CI_Model
     public function create($data)
     {
         if (!$data) return false;
-        $this->db->insert('judges', $data);
-        $judge_id = $this->db->insert_id();
-        return $judge_id;
+        $this->db->insert('partners', $data);
+        $partner_id = $this->db->insert_id();
+        return $partner_id;
     }
 
     public function update($id, $data)
     {
         if (!$data || !$id) return false;
         $id = (int)$id;
-        $this->db->update('judges', $data, array('id'=>$id));
+        $this->db->update('partners', $data, array('id'=>$id));
         return true;
     }
 
@@ -29,10 +29,10 @@ class M_judges extends CI_Model
         $id = (int)$id;
         if (!$id) return array();
         $this->db->where('id', $id);
-        $query = $this->db->get('judges', 1);
-        $judge = $query->row_array();
-        if (!$judge) return false;
-        return $judge;
+        $query = $this->db->get('partners', 1);
+        $partner = $query->row_array();
+        if (!$partner) return false;
+        return $partner;
     }
 
     public function getItems($where = array(), $order = array())
@@ -50,10 +50,10 @@ class M_judges extends CI_Model
             }
         }
 
-        $query = $this->db->get('judges', 16);
-        $judges=$query->result_array();
+        $query = $this->db->get('partners', 16);
+        $partners=$query->result_array();
 
 
-        return $judges;
+        return $partners;
     }
 }

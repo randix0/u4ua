@@ -5,8 +5,8 @@
     </a>
     <a class="b-ideas-item-iname" href="{$SITE_URL}idea/{$item.id}">{$item.iname}</a>
     <time class="b-ideas-item-time">{$item.add_date|actionTime}</time>
-    <a class="b-ideas-item-vote" onclick="U4ua.idea.vote({$item.id});">
-        ПІДТРИМУЙ!
+    <a class="b-ideas-item-vote" onclick="{if !$item.is_sample && !$item.is_deleted}U4ua.idea.vote({$item.id});{/if}">
+    {if !$item.is_sample}ПІДТРИМУЙ!{else}ПРИКЛАД{/if}
     </a>
     <div class="tCenter">
         <div class="b-ideas-item-rating">Судьи: <a class="b-ideas-item-ratingStars s{$item.rating_stars}" title="{$item.rating_judges} votes"></a></div>

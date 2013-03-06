@@ -89,8 +89,8 @@ class M_ideas extends CI_Model
                 'first_name' => $idea['contact_first_name'],
                 'last_name' => $idea['contact_last_name'],
                 'role' => $idea['contact_role'],
-                'avatar_s' => $idea_author['avatar_s'],
-                'avatar_m' => $idea_author['avatar_m'],
+                'avatar_s' => $idea_author['avatar_b'],
+                'avatar_m' => $idea_author['avatar_b'],
                 'avatar_b' => $idea_author['avatar_b'],
                 'is_deleted' => -1
             );
@@ -136,7 +136,8 @@ class M_ideas extends CI_Model
 
     public function getItems($where = array(), $order = array() ,$fetch = false)
     {
-        $where['is_deleted'] = 0;
+        if (!$where || !isset($where['is_deleted']) || !$where['is_deleted'])
+            $where['is_deleted'] = 0;
         if (!$order)
             $order['id'] = 'desc';
 

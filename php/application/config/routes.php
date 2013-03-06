@@ -39,16 +39,30 @@
 */
 
 $route['default_controller'] = "main";
-$route['idea/(:num)'] = "idea/index/$1";
-$route['ideas/(.+)$'] = "main/index/$1";
-$route['judges/(.+)$'] = "judge/judges/$1";
-$route['judges$'] = "judge/judges";
+$route['idea/(:num)']        = "idea/index/$1";
+$route['ideas/(.+)$']        = "main/index/$1";
+$route['judge/(:num)']       = "judge/item/$1";
+$route['judges/(.+)$']       = "judge/items/$1";
+$route['judges$']            = "judge/index";
+$route['partner/(:num)']       = "partner/item/$1";
+$route['partners/(.+)$']       = "partner/items/$1";
+$route['partners$']            = "partner/index";
+$route['video/(:num)']         = "video/item/$1";
+$route['videos/(.+)$']         = "video/items/$1";
+$route['videos$']              = "video/index";
 
 
-$route['^(en|ru|ua)/idea/(:num)$']        = "idea/index/$2";
-$route['^(en|ru|ua)/ideas/(.+)$']        = "main/index/$2";
-$route['^(en|ru|ua)/judges/(.+)$']        = "judge/judges/$2";
-$route['^(en|ru|ua)/judges$']        = "judge/judges";
+$route['^(en|ru|ua)/idea/(:num)$'] = "idea/index/$2";
+$route['^(en|ru|ua)/ideas/(.+)$']  = "main/index/$2";
+$route['^(en|ru|ua)/judge/(:num)'] = "judge/item/$2";
+$route['^(en|ru|ua)/judges/(.+)$'] = "judge/items/$2";
+$route['^(en|ru|ua)/judges$']      = "judge/index";
+$route['^(en|ru|ua)/partner/(:num)'] = "partner/item/$2";
+$route['^(en|ru|ua)/partners/(.+)$'] = "partner/items/$2";
+$route['^(en|ru|ua)/partners$']      = "partner/index";
+$route['^(en|ru|ua)/video/(:num)'] = "video/item/$2";
+$route['^(en|ru|ua)/videos/(.+)$'] = "video/items/$2";
+$route['^(en|ru|ua)/videos$']      = "video/index";
 $route['^(en|ru|ua)/(.+)$']        = "$2";
 $route['^(en|ru|ua)$'] = $route['default_controller'];
 

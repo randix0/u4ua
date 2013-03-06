@@ -44,13 +44,20 @@
             </div>
         </aside>
         <div class="b-section-body b-section-body__withAside">
-            {if $idea.is_author}
+            {if $idea.is_author && !$idea.is_sample}
                 <h3 class="b-section-h3">Твоя идея:</h3>
                 <div class="b-idea-notice">
                     <a class="close" href=""></a>
                     <div class="b-idea-notice-content p37pxi">
                         ТОЛЬКО ОТ ТЕБЯ ЗАВИСИТ УСПЕХ ТВОЕЙ ИДЕИИ!<br/>
                         ИСПОЛЬЗУЙ ВСЕ СРЕДСТВА ДЛЯ ЕЕ ПРОДВИЖЕНИЯ!
+                    </div>
+                </div>
+            {elseif $idea.is_sample}
+                <div class="b-idea-notice">
+                    <a class="close" href=""></a>
+                    <div class="b-idea-notice-content p37pxi">
+                        It is sample
                     </div>
                 </div>
             {/if}

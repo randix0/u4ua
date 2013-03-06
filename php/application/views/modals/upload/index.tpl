@@ -10,6 +10,17 @@
             Window.close('win-upload');
         }
     };
+    {elseif $upload_type == 'partners'}
+    Upload.callback = function(data){
+        if (data.status == 'success') {
+            console.log('good');
+            console.log('file='+data.files[0].path);
+            $('#partner_avatar_preview').addClass('active').css('background-image','url(/'+data.files[0].path+')');
+            $('#partner_avatar_store_name').val(data.files[0].store_name);
+            $('#partner_avatar_upload_path').val(data.upload_path);
+            Window.close('win-upload');
+        }
+    };
     {else}
     Upload.callback = function(data){
         if (data.status == 'success' && data.html) {

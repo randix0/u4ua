@@ -96,7 +96,7 @@ class Imagine{
             }
 
             $image->writeImage(FCPATH.$avatar['b']);
-            $image->cropThumbnailImage(107, 107);
+            $image->cropThumbnailImage(216, 184);
             $image->writeImage(FCPATH.$avatar['m']);
             $image->cropThumbnailImage(60, 60);
             $image->writeImage(FCPATH.$avatar['s']);

@@ -99,7 +99,7 @@
                     <div class="b-header-video-author" href="#">— Святослав Вакарчук</div>
                 </div>
 
-                <a class="b-header-video-viewAll" href="#">Перегляд всіх відео</a>
+                <a class="b-header-video-viewAll" href="{$SITE_URL}videos">Перегляд всіх відео</a>
             </div>
         </div>
     </div>

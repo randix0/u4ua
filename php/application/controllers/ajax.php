@@ -37,6 +37,7 @@ class Ajax extends CI_Controller {
     {
         $result = array('status' => 'error', 'errors' => array());
 
+        $item = array();
         $required = array(
             'link','iname','idesc','contact_first_name','contact_last_name','contact_email','contact_phone','contact_role'
         );
@@ -49,12 +50,11 @@ class Ajax extends CI_Controller {
             if (!isset($RAW[$r]) || !$RAW[$r]) $result['errors'][$r] = 1;
         }
 
-        $item = array(
-            'user_id' => $this->user->uid()
-        );
-
-        if ($idea_id)
+        if (!$idea_id) {
+            $item['user_id'] = $this->user->uid();
             $item['add_date'] = time();
+
+        }
 
         if ($result['errors'])
             return $this->json->parse($result);
@@ -67,6 +67,12 @@ class Ajax extends CI_Controller {
         $item['contact_phone'] = strip_tags($RAW['contact_phone']);
         $item['contact_role'] = strip_tags($RAW['contact_role']);
 
+        if ($this->user->access_level > 50 && isset($RAW['is_sample'])){
+            if ($RAW['is_sample'])
+                $item['is_sample'] = 1;
+            else
+                $item['is_sample'] = 0;
+        }
 
         $link = $RAW['link'];
         $link = str_replace('http://', '', $link);
@@ -184,7 +190,7 @@ class Ajax extends CI_Controller {
     public function getIdeas()
     {
         $this->load->model('m_ideas');
-        $ideas = $this->m_ideas->getItems();
+        $ideas = $this->m_ideas->getItems(array(),array(), true);
         $result = array('status'=>'success');
         $result['html'] = $this->mysmarty->view('global/idea/items/index.tpl', array('ideas'=>$ideas),false,true);
         return $this->json->parse($result);
@@ -214,7 +220,6 @@ class Ajax extends CI_Controller {
                 $result['needed'] = 0;
                 $result[$handler.'_id'] = $handler_id;
             } else {
-                //setcookie('aC_stop', 1, 0 , '/');
                 $this->session->set_userdata('aC_stop',1);
             }
         }
@@ -227,7 +232,7 @@ class Ajax extends CI_Controller {
         $this->load->helper('file');
         $result = array('status'=>'error');
 
-        if (!$upload_type || !$item_id || !preg_match('/^(attachments|team|judges)$/',$upload_type)) return $this->json->parse($result);
+        if (!$upload_type || !$item_id || !preg_match('/^(attachments|team|judges|partners)$/',$upload_type)) return $this->json->parse($result);
 
         if (!$_FILES || !isset($_FILES['userfile']) || !$_FILES['userfile'] || !isset($_FILES['userfile']['name'])) return $this->json->parse($result);
 
@@ -237,13 +242,15 @@ class Ajax extends CI_Controller {
         $allowed_files = array(
             'attachments' => 'pdf|doc|docx|png|jpg',
             'team' => 'png|jpg',
-            'judges' => 'png|jpg'
+            'judges' => 'png|jpg',
+            'partners' => 'png|jpg'
         );
 
         $limit = array(
             'attachments' => 10,
             'team' => 10,
-            'judges' => 1
+            'judges' => 1,
+            'partners' => 1
         );
 
         $files = array();
@@ -464,18 +471,15 @@ class Ajax extends CI_Controller {
         if (!$RAW || !isset($RAW['first_name']) || !$RAW['first_name'] || !isset($RAW['last_name']) || !$RAW['last_name']) return $this->json->parse($result);
 
         $item = array(
-            'user_id' => $this->user->uid(),
             'first_name' => strip_tags($RAW['first_name']),
             'last_name' => strip_tags($RAW['last_name']),
+            'company_url' => strip_tags($RAW['company_url']),
+            'company_iname' => strip_tags($RAW['company_iname']),
             'role' => strip_tags($RAW['role']),
             'iname' => strip_tags($RAW['iname']),
-            'idesc' => strip_tags($RAW['idesc']),
-            'youtube_img' => '',
-            'youtube_code' => '',
-            'avatar_b' => '',
-            'avatar_m' => '',
-            'avatar_s' => '',
+            'idesc' => strip_tags($RAW['idesc'])
         );
+        if (!$judge_id) $item['user_id'] = $this->user->uid();
 
         if ($RAW['link']) {
             $link = $RAW['link'];
@@ -514,6 +518,109 @@ class Ajax extends CI_Controller {
         if ($judge_id) {
             $result['status'] = 'success';
             $result['goto'] = base_url('/judges');
+        }
+
+        return $this->json->parse($result);
+    }
+
+    public function savePartner()
+    {
+        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        $RAW = $this->input->post('item');
+        $partner_id = (int)$this->input->post('id');
+        $file = $this->input->post('file');
+        if (!$RAW || !isset($RAW['iname']) || !$RAW['iname'] || !isset($RAW['idesc']) || !$RAW['idesc'])
+            return $this->json->parse($result);
+
+
+        $item = array(
+            'url' => strip_tags($RAW['url']),
+            'iname' => strip_tags($RAW['iname']),
+            'idesc' => strip_tags($RAW['idesc'])
+        );
+        if (!$partner_id) $item['user_id'] = $this->user->uid();
+
+        if ($RAW['link']) {
+            $link = $RAW['link'];
+            $link = str_replace('http://', '', $link);
+            $link = str_replace('www.', '', $link);
+            preg_match('/([^\/]+)/', $link, $matches);
+            $hoster = $matches[1];
+            $result['hoster']=$hoster;
+            $matches = array();
+            if($hoster == 'youtube.com' && preg_match('/(?:\?|\&)v\=([A-z0-9\-\_]+)/', $link, $matches)) {
+                $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
+                $item['youtube_code'] = $matches[1];
+            } else {
+                $result['errors']['link'] = 2;
+            }
+        }
+
+        if ($file && isset($file['store_name']) && $file['store_name'] && isset($file['upload_path']) && $file['upload_path']) {
+            $this->load->library('imagine');
+            $avatar = $this->imagine->proccessPhoto($file);
+            if ($avatar) {
+                $item['avatar_b'] = $avatar['b'];
+                $item['avatar_m'] = $avatar['m'];
+                $item['avatar_s'] = $avatar['s'];
+            }
+        }
+
+        $this->load->model('m_partners');
+        if ($partner_id)
+            $this->m_partners->update($partner_id, $item);
+        else {
+            $item['add_date'] = time();
+            $partner_id = $this->m_partners->create($item);
+        }
+        if ($partner_id) {
+            $result['status'] = 'success';
+            $result['goto'] = base_url('/partners');
+        }
+
+        return $this->json->parse($result);
+    }
+
+    public function saveVideo()
+    {
+        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        $RAW = $this->input->post('item');
+        $video_id = (int)$this->input->post('id');
+        if (!$RAW || !isset($RAW['iname']) || !$RAW['iname'] || !isset($RAW['idesc']) || !$RAW['idesc'])
+            return $this->json->parse($result);
+
+        $item = array(
+            'iname' => strip_tags($RAW['iname']),
+            'idesc' => strip_tags($RAW['idesc'])
+        );
+        if (!$video_id) $item['user_id'] = $this->user->uid();
+
+        if ($RAW['link']) {
+            $link = $RAW['link'];
+            $link = str_replace('http://', '', $link);
+            $link = str_replace('www.', '', $link);
+            preg_match('/([^\/]+)/', $link, $matches);
+            $hoster = $matches[1];
+            $result['hoster']=$hoster;
+            $matches = array();
+            if($hoster == 'youtube.com' && preg_match('/(?:\?|\&)v\=([A-z0-9\-\_]+)/', $link, $matches)) {
+                $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
+                $item['youtube_code'] = $matches[1];
+            } else {
+                $result['errors']['link'] = 2;
+            }
+        }
+
+        $this->load->model('m_videos');
+        if ($video_id)
+            $this->m_videos->update($video_id, $item);
+        else {
+            $item['add_date'] = time();
+            $video_id = $this->m_videos->create($item);
+        }
+        if ($video_id) {
+            $result['status'] = 'success';
+            $result['goto'] = base_url('/videos');
         }
 
         return $this->json->parse($result);
