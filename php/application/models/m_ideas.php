@@ -58,33 +58,46 @@ class M_ideas extends CI_Model
 
     public function getItem($id = 0, $fetch = false)
     {
-        $id = (int)$id;
         if (!$id) return array();
-        $this->db->where('id', $id);
+
+        if (is_array($id)) {
+            $this->db->where($id);
+        } else {
+            $id = (int)$id;
+            $this->db->where('id', $id);
+        }
+
+
         $query = $this->db->get('ideas', 1);
-        $user_id = $this->user->uid();
+
         $idea = $query->row_array();
+
         if (!$idea) return false;
+
+        $user_id = $this->user->uid();
+
+        $idea_id = (int)$idea['id'];
+
         if ($fetch) {
             $this->db->where('id', $idea['user_id']);
             $query = $this->db->get('users', 1);
             $idea_author=$query->row_array();
 
-            $this->db->where('idea_id', $id);
+            $this->db->where('idea_id', $idea_id);
             $query = $this->db->get('ideas_comments', 20);
             $idea_comments=$query->result_array();
 
-            $this->db->where('idea_id', $id);
+            $this->db->where('idea_id', $idea_id);
             $query = $this->db->get('ideas_team', 20);
             $idea_team=$query->result_array();
 
-            $this->db->where('idea_id', $id);
+            $this->db->where('idea_id', $idea_id);
             $query = $this->db->get('ideas_attachments', 20);
             $idea_attachments=$query->result_array();
 
             $leader = array(
                 'id' =>-1,
-                'idea_id' => $id,
+                'idea_id' => $idea_id,
                 'user_id' => $idea['user_id'],
                 'first_name' => $idea['contact_first_name'],
                 'last_name' => $idea['contact_last_name'],
@@ -113,7 +126,7 @@ class M_ideas extends CI_Model
         $idea['rating_stars'] = $idea['rating_judges'];
 
         if ($user_id && $user_id != $idea['user_id']){
-            $this->db->where(array( 'idea_id' => $id, 'user_id' => $user_id));
+            $this->db->where(array( 'idea_id' => $idea_id, 'user_id' => $user_id));
             $query = $this->db->get('ideas_votes', 1);
             $isVoted = $query->row_array();
         } else {

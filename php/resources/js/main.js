@@ -1,45 +1,42 @@
-//Ideas = {
-//    tPrev: null,
-//    tNext: null,
-//    prev: function(){
-////        alert('prev');
-//        Ideas.unbinder();
-//        $('.p-idea.prev').remove();
-//        $('.p-idea.active').removeClass('active').addClass('next');
-//        $('.p-idea.prev').removeClass('prev').addClass('active');
-//
-//        Ideas.tPrev = '<div class="p-idea prev">Вот сюда мы пихаем блок 2</div>';
-//        $('.p-ideas').prepend(Ideas.tPrev);
-//        Ideas.tPrev = null;
-//
-//        Ideas.binder();
-//    },
-//    next: function(){
-////        alert('next');
-//        Ideas.unbinder();
-//        //$('.p-idea.prev').hide();
-//        $('.p-idea.prev').remove();
-//        $('.p-idea.active').removeClass('active').addClass('prev');
-//        $('.p-idea.next').removeClass('next').addClass('active');
-//
-//        Ideas.tNext = '<div class="p-idea next">Вот сюда мы пихаем блок 1</div>';
-//        $('.p-ideas').append(Ideas.tNext);
-//        Ideas.tNext = null;
-//
-//        Ideas.binder();
-//    },
-//    unbinder: function(){
-//        $('.p-idea.prev').unbind();
-//        $('.p-idea.next').unbind();
-//    },
-//    binder: function(){
-//        $('.p-idea.prev').bind('click',function(){Ideas.prev();});
-//        $('.p-idea.next').bind('click',function(){Ideas.next();});
-//    }
-//};
-//$(document).ready(function(){
-//    Ideas.binder();
-//});
+ideas = {
+    tPrev: null,
+    tNext: null,
+    prev: function(){
+//        alert('prev');
+        Ideas.unbinder();
+        $('.p-idea.prev').remove();
+        $('.p-idea.active').removeClass('active').addClass('next');
+        $('.p-idea.prev').removeClass('prev').addClass('active');
+
+        Ideas.tPrev = '<div class="p-idea prev">Вот сюда мы пихаем блок 2</div>';
+        $('.p-ideas').prepend(Ideas.tPrev);
+        Ideas.tPrev = null;
+
+        Ideas.binder();
+    },
+    next: function(){
+//        alert('next');
+        Ideas.unbinder();
+        $('.p-idea.prev').hide();
+        $('.p-idea.prev').remove();
+        $('.p-idea.active').removeClass('active').addClass('prev');
+        $('.p-idea.next').removeClass('next').addClass('active');
+
+       Ideas.tNext = '<div class="p-idea next">Вот сюда мы пихаем блок 1</div>';
+        $('.p-ideas').append(Ideas.tNext);
+        Ideas.tNext = null;
+
+        Ideas.binder();
+    },
+    unbinder: function(){
+        $('.p-idea.prev').unbind();
+        $('.p-idea.next').unbind();
+    },
+    binder: function(){
+        $('.p-idea.prev').bind('click',function(){Ideas.prev();});
+        $('.p-idea.next').bind('click',function(){Ideas.next();});
+    }
+};
 
 
 U4ua = {
@@ -74,6 +71,77 @@ U4ua = {
             U4ua.partnersSlider.size = $('.b-partnersBlock-sizer').width();
             if (U4ua.partnersSlider.size > U4ua.partnersSlider.clipSize)
                 U4ua.partnersSlider.binder();
+        }
+    },
+    ideas: {
+        tPrev: null,
+        tNext: null,
+        current_id: null,
+        prev: function(){
+            //U4ua.ideas.unbinder();
+            $('.p-idea.next').hide();
+            $('.p-idea.next').remove();
+            $('.p-idea.active').removeClass('active').addClass('next').attr('data-status','next');
+            U4ua.ideas.current_id = $('.p-idea.prev').attr('data-id');
+            $('.p-idea.prev').removeClass('prev').addClass('active');
+
+            $.ajax({
+                url: '/ajax/getIdea/'+U4ua.ideas.current_id+'/date/prev',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data){
+                    if (data.status == 'success'){
+                        //U4ua.ideas.tPrev = data.html;
+                        $('.p-ideas .modal-window-body').append(data.html);
+                    } else {
+                        console.log('Idea.save: error!');
+                    }
+                }
+            });
+
+            //U4ua.ideas.tPrev = null;
+
+            //U4ua.ideas.binder();
+        },
+        next: function(){
+            //U4ua.ideas.unbinder();
+            $('.p-idea.prev').hide();
+            $('.p-idea.prev').remove();
+            $('.p-idea.active').removeClass('active').addClass('prev').attr('data-status','prev');
+            U4ua.ideas.current_id = $('.p-idea.next').attr('data-id');
+            $('.p-idea.next').removeClass('next').addClass('active');
+
+            $.ajax({
+                url: '/ajax/getIdea/'+U4ua.ideas.current_id+'/date/next',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data){
+                    if (data.status == 'success'){
+                        //U4ua.ideas.tNext = data.html;
+                        $('.p-ideas .modal-window-body').append(data.html);
+                    } else {
+                        console.log('Idea.save: error!');
+                    }
+                }
+            });
+
+            //U4ua.ideas.tNext = null;
+
+            //U4ua.ideas.binder();
+        },
+        move: function(el){
+            var status = $(el).parent().attr('data-status');
+            if (status == 'prev') U4ua.ideas.prev();
+            else if (status == 'next') U4ua.ideas.next();
+            //console.log(status);
+        },
+        unbinder: function(){
+            $('.p-idea.prev').unbind();
+            $('.p-idea.next').unbind();
+        },
+        binder: function(){
+            $('.p-idea.prev').bind('click',U4ua.ideas.prev);
+            $('.p-idea.next').bind('click',U4ua.ideas.next);
         }
     },
     idea: {
@@ -166,11 +234,21 @@ U4ua = {
                         }
                     }
                 });
-
-                //Auth.facebook
-
-
             }
+        },
+        click: function(el){
+            var idea_id;
+            if (typeof(el) == 'object') {
+                idea_id = parseInt($(el).attr('data-id'));
+            } else if (typeof(el) == 'string' || typeof(el) == 'number'){
+                idea_id = parseInt(el);
+            } else return true;
+            Window.load(BASE_URL+'idea/ajaxItem/'+idea_id,'p-ideas','');
+            console.log('idea_id='+idea_id);
+            return false;
+        },
+        binder: function(){
+            $('.b-ideas-item-click').bind('click',function(){return U4ua.idea.click(this);});
         }
     },
     init: function(){}

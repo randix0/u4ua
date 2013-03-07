@@ -68,6 +68,8 @@
         });
     });
 
+    U4ua.idea.binder();
+
     Ideas = {
         more: function(){
             $.ajax({

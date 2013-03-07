@@ -20,6 +20,7 @@ class Idea extends CI_Controller {
     public function index($idea_id)
     {
         $this->load->helper('url');
+        if (!$idea_id) redirect('/');
         $idea_id = (int)$idea_id;
         $this->load->model('m_ideas');
         $idea = $this->m_ideas->getItem($idea_id, true);
@@ -39,6 +40,24 @@ class Idea extends CI_Controller {
             'idea' => $idea
         );
         $this->mysmarty->view('global/idea/item/index.tpl', $ps);
+    }
+
+    public function ajaxItem($idea_id)
+    {
+        $this->load->helper('url');
+        if (!$idea_id) redirect('/');
+        $idea_id = (int)$idea_id;
+        $this->load->model('m_ideas');
+        $idea = $this->m_ideas->getItem($idea_id, true);
+        if (!$idea) redirect('/');
+
+        $ps = array(
+            '__PAGE' => 'idea',
+            'idea' => $idea,
+            'prevIdea' => $this->m_ideas->getItem(array('id <'=>$idea_id), true),
+            'nextIdea' => $this->m_ideas->getItem(array('id >'=>$idea_id), true)
+        );
+        $this->mysmarty->view('global/idea/ajaxItem/index.tpl', $ps, false);
     }
 
     public function add()

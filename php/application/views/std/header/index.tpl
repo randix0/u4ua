@@ -21,6 +21,7 @@
     <script src="{$RESOURCES_URL}js/main.js"></script>
     <script src="{$RESOURCES_URL}js/modernizr-transitions.js"></script>
     <script src="{$RESOURCES_URL}js/jquery.masonry.min.js"></script>
+    {*<script src="{$RESOURCES_URL}js/jquery.history.js"></script>*}
 
     <script>
         var vk_app_id = '{$VK_APP_ID}',

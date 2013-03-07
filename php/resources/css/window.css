@@ -4,6 +4,8 @@
 .win-alertError {width: 300px;}
 .win-upload {width: 300px;}
 .win-upload-wide {width: 500px;}
+.win-idea {width: 700px;}
+.p-ideas {width: 700px;}
 
 #modal_layer_wrap,#dimmer{position:fixed;top:0;left:0;}
 #dimmer{width:100%;background-color:#000;opacity: 0.2;z-index: 10000;filter: alpha(opacity=20);overflow:hidden;}
@@ -52,9 +54,10 @@
     background: url(./../img/buttons/btn-close.png) 0 0 no-repeat;
 }
 
-.p-idea .modal-window-close {
+.p-ideas .modal-window-close {
     top: 10px;
     right: 10px;
+    z-index: 1;
 }
 
 .modal-window.p-ideas {
@@ -73,7 +76,8 @@
 .p-idea.next {right: -260px;}
 
 .b-idea-item-more {display: none;}
-.b-idea-item-video {height: 100px;}
+.p-idea .b-idea-item-video {height: 100px;}
+.p-idea.active .b-idea-item-video {display: none;}
 .p-idea.active .b-idea-item-more {display: block;}
 .p-idea.active .b-idea-item-video {height: 429px;}
 

@@ -196,6 +196,19 @@ class Ajax extends CI_Controller {
         return $this->json->parse($result);
     }
 
+    public function getIdea($idea_id = 0, $order_by = '', $direction = '')
+    {
+        $this->load->model('m_ideas');
+        $where = array();
+        if ($direction == 'prev') $where['id <'] = $idea_id;
+        elseif ($direction == 'next') $where['id >'] = $idea_id;
+        $idea = $this->m_ideas->getItem($where, true);
+
+        $result = array('status'=>'success');
+        $result['html'] = $this->mysmarty->view('global/idea/ajaxItem/item.tpl', array('idea'=>$idea, 'class'=>$direction),false,true);
+        return $this->json->parse($result);
+    }
+
     public function isAuthNeeded($handler = '')
     {
         $result = array('status'=>'error','needed' => 1);

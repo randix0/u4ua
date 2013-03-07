@@ -38114,3 +38114,79 @@ ERROR - 2013-03-06 19:01:44 --> Could not find the language line ""
 ERROR - 2013-03-06 19:01:44 --> Could not find the language line "ПІДТРИМАЙ ідеї людей, <br> хто перетворює Україну на краще"
 DEBUG - 2013-03-06 19:01:44 --> Final output sent to browser
 DEBUG - 2013-03-06 19:01:44 --> Total execution time: 0.0543
+DEBUG - 2013-03-06 19:16:38 --> Config Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Hooks Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Utf8 Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> UTF-8 Support Enabled
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> URI Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Router Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Output Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Security Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Input Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Global POST and COOKIE data sanitized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Language Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Loader Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Database Driver Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Session Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Helper loaded: string_helper
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Session routines successfully run
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Helper loaded: url_helper
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Language file loaded: language/ua/_lang.php
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Model Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Model Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Controller Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:38 --> Model Class Initialized
+ERROR - 2013-03-06 19:16:38 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line ""
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line "вийти"
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line ""
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line "Розкажи друзям"
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line ""
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line "Головна"
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line ""
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line "Судді"
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line ""
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line "Умови конкурсу"
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line ""
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line "Партнери"
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line ""
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+ERROR - 2013-03-06 19:16:39 --> Could not find the language line "Про проект"
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:39 --> Final output sent to browser
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
+DEBUG - 2013-03-06 19:16:39 --> Total execution time: 0.0658
+ERROR - 2013-03-06 19:16:39 --> Severity: Warning  --> chmod(): Operation not permitted /www/u4ua.lo/www/system/libraries/Log.php 106
