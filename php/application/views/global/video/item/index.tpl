@@ -18,12 +18,9 @@
                 {elseif $video.avatar_b}
                 <img src="/{$video.avatar_b}" alt="">
             {/if}
-                <div class="b-idea-item-idesc">
-                {$video.idesc|truncate:255}
-                </div>
 
-                <div class="mB20px">
-                    <a class="b-showMore" href="">Показать больше</a>
+                <div class="b-idea-item-idesc js-tcMore">
+                    {$video.idesc|tcMore}
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 {if $partners}
     {foreach from=$partners item=item}
         <div class="b-partners-item">
-            <a class="b-partners-item-img" style="background-image: url(/{$item.avatar_m});" href="{$SITE_URL}partner/{$item.id}">
+            <a class="b-partners-item-img" style="{if $item.youtube_img}background-image: url({$item.youtube_img});{elseif $item.avatar_m}background-image: url(/{$item.avatar_m});{/if}" href="{$SITE_URL}partner/{$item.id}">
                 {if $item.youtube_code}
                     <div class="play"></div>
                 {/if}

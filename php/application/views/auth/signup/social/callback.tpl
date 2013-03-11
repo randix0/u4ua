@@ -2,9 +2,9 @@
     <form id="completeSignUp">
         <input type="hidden" name="item[vkontakte_id]" value="{if isset($hItem.vkontakte_id)}{$hItem.vkontakte_id}{else}0{/if}">
         <input type="hidden" name="item[twitter_id]" value="{if isset($hItem.twitter_id)}{$hItem.twitter_id}{else}0{/if}">
-        <h4 class="b-section-h4">Enter your e-mail to complete registration</h4>
+        <h4 class="b-section-h4">{l}AUTH_STEP2_EMAIL{/l}</h4>
         <div class="in-text mB25px"><input type="text" name="item[email]" placeholder="your@email.address" /></div>
-        <a class="button" onclick="SignUp.send();">Сохранить</a>
+        <a class="button" onclick="SignUp.send();">{l}SAVE{/l}</a>
     </form>
 
     <script type="text/javascript">
@@ -29,9 +29,6 @@
                         } else {
                             window.location = window.location;
                         }
-
-
-
                     }
                 });
             }

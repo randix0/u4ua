@@ -19,22 +19,33 @@ class Main extends CI_Controller {
 	 */
 	public function index($order_by = '')
 	{
+        $this->load->helper('url');
         $this->load->model('m_ideas');
         $where = array('is_sample'=>0);
         $order = array('id'=>'desc');
-        if ($order_by == 'judging' && $this->user->logged() && $this->user->is_judge) {
-            $where = array('comments_count >=' => 10);
+        $gen_raw_id = false;
+
+        if ($order_by == 'judging' && (!$this->user->logged() || !$this->user->is_judge)) return redirect('/');
+
+        if ($order_by == 'judging') {
+            $where = array('comments_count >' => 9);
             $order = array('id'=>'desc');
-        } elseif ($order_by == 'rating')
-        {
+        } elseif ($order_by == 'rating') {
             $order = array('rating'=>'desc','id'=>'desc');
+            $gen_raw_id = true;
         } elseif ($order_by == 'samples') {
             $where = array('is_sample'=>1);
         }
 
+        $getItems = array(
+            'where' => $where,
+            'order' => $order,
+            'limit' => 20
+        );
+
         $ps = array(
             '__PAGE' => 'main',
-            'ideas' => $this->m_ideas->getItems($where, $order, true),
+            'ideas' => $this->m_ideas->getItems($getItems, true, $gen_raw_id),
             'order_by' => ($order_by)? $order_by : 'date'
         );
         $this->mysmarty->view('global/main/index.tpl', $ps);

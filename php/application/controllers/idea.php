@@ -42,20 +42,39 @@ class Idea extends CI_Controller {
         $this->mysmarty->view('global/idea/item/index.tpl', $ps);
     }
 
-    public function ajaxItem($idea_id)
+    public function ajaxItem($idea_id, $filter = '')
     {
         $this->load->helper('url');
         if (!$idea_id) redirect('/');
         $idea_id = (int)$idea_id;
         $this->load->model('m_ideas');
         $idea = $this->m_ideas->getItem($idea_id, true);
+
         if (!$idea) redirect('/');
+
+        $where_paging = array();
+        $where_paging['is_deleted'] = 0;
+
+        if (!$filter || $filter == 'main') {
+            $where_paging['is_sample'] = 0;
+        } elseif ($filter == 'judges') {
+            $where_paging['is_sample'] = 0;
+            $where_paging['comments_count >'] = 9;
+        } elseif ($filter == 'samples') {
+            $where_paging['is_sample'] = 1;
+        }
+
+        $where_prev = $where_next = $where_paging;
+        $where_prev['id <'] = $idea_id;
+        $where_next['id >'] = $idea_id;
+
 
         $ps = array(
             '__PAGE' => 'idea',
             'idea' => $idea,
-            'prevIdea' => $this->m_ideas->getItem(array('id <'=>$idea_id), true),
-            'nextIdea' => $this->m_ideas->getItem(array('id >'=>$idea_id), true)
+            'filter' => $filter,
+            'prevIdea' => $this->m_ideas->getItem($where_prev, true, array('id'=>'desc')),
+            'nextIdea' => $this->m_ideas->getItem($where_next, true, array('id'=>'asc'))
         );
         $this->mysmarty->view('global/idea/ajaxItem/index.tpl', $ps, false);
     }
@@ -63,7 +82,7 @@ class Idea extends CI_Controller {
     public function add()
     {
         $this->load->helper('url');
-        if (!$this->user->logged()) return redirect(base_url('/'));
+        if (!$this->user->logged() || $this->user->is_deleted) return redirect(base_url('/'));
 
         $idea = array(
             'id' => 0,
@@ -74,7 +93,8 @@ class Idea extends CI_Controller {
             'contact_last_name' => '',
             'contact_email' => '',
             'contact_phone' => '',
-            'contact_role' => ''
+            'contact_role' => '',
+            'is_sample' => 0
         );
         $ps = array(
             '__PAGE' => 'idea',
@@ -86,7 +106,7 @@ class Idea extends CI_Controller {
     public function edit($idea_id = 0)
     {
         if (!$idea_id) return redirect(base_url('/'));
-        if (!$this->user->logged()) return redirect(base_url('/idea/'.$idea_id));
+        if (!$this->user->logged() || $this->user->is_deleted) return redirect(base_url('/idea/'.$idea_id));
         $idea_id = (int)$idea_id;
         $this->load->model('m_ideas');
         $idea = $this->m_ideas->getItem($idea_id, true);
@@ -96,26 +116,6 @@ class Idea extends CI_Controller {
             'idea' => $idea
         );
         $this->mysmarty->view('global/idea/add/index.tpl', $ps);
-    }
-
-    public function qr($idea_id = 0)
-    {
-        $this->load->helper('url');
-        /*
-        $this->load->library('ciqrcode');
-
-        $params['data'] = base_url('item/'.$idea_id);
-        $params['level'] = 'H';
-        $params['size'] = 5;
-        $params['savename'] = FCPATH.'resources/img/qr/u4ua_idea_'.$idea_id.'.png';
-        $this->ciqrcode->generate($params);
-        */
-
-        $this->load->model('m_ideas');
-        echo $this->m_ideas->generateQR($idea_id);
-
-        //$params['savename']
-        //echo $params['data'].'<img src="/resources/img/qr/u4ua_idea_'.$idea_id.'.png" />';
     }
 }
 

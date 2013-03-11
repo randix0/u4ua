@@ -68,12 +68,8 @@
                     <div class="b-idea-item-rating right">Судьи: <div class="b-idea-item-ratingStars s{$idea.rating_stars}"></div></div>
                     Поддержало: {$idea.rating}
                 </div>
-                <div class="b-idea-item-idesc">
-                    {$idea.idesc|truncate:255}
-                </div>
-
-                <div class="mB20px">
-                    <a class="b-showMore" href="">Показать больше</a>
+                <div class="b-idea-item-idesc js-tcMore">
+                    {$idea.idesc|tcMore}
                 </div>
 
                 {if $idea.comments_count < 10}

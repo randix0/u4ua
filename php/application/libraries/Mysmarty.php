@@ -21,7 +21,7 @@ class Mysmarty extends Smarty
 
         $current_url = '';
         $lang = $this->CI->uri->segment(1);
-        if (!preg_match('(en|ru|ua)',$lang)){
+        if (!preg_match('/^(en|ru|ua)$/',$lang)){
             $lang = 'ua';
             $current_url = uri_string();
         } else {
@@ -39,6 +39,8 @@ class Mysmarty extends Smarty
 		$this->registerPlugin('block', 'l', array($this, 'smartyBlockTranslate'));
 		$this->registerPlugin('modifier', 'minBr', array($this, 'smartyModifierMinBr'));
         $this->registerPlugin('modifier', 'actionTime', array($this, 'smartyActionTime'));
+        $this->registerPlugin('modifier', 'tcMore', array($this, 'smartyModifierTruncateAndMore'));
+
 
 
 		// absolute path prevents "template not found" errors
@@ -52,6 +54,7 @@ class Mysmarty extends Smarty
 		$this->assign('TEST_MODE', (isset($config['test_mode']) && $config['test_mode'])?true:false);
         $this->assign('_LANG', $lang);
         $this->assign('CURRENT_URL', $current_url);
+        $this->assign("SITE_URI", '/'.$lang.'/');
 			
 		if (function_exists('site_url')) {
     		// URL helper required
@@ -218,7 +221,156 @@ class Mysmarty extends Smarty
         return $action_time;
     }
 
+    /**
+    * Get segments file name
+    *
+    * @param integer $generation
+    * @return string
+    */
+    function smartyModifierMetaDesc($text, $min_length = 128, $max_length = 256, $etc=' <b>...</b>') {
+        if ($min_length == 0 || $max_length == 0)
+            return '';
+        $text = trim($text);
+        $matches = array();
+
+        $str_ln = mb_strlen($text);
+
+        //$text = preg_replace('/http[s]{0,1}:\/\/[\S]{1,}/', '<a href="#">$0</a>', $text);
+
+        if($str_ln <= $max_length)
+            return $text;
+
+        $text = mb_substr($text, 0, $max_length);
+        $delimeters = array('.','!','?');
+
+        while($max_length > $min_length) {
+            if(in_array(mb_substr($text, ($max_length-1), 1), $delimeters)) {
+                return mb_substr($text, 0, $max_length).$etc;
+            }
+            $max_length--;
+        }
+
+        return $text.$etc;
+    }
+    //$text = preg_replace_callback(validURLExp(), array(&$this, 'linksReplaceCallback'), $text);
+
+    /**
+     * Get segments file name
+     *
+     * @param integer $generation
+     * @return string
+     */
+    private function linksReplaceCallback($matches, $suf_limit = 48) {
+        if(!$matches)
+            return '';
+
+        $suf = '';
+        if(isset($matches[2]) && strlen($matches[2]) < $suf_limit) {
+            $suf = $matches[2];
+        } else {
+            $suf = (isset($matches[3])?$matches[3].'..':'');
+        }
+
+        return '<a href="/away?url='.$matches[0].'" target="_blank">'.$matches[1].''.$suf.'</a>';
+    }
 
 
+
+    /**
+     * Get segments file name
+     *
+     * @param integer $generation
+     * @return string
+     */
+    function smartyModifierPrepareLinks($text) {
+
+        $this->CI->load->helper('url_helper');
+        $text = preg_replace_callback(validURLExp(), array(&$this, 'linksReplaceCallback'), $text);
+
+        return $text;
+    }
+
+
+
+    /**
+     * Get segments file name
+     *
+     * @param integer $generation
+     * @return string
+     */
+    function smartyModifierTruncateAndMore($text, $min = 164, $max = 312, $show_word = 'ACTION_SHOW_ALL', $hide_word = 'ACTION_HIDE') {
+        $text_ln_mb = mb_strlen($text);
+        $text_ln = strlen($text);
+
+        $this->CI->load->helper('url_helper');
+        $text = preg_replace_callback(validURLExp(), array(&$this, 'linksReplaceCallback'), $text);
+
+        if($text_ln_mb <= $min) {
+            return $text;
+        }
+
+
+
+        //find and cut links in text
+        $repl = array(); $matches = array();
+        preg_match_all('/<a[^\<]+<\/a>/', $text, $matches, PREG_OFFSET_CAPTURE);
+
+        $offsets = 0;
+        if($matches) {
+            foreach($matches[0] as $m) {
+                if(!$m)
+                    break;
+
+                $len = strlen($m[0]);
+                $repl[] = array($m[0], $m[1]-$offsets, $len);
+
+                $text = substr_replace($text,'',$m[1]-$offsets,$len);
+                $offsets += $len;
+            }
+        }
+
+        //reverse cuted links array
+        if($repl)
+            $repl = array_reverse($repl);
+
+        $half_1  = $this->smartyModifierMetaDesc($text, $min, $max, '');
+        $half_1_ln = strlen($half_1);
+
+        if($half_1_ln >= $text_ln) {
+
+            if($repl) {
+                foreach($repl as $r) {
+                    $text = substr_replace($text,$r[0],$m[1]);
+                }
+            }
+
+            return $text;
+        }
+
+        $half_2  = substr($text, $half_1_ln);
+
+        //paste cuted links into text
+        if($repl) {
+            foreach($repl as $r) {
+                if($r[1]<=$half_1_ln) {
+                    $half_1 = substr_replace($half_1,$r[0],$r[1],0);
+                } else {
+                    $half_2 = substr_replace($half_2,$r[0],$r[1]-$half_1_ln,0);
+                }
+            }
+        }
+
+
+        $etc = '<span class="show-more" style="display:none;">';
+        $end = '</span><br /><a class="b-showMore" onclick="Posts.showMore(this);" data-hidden="1" data-txt-show="'.$this->CI->lang->line($show_word).'" data-txt-hide="'.$this->CI->lang->line($hide_word).'">'.$this->CI->lang->line($show_word).'</a>';
+
+        return $half_1.$etc.$half_2.$end;
+    }
 } // END class smarty_library
+
+if(!function_exists('validURLExp')) {
+    function validURLExp() {
+        return '/((?:http[s]?|ftp):\/\/[A-Za-z0-9-.]{2,}\.[A-Za-z0-9^.]{2,10})(([\?\/\#])[^\"\'\<\>]*|[\?\/\#]?)/';
+ }
+}
 ?>

@@ -37,6 +37,10 @@ class Ajax extends CI_Controller {
     {
         $result = array('status' => 'error', 'errors' => array());
 
+        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
+
+        $user_id = $this->user->uid();
+
         $item = array();
         $required = array(
             'link','iname','idesc','contact_first_name','contact_last_name','contact_email','contact_phone','contact_role'
@@ -45,13 +49,20 @@ class Ajax extends CI_Controller {
         $RAW = $this->input->post('item');
         $idea_id = $this->input->post('id');
 
+        $this->load->model('m_ideas');
+
+        if ($idea_id) {
+            $idea = $this->m_ideas->getItem($idea_id);
+            if ($idea['user_id'] != $user_id && $this->user->access_level < 50) return $this->json->parse($result);
+        }
+
         foreach($required as $r)
         {
             if (!isset($RAW[$r]) || !$RAW[$r]) $result['errors'][$r] = 1;
         }
 
         if (!$idea_id) {
-            $item['user_id'] = $this->user->uid();
+            $item['user_id'] = $user_id;
             $item['add_date'] = time();
 
         }
@@ -90,9 +101,11 @@ class Ajax extends CI_Controller {
 
 
         if (!$result['errors']) {
-            $this->load->model('m_ideas');
-            if (!$idea_id)
+            $created = false;
+            if (!$idea_id){
                 $idea_id = $this->m_ideas->create($item);
+                $created = true;
+            }
             else
                 $this->m_ideas->update($idea_id,$item);
             $item['id'] = $idea_id;
@@ -104,7 +117,10 @@ class Ajax extends CI_Controller {
                 );
                 $qr_name = $this->m_ideas->generateQR($idea_id);
                 $this->m_ideas->update($idea_id,array('qr_code'=>$qr_name));
-
+                if ($created) {
+                    $this->load->model('m_users');
+                    $this->m_users->update($user_id, array('ideas_count'=>$this->user->ideas_count+1));
+                }
             }
         }
 
@@ -113,7 +129,7 @@ class Ajax extends CI_Controller {
 
     public function shareIdea($handler, $idea_id = 0)
     {
-        if (!$this->user->logged()) return false;
+        if (!$this->user->logged() || $this->user->is_deleted) return false;
         $config	 = &get_config();
         $link = $config['base_url'].'idea/'.$idea_id;
         if ($handler == 'facebook') {
@@ -144,7 +160,7 @@ class Ajax extends CI_Controller {
 
         $RAW = $this->input->post('item');
 
-        if (!$this->user->logged() || !isset($RAW['handler_type']) || !$RAW['handler_type'] || !isset($RAW['idea_id']) || !$RAW['idea_id']) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted || !isset($RAW['handler_type']) || !$RAW['handler_type'] || !isset($RAW['idea_id']) || !$RAW['idea_id']) return $this->json->parse($result);
 
         $user_id = $this->user->uid();
         $is_judge = $this->user->is_judge;
@@ -187,32 +203,80 @@ class Ajax extends CI_Controller {
         return $this->json->parse($result);
     }
 
-    public function getIdeas()
+    public function getIdeas($order_by = 'date', $data_id = 0)
     {
         $this->load->model('m_ideas');
-        $ideas = $this->m_ideas->getItems(array(),array(), true);
-        $result = array('status'=>'success');
-        $result['html'] = $this->mysmarty->view('global/idea/items/index.tpl', array('ideas'=>$ideas),false,true);
-        return $this->json->parse($result);
+        $gen_raw_id = false;
+        $data_id = (int)$data_id;
+
+        $getItems = array(
+            'where' => array('is_deleted' => 0, 'is_sample' => 0),
+            'offset' => 0,
+            'order' => array('id'=>'desc')
+        );
+
+        if ($order_by == 'rating') {
+            $getItems['order'] = array(
+                'rating' => 'desc',
+                'id' => 'desc'
+            );
+            $gen_raw_id = true;
+            $getItems['raw_id_start'] = $data_id + 1;
+            $getItems['offset'] = $data_id;
+        } elseif ($order_by == 'judging'){
+            $getItems['where']['comments_count >'] = 9;
+            $getItems['where']['id <'] = $data_id;
+        } elseif ($order_by == 'samples'){
+            $getItems['where']['is_sample'] = 1;
+            $getItems['where']['id <'] = $data_id;
+        } else {
+            $getItems['where']['id <'] = $data_id;
+        }
+
+
+        $ideas = $this->m_ideas->getItems($getItems, true, $gen_raw_id);
+        $this->mysmarty->view('global/idea/items/index.tpl', array('ideas'=>$ideas),false);
     }
 
-    public function getIdea($idea_id = 0, $order_by = '', $direction = '')
+    public function getIdea($idea_id = 0, $direction = '', $filter = '')
     {
         $this->load->model('m_ideas');
         $where = array();
-        if ($direction == 'prev') $where['id <'] = $idea_id;
-        elseif ($direction == 'next') $where['id >'] = $idea_id;
-        $idea = $this->m_ideas->getItem($where, true);
+        $offset = false;
+
+        if (!$filter || $filter == 'main') {
+            $where['is_deleted'] = 0;
+            $where['is_sample'] = 0;
+        } elseif ($filter == 'judges') {
+            $where['is_sample'] = 0;
+            $where['comments_count >'] = 9;
+        } elseif ($filter == 'samples') {
+            $where['is_sample'] = 1;
+        }
+
+
+        if ($direction == 'prev') {
+            $where['id <'] = $idea_id;
+            $order_sc = 'desc';
+        }
+        else {
+            $where['id >'] = $idea_id;
+            $order_sc = 'asc';
+        }
+        $order = array('id'=>$order_sc);
+
+        $idea = $this->m_ideas->getItem($where, true, $order);
 
         $result = array('status'=>'success');
-        $result['html'] = $this->mysmarty->view('global/idea/ajaxItem/item.tpl', array('idea'=>$idea, 'class'=>$direction),false,true);
+        if ($idea)
+            $result['html'] = $this->mysmarty->view('global/idea/ajaxItem/item.tpl', array('idea'=>$idea, 'class'=>$direction, 'filter' => $filter),false,true);
         return $this->json->parse($result);
     }
 
     public function isAuthNeeded($handler = '')
     {
         $result = array('status'=>'error','needed' => 1);
-        if (!$handler) return $this->json->parse($result);
+        if (!$handler || $this->user->is_deleted) return $this->json->parse($result);
 
         $user_id = $this->user->uid();
 
@@ -244,6 +308,7 @@ class Ajax extends CI_Controller {
     {
         $this->load->helper('file');
         $result = array('status'=>'error');
+        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
 
         if (!$upload_type || !$item_id || !preg_match('/^(attachments|team|judges|partners)$/',$upload_type)) return $this->json->parse($result);
 
@@ -312,7 +377,6 @@ class Ajax extends CI_Controller {
             $files_i++;
         }
 
-        //var_dump($_FILES['userfile']);
         if ($files) {
             $result['status'] = 'success';
             $result['files'] = $files;
@@ -324,8 +388,8 @@ class Ajax extends CI_Controller {
 
     public function saveAttachments()
     {
-       //if (!$this->user->logged()) return false;
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
         $this->load->model('m_ideas');
         $RAW = $this->input->post('item');
 
@@ -348,8 +412,10 @@ class Ajax extends CI_Controller {
                 'add_date' => time()
             );
             $idea_attach_id = $this->m_ideas->create_attachment($data);
-            if ($idea_attach_id)
+            if ($idea_attach_id){
                 $attachments[] = $data;
+                $i++;
+            }
 
         }
         if ($attachments) {
@@ -361,8 +427,8 @@ class Ajax extends CI_Controller {
 
     public function saveTeam()
     {
-        //if (!$this->user->logged()) return false;
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
         $this->load->model('m_ideas');
         $RAW = $this->input->post('item');
 
@@ -375,18 +441,6 @@ class Ajax extends CI_Controller {
         foreach($RAW as $file)
         {
             if ($i > 5) continue;
-            /*
-            $data = array(
-                'idea_id' => (int)$file['idea_id'],
-                'type' => $file['type'],
-                'ext' => $file['ext'],
-                'user_id' => $this->user->uid(),
-                'iname' => $file['iname'],
-                'path' => 'upload/'.$file['store_name'],
-                'add_date' => time()
-            );
-            */
-
             if (!preg_match('/^(png|jpg)$/',$file['ext'])) continue;
 
             $avatar = array(
@@ -428,8 +482,10 @@ class Ajax extends CI_Controller {
             $result['files'][] = $avatar['b'];
 
             $idea_team_id = $this->m_ideas->create_team($data);
-            if ($idea_team_id)
+            if ($idea_team_id){
                 $team[] = $data;
+                $i++;
+            }
 
         }
         if ($team) {
@@ -444,7 +500,7 @@ class Ajax extends CI_Controller {
     public function saveComment()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        //if (!$this->user->logged()) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
         $RAW = $this->input->post('item');
         if (!$RAW || !isset($RAW['idea_id']) || !$RAW['idea_id'] || !isset($RAW['idesc']) || !$RAW['idesc']) return $this->json->parse($result);
 
@@ -478,6 +534,7 @@ class Ajax extends CI_Controller {
     public function saveJudge()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
         $RAW = $this->input->post('item');
         $judge_id = (int)$this->input->post('id');
         $file = $this->input->post('file');
@@ -508,6 +565,9 @@ class Ajax extends CI_Controller {
             } else {
                 $result['errors']['link'] = 2;
             }
+        } elseif ($judge_id && !$RAW['link']){
+            $item['youtube_img'] = '';
+            $item['youtube_code'] = '';
         }
 
 
@@ -539,12 +599,12 @@ class Ajax extends CI_Controller {
     public function savePartner()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
         $RAW = $this->input->post('item');
         $partner_id = (int)$this->input->post('id');
         $file = $this->input->post('file');
         if (!$RAW || !isset($RAW['iname']) || !$RAW['iname'] || !isset($RAW['idesc']) || !$RAW['idesc'])
             return $this->json->parse($result);
-
 
         $item = array(
             'url' => strip_tags($RAW['url']),
@@ -567,11 +627,19 @@ class Ajax extends CI_Controller {
             } else {
                 $result['errors']['link'] = 2;
             }
+        } elseif ($partner_id && !$RAW['link']){
+            $item['youtube_img'] = '';
+            $item['youtube_code'] = '';
         }
 
         if ($file && isset($file['store_name']) && $file['store_name'] && isset($file['upload_path']) && $file['upload_path']) {
             $this->load->library('imagine');
-            $avatar = $this->imagine->proccessPhoto($file);
+            $sizes = array(
+                array('key'=>'b','prefix'=>'b_', 'thumb'=>true, 'width'=>644, 'height'=>483),
+                array('key'=>'m','prefix'=>'m_', 'thumb'=>true, 'width'=>216, 'height'=>184),
+                array('key'=>'s','prefix'=>'s_', 'thumb'=>true, 'width'=>60, 'height'=>60),
+            );
+            $avatar = $this->imagine->proccessPhoto($file, $sizes);
             if ($avatar) {
                 $item['avatar_b'] = $avatar['b'];
                 $item['avatar_m'] = $avatar['m'];
@@ -597,6 +665,7 @@ class Ajax extends CI_Controller {
     public function saveVideo()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
         $RAW = $this->input->post('item');
         $video_id = (int)$this->input->post('id');
         if (!$RAW || !isset($RAW['iname']) || !$RAW['iname'] || !isset($RAW['idesc']) || !$RAW['idesc'])
@@ -640,5 +709,5 @@ class Ajax extends CI_Controller {
     }
 }
 
-/* End of file main.php */
-/* Location: ./application/controllers/main.php */
+/* End of file ajax.php */
+/* Location: ./application/controllers/ajax.php */

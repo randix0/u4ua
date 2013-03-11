@@ -1,5 +1,3 @@
-{$hItem|var_dump}
-
 <form id="signUp">
     <input type="hidden" name="item[vkontakte_id]" value="0">
     <input type="hidden" name="item[twitter_id]" value="0">

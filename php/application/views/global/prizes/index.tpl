@@ -98,7 +98,7 @@
         </div>
 
         <div class="tCenter">
-            <a class="b-official-rules" href="/rules/">Офіційні правила конкурсу</a>
+            <a class="b-official-rules" href="{$SITE_URL}rules/">Офіційні правила конкурсу</a>
         </div>
 
     </div>

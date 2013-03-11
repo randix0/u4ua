@@ -231,8 +231,9 @@ Window = {
 		else {
 			var winID = $('.modal-window.' + p).parent('.modal-window-container').attr('id');
 		}
-		
-		
+
+        if (supports_history_api())
+            history.pushState(null, null, SITE_URI);
 		if(winID == 'undefined') {
 			return false;
 		}

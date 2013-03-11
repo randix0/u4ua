@@ -29,10 +29,14 @@ class My extends CI_Controller {
     {
         $this->load->model('m_ideas');
         $user_id = $this->user->uid();
+
+        $getItems = array(
+            'where' => array('user_id'=>$user_id)
+        );
         $ps = array(
             '__PAGE' => 'my',
             'is_author' => 1,
-            'ideas' => $this->m_ideas->getItems(array('user_id' => $user_id), array(), true)
+            'ideas' => $this->m_ideas->getItems($getItems, true)
         );
         $this->mysmarty->view('global/my/index.tpl', $ps);
     }

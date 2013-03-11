@@ -72,8 +72,8 @@
     padding: 30px;
 }
 .p-idea.prev, .p-idea.next {position: absolute; top: 50px; width: 200px;}
-.p-idea.prev {left: -260px;}
-.p-idea.next {right: -260px;}
+.p-idea.prev {right: -260px;}
+.p-idea.next {left: -260px;}
 
 .b-idea-item-more {display: none;}
 .p-idea .b-idea-item-video {height: 100px;}

@@ -23,12 +23,9 @@
             {elseif $judge.avatar_b}
                 <img src="/{$judge.avatar_b}" alt="">
             {/if}
-                <div class="b-idea-item-idesc">
-                {$judge.idesc|truncate:255}
-                </div>
 
-                <div class="mB20px">
-                    <a class="b-showMore" href="">Показать больше</a>
+                <div class="b-idea-item-idesc js-tcMore">
+                    {$judge.idesc|tcMore}
                 </div>
             </div>
         </div>

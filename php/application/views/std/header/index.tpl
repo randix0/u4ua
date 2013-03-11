@@ -28,6 +28,7 @@
                 fb_app_id = '{$FB_APP_ID}',
                 gl_app_id = '{$GL_APP_ID}',
                 BASE_URL = '{$BASE_URL}',
+                SITE_URI = '{$SITE_URI}',
                 LOGGED = {if $LOGGED}{$LOGGED}{else}0{/if};
     </script>
     <script src="{$RESOURCES_URL}js/auth.js"></script>
@@ -55,10 +56,10 @@
                     <a class="b-login-avatar" href="{$SITE_URL}my"><img src="{if $USER_DATA.avatar_s}/{$USER_DATA.avatar_s}{/if}" width=24 height=24 /></a>
                     <a class="b-login-iname" href="{$SITE_URL}my">{$USER_DATA.first_name} {$USER_DATA.last_name}</a>
                     {*<a class="b-login-login" onclick="Window.load('/modal/login/merge','win-login','');">{l}add social{/l}<i class="i-logout"></i></a>*}
-                    <a class="b-login-logout" href="/auth/logout">{l}вийти{/l}<i class="i-logout"></i></a>
+                    <a class="b-login-logout" href="/auth/logout">{l}HEADER_LOGOUT{/l}<i class="i-logout"></i></a>
                 {else}
                     {* Auth.facebook(); return false; *}
-                    <a class="b-login-login" onclick="Window.load('/modal/login','win-login','');">{l}увійти{/l}<i class="i-logout"></i></a>
+                    <a class="b-login-login" onclick="Window.load('/modal/login','win-login','');">{l}HEADER_LOGIN{/l}<i class="i-logout"></i></a>
                 {/if}
 
                 <div style="display: none;">
@@ -67,7 +68,7 @@
                 </div>
             </div>
             <div class="b-share">
-                {l}Розкажи друзям{/l}
+                {l}HEADER_SHARE{/l}
                 <a class="b-share-btn fb" href=""></a>
                 <a class="b-share-btn tw" href=""></a>
                 <a class="b-share-btn gp" href=""></a>
@@ -79,46 +80,46 @@
         <a class="b-logo" href="/">
             <span class="b-logo-beta">beta</span>
         </a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'main'}active{/if}" href="{$SITE_URL}">{l}Головна{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'judges'}active{/if}" href="{$SITE_URL}judges/">{l}Судді{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'prizes'}active{/if}" href="{$SITE_URL}prizes/">{l}Умови конкурсу{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'partners'}active{/if}" href="{$SITE_URL}partners/">{l}Партнери{/l}</a>
-        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'about'}active{/if}" href="{$SITE_URL}about/">{l}Про проект{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'main'}active{/if}" href="{$SITE_URL}">{l}NAV_MAIN{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'judges'}active{/if}" href="{$SITE_URL}judges/">{l}NAV_JUDGES{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'prizes'}active{/if}" href="{$SITE_URL}prizes/">{l}NAV_PRIZES{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'partners'}active{/if}" href="{$SITE_URL}partners/">{l}NAV_PARTNERS{/l}</a>
+        <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'about'}active{/if}" href="{$SITE_URL}about/">{l}NAV_ABOUT{/l}</a>
     </nav>
     {if isset($__PAGE) && $__PAGE == 'main'}
     <div class="b-header-body">
         <div class="layout w976px relative">
-            <a class="b-header-button" {if $LOGGED}href="{$SITE_URL}idea/add/"{else}onclick="Window.load('/modal/login','win-login','');"{/if}>{l}Поділись своєю ідеєю{/l}</a>
-            <div class="b-header-btn-span0">{l}АБО{/l}</div>
-            <div class="b-header-btn-span1">{l}ПІДТРИМАЙ ідеї людей, <br> хто перетворює Україну на краще{/l}</div>
+            <a class="b-header-button" {if $LOGGED}href="{$SITE_URL}idea/add/"{else}onclick="Window.load('{$SITE_URL}modal/login','win-login','');"{/if}>{l}HEADER_SHARE_YOUR_IDEA{/l}</a>
+            <div class="b-header-btn-span0">{l}HEADER_OR{/l}</div>
+            <div class="b-header-btn-span1">{l}HEADER_SUPPORT_IDEAS{/l}</div>
             <div class="b-header-video">
                 <a class="b-header-video-frame" href="">
                     <div class="b-header-video-play"></div>
                 </a>
                 <div class="b-header-video-desc">
-                    <a class="b-header-video-iname" href="#">Давай змінемо цей світ на краще разом!</a><br/>
-                    <div class="b-header-video-author" href="#">— Святослав Вакарчук</div>
+                    <a class="b-header-video-iname" href="#">{l}HEADER_VIDEO_INAME{/l}</a><br/>
+                    <div class="b-header-video-author" href="#">— {l}HEADER_VIDEO_AUTHOR{/l}</div>
                 </div>
 
-                <a class="b-header-video-viewAll" href="{$SITE_URL}videos">Перегляд всіх відео</a>
+                <a class="b-header-video-viewAll" href="{$SITE_URL}videos">{l}HEADER_VIDEO_ALL{/l}</a>
             </div>
         </div>
     </div>
     <div class="b-header-footer">
         <div class="b-partnersBlock">
-            <div class="b-partnersBlock-header">партнери</div>
+            <div class="b-partnersBlock-header">{l}HEADER_PARTNERS{/l}</div>
             <a class="b-partnersBlock-prev"></a>
             <a class="b-partnersBlock-next"></a>
 
             <div class="b-partnersBlock-body">
                 <div class="b-partnersBlock-wrap">
                     <div class="b-partnersBlock-sizer">
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/pinchuk.jpg);" href="/partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/eastlabs.jpg);" href="/partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/microsoft.jpg);" href="/partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/google.jpg);" href="/partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/microsoft.jpg);" href="/partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/google.jpg);" href="/partners"></a>
+                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/pinchuk.jpg);" href="{$SITE_URL}partners"></a>
+                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/eastlabs.jpg);" href="{$SITE_URL}partners"></a>
+                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/microsoft.jpg);" href="{$SITE_URL}partners"></a>
+                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/google.jpg);" href="{$SITE_URL}partners"></a>
+                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/microsoft.jpg);" href="{$SITE_URL}partners"></a>
+                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/google.jpg);" href="{$SITE_URL}partners"></a>
                     </div>
                 </div>
             </div>

@@ -19,12 +19,9 @@
                 {elseif $partner.avatar_b}
                 <img src="/{$partner.avatar_b}" alt="">
             {/if}
-                <div class="b-idea-item-idesc">
-                {$partner.idesc|truncate:255}
-                </div>
 
-                <div class="mB20px">
-                    <a class="b-showMore" href="">Показать больше</a>
+                <div class="b-idea-item-idesc js-tcMore">
+                    {$partner.idesc|tcMore}
                 </div>
             </div>
         </div>

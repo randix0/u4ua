@@ -867,6 +867,7 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 }
 
 .b-partners-item-img {
+    position: relative;
     display: block;
     background-color: #fff;
     background-position: 50% 50%;
@@ -875,6 +876,18 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
     height: 184px;
     border-radius: 0 0 4px 4px;
 }
+
+.b-partners-item-img .play {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background: url(./../img/misc/idea-play.png) 50% 50% no-repeat;
+}
+
+.b-partners-item-img:hover .play {opacity: 1;}
 .b-partners-item-desc {
     padding: 10px 15px;
 }

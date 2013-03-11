@@ -73,14 +73,17 @@ class Imagine{
         return $data;
     }
 
-    public function proccessPhoto($file)
+    public function proccessPhoto($file, $sizes = false)
     {
         if (!$file || !isset($file['store_name']) || !$file['store_name'] || !isset($file['upload_path']) || !$file['upload_path']) return false;
-        $avatar = array(
-            's' => $file['upload_path'].'s_'.$file['store_name'],
-            'm' => $file['upload_path'].'m_'.$file['store_name'],
-            'b' => $file['upload_path'].'b_'.$file['store_name']
-        );
+
+        if (!$sizes || !is_array($sizes)) {
+            $sizes = array(
+                array('key'=>'b','prefix'=>'b_', 'thumb'=>false, 'width'=>800, 'height'=>600),
+                array('key'=>'m','prefix'=>'m_', 'thumb'=>true, 'width'=>216, 'height'=>184),
+                array('key'=>'s','prefix'=>'s_', 'thumb'=>true, 'width'=>60, 'height'=>60),
+            );
+        }
 
         if (class_exists('Imagick')) {
             $image = new Imagick(FCPATH.$file['upload_path'].$file['store_name']);
@@ -88,22 +91,29 @@ class Imagine{
             $height=$image->getImageHeight();
             $width=$image->getImageWidth();
 
-            if ($width > 800 || $height > 800){
-                if ($height < $width)
-                    $image->scaleImage(800,0);
-                else
-                    $image->scaleImage(0,600);
+            $proccessed = array();
+
+            foreach($sizes as $s)
+            {
+                if ($s['thumb']) {
+                    $image->cropThumbnailImage($s['width'], $s['height']);
+                } else {
+                    if ($width > $s['width'] || $height > $s['height']){
+                        if ($height < $width)
+                            $image->scaleImage($s['width'],0);
+                        else
+                            $image->scaleImage(0,$s['height']);
+                    }
+                }
+
+                $key = $s['key'];
+                $el = $file['upload_path'].$s['prefix'].$file['store_name'];
+                $proccessed[$key] = $el;
+                $image->writeImage(FCPATH.$el);
             }
 
-            $image->writeImage(FCPATH.$avatar['b']);
-            $image->cropThumbnailImage(216, 184);
-            $image->writeImage(FCPATH.$avatar['m']);
-            $image->cropThumbnailImage(60, 60);
-            $image->writeImage(FCPATH.$avatar['s']);
-
             unset($image);
-
-            return $avatar;
+            return $proccessed;
         }
     }
 

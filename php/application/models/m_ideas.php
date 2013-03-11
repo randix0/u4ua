@@ -56,7 +56,7 @@ class M_ideas extends CI_Model
         return true;
     }
 
-    public function getItem($id = 0, $fetch = false)
+    public function getItem($id = 0, $fetch = false, $order = array(), $offset = false)
     {
         if (!$id) return array();
 
@@ -67,8 +67,20 @@ class M_ideas extends CI_Model
             $this->db->where('id', $id);
         }
 
+        if ($order && is_array($order)){
+            foreach($order as $o_key=>$o_val)
+            {
+                $this->db->order_by($o_key, $o_val);
+            }
+        }
 
-        $query = $this->db->get('ideas', 1);
+        if ($offset)
+            $this->db->limit(1, $offset);
+        else
+            $this->db->limit(1);
+
+
+        $query = $this->db->get('ideas');
 
         $idea = $query->row_array();
 
@@ -147,8 +159,14 @@ class M_ideas extends CI_Model
         return $idea;
     }
 
-    public function getItems($where = array(), $order = array() ,$fetch = false)
+    public function getItems($options = array(), $fetch = false, $gen_raw_id = false)
     {
+        $where = (isset($options['where']) && $options['where'])?$options['where']:array();
+        $order = (isset($options['order']) && $options['order'])?$options['order']:array();
+        $limit = (isset($options['limit']) && $options['limit'])?$options['limit']:20;
+        $offset = (isset($options['offset']) && $options['offset'])?$options['offset']:0;
+        $raw_id = (isset($options['raw_id_start']) && $options['raw_id_start'])?(int)$options['raw_id_start']:1;
+
         if (!$where || !isset($where['is_deleted']) || !$where['is_deleted'])
             $where['is_deleted'] = 0;
         if (!$order)
@@ -163,13 +181,20 @@ class M_ideas extends CI_Model
             }
         }
 
-        $query = $this->db->get('ideas', 16);
+        if ($offset) $this->db->limit($limit, $offset);
+        else $this->db->limit($limit);
+        $query = $this->db->get('ideas');
         $ideas=$query->result_array();
 
-        if ($ideas && $fetch) {
+        if ($ideas && ($fetch || $gen_raw_id)) {
             foreach($ideas as &$idea)
             {
-                $idea['rating_stars'] = $idea['rating_judges'];
+                if ($fetch)
+                    $idea['rating_stars'] = $idea['rating_judges'];
+                if ($gen_raw_id){
+                    $idea['raw_id'] = $raw_id;
+                    $raw_id++;
+                }
             }
         }
 
