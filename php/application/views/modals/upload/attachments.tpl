@@ -10,13 +10,13 @@
             <input type="hidden" name="item[{$i}][idea_id]" value="{$file.idea_id}" />
             <div class="in-text mB25px"><input type="text" disabled="disabled" value="{$file.name}"></div>
 
-            <h4 class="b-section-h4">Описание файла</h4>
-            <div class="in-text mB25px"><input type="text" name="item[{$i}][iname]" placeholder="Бизнес-план проекта" value="{$file.name}"></div>
+            <h4 class="b-section-h4">{l}FILE_IDESC{/l}</h4>
+            <div class="in-text mB25px"><input type="text" name="item[{$i}][iname]" placeholder="Business plan" value="{$file.name}"></div>
             <hr>
         </div>
         {counter}
     {/foreach}
-    <a class="button" onclick="Attachment.save();">Добавить</a>
+    <a class="button" onclick="Attachment.save();">{l}ADD{/l}</a>
 </form>
 
 <script type="text/javascript">

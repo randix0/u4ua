@@ -44,12 +44,12 @@ $route['ideas/(.+)$']        = "main/index/$1";
 $route['judge/(:num)']       = "judge/item/$1";
 $route['judges/(.+)$']       = "judge/items/$1";
 $route['judges$']            = "judge/index";
-$route['partner/(:num)']       = "partner/item/$1";
-$route['partners/(.+)$']       = "partner/items/$1";
-$route['partners$']            = "partner/index";
-$route['video/(:num)']         = "video/item/$1";
-$route['videos/(.+)$']         = "video/items/$1";
-$route['videos$']              = "video/index";
+$route['partner/(:num)']     = "partner/item/$1";
+$route['partners/(.+)$']     = "partner/items/$1";
+$route['partners$']          = "partner/index";
+$route['video/(:num)']       = "video/item/$1";
+$route['videos/(.+)$']       = "video/items/$1";
+$route['videos$']            = "video/index";
 
 
 $route['^(en|ru|ua)/idea/(:num)$'] = "idea/index/$2";

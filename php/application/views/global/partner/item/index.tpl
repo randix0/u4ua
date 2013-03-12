@@ -1,13 +1,13 @@
 <section class="b-section b-section-idea">
     <div class="b-section-header layout w976px">
-        <div class="b-section-header-iname">Partner</div>
+        <div class="b-section-header-iname">{l}PARTNERS_ONE{/l}</div>
     {if $LOGGED && $USER_DATA.access_level > 50}
-        <a class="" href="{$SITE_URL}partner/edit/{$partner.id}">edit</a>
+        <a class="" href="{$SITE_URL}partner/edit/{$partner.id}">{l}EDIT{/l}</a>
     {/if}
     </div>
     <div class="b-section-wrap layout w976px b-idea">
         <aside class="b-section-aside">
-            <h3 class="b-section-h3">Site:</h3>
+            <h3 class="b-section-h3">{l}PARTNERS_COMPANY_URL{/l}:</h3>
             <div class="mB20px"><a target="_blank" href="{$partner.url}">{$partner.url}</a></div>
         </aside>
         <div class="b-section-body b-section-body__withAside">

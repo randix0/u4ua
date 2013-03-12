@@ -1,8 +1,9 @@
 <section class="b-section b-section-prizes">
     <div class="b-section-header layout w976px">
-        <div class="b-section-header-iname">УМОВИ КОНКУРСУ</div>
+        <div class="b-section-header-iname">{l}NAV_PRIZES{/l}</div>
     </div>
     <div class="b-section-body layout w976px b-prizes">
+        {if $_LANG == 'ua'}
         <div class="b-prizes-desc mB30px">Основною перевагою участі у конкурсі для кожної команди, яка подала відео-пітч, є практичний досвід і можливість просунути свою ідею, довести її до реалізації - запуску конкретного продукту або послуги.</div>
 
         <div class="b-prizes-desc">
@@ -74,7 +75,7 @@
                 </div>
             </div>
             <div class="tCenter mB40px">
-                <a class="button button_big" href="/newidea/">ЗАВАНТАЖУЙ СВІЙ ВІДЕО-ПІТЧ ВЖЕ СЬОГОДНІ!</a>
+                <a class="button button_big" href="{$SITE_URL}idea/add/">ЗАВАНТАЖУЙ СВІЙ ВІДЕО-ПІТЧ ВЖЕ СЬОГОДНІ!</a>
             </div>
 
             <div class="b-notice b-notice__size_small">
@@ -96,9 +97,103 @@
                 </div>
             </div>
         </div>
+        {elseif $_LANG == 'en'}
+            <div class="b-prizes-desc mB30px">The main advantage of participating in the competition for each team that provided video pitch is an experience and ability to promote your idea, bring it to realization: running a particular product or service.</div>
 
+            <div class="b-prizes-desc">
+                <h3 class="b-section-h3"><span class="b-section-tag">IDEAS will accepted if they:</span></h3>
+                <ul>
+                    <li>Addresses the urgent problem of the people in a region, country or the world using the latest technologies (potential web, mobile or informational startup)</li>
+                    <li>Addresses the urgent problem of the people in a region, country or the world, offering a new business model that is financially viable</li>
+                    <li>Addresses the urgent problem of the people in a region or country by using existing technologies and business models that aren’t still, due to different circumstances, lead to well-being</li>
+                    <li>Can quickly become global</li>
+                    <li>Create opportunities for young people and / or jobs</li>
+                    <li>Will improve the lives of at least 5,000 people, potential clients</li>
+                </ul>
+            </div>
+
+            <div class="b-hr mB40px"></div>
+
+            <div class="b-prizes-steps">
+                <div class="b-prizes-step step0">
+                    <div class="b-prizes-step-col0">
+                        <div class="b-prizes-step-arrow">Stage 1</div>
+                    </div>
+                    <div class="b-prizes-step-col1">
+                        <div class="b-prizes-step-img"></div>
+                    </div>
+                    <div class="b-prizes-step-col2">
+                        <h2 class="b-section-h2 mB10px">Selection of the ideas</h2>
+                        <h3 class="b-section-h3"><span class="b-section-tag">By March 20, 2013</span></h3>
+                        <div class="b-prizes-step-idesc">
+                            <ul>
+                                <li>All ideas submitted in the form of a video pitch (up to 3 minutes) English only, which is the basis for the evaluation of the jury</li>
+                                <li>In addition (not mandatory) to video pitch applicants can submit to the additional documents</li>
+                                <li>All ideas must be submitted by the team (at least 2 people) and not taken from one entrepreneur</li>
+                                <li>The team must be at least one student (occasions when the idea takes the student along with the teacher are most welcomed)</li>
+                                <li>Teams may submit multiple ideas simultaneously</li>
+                                <li>Selection of the best ideas is based on the level of support for the idea of ​the audience (active comments to the video pitch, popularity among the audience) and evaluation by jury U4UA within a week after the competition</li>
+                                <li>As a result of the 1st stage, 50 teams will be transfer to the 2nd stage</li>
+                            </ul>
+
+                        </div>
+                        <h3 class="b-section-h3"><span class="b-section-tag">Prize</span></h3>
+                        <div class="b-prizes-step-idesc">
+                            UAH 7000 for a party at the University in honor of idea celebration with friends who supported the idea
+                        </div>
+                    </div>
+                </div>
+                <div class="b-prizes-step step1">
+                    <div class="b-prizes-step-col0">
+                        <div class="b-prizes-step-arrow">Stage 2</div>
+                    </div>
+                    <div class="b-prizes-step-col1">
+                        <div class="b-prizes-step-img"></div>
+                    </div>
+                    <div class="b-prizes-step-col2">
+                        <h2 class="b-section-h2 mB10px">Selection of the prototypes</h2>
+                        <h3 class="b-section-h3"><span class="b-section-tag">By April 20, 2013</span></h3>
+                        <div class="b-prizes-step-idesc">
+                            <ul>
+                                <li>Teams that will be the winners of the 1st stage of the competition are invited to move into the second stage and submit to the jury a prototype for future service or product
+                                    <br> (Graphic image, original layout of the product, wireframes and mock-ups, the original alpha model of software or website, pictures, illustrations, video, animation or other form of mapping solution of this problem)</li>
+                                <li>According to evaluation, the jury will select 3 winners who will receive prizes</li>
+                            </ul>
+                        </div>
+                        <h3 class="b-section-h3"><span class="b-section-tag">Prizes</span></h3>
+                        <div class="b-prizes-step-idesc">
+                            1st place – UAH 10000<br>
+                            2nd place – UAH 7000<br>
+                            3rd place – UAH 5000
+                        </div>
+                    </div>
+                </div>
+                <div class="tCenter mB40px">
+                    <a class="button button_big" href="{$SITE_URL}idea/add/">Upload your idea right now</a>
+                </div>
+
+                <div class="b-notice b-notice__size_small">
+                    <div class="b-notice-content p37pxi">
+                        <h3 class="b-section-h3">10 tips for making a video pitch</h3>
+                        <p>In a video pitching it should be noted:</p>
+                        <ul>
+                            <li>The name of the team and their ideas</li>
+                            <li>Vision of problems, which needs to be solved</li>
+                            <li>The target audience for which this decision should bring significant value</li>
+                            <li>Methods of solution of this problem</li>
+                            <li>Channels of interaction with the audience and potential risks</li>
+                            <li>The expected result for the audience (great vision)</li>
+                            <li>Sources of financial flows in the project or business in the future a few years, and business model of the future of the organization or company</li>
+                            <li>Plans and tactical steps to implement the idea</li>
+                            <li>Unique experience, skills and potential team</li>
+                            <li>A key advantage or uniqueness of ideas and call for participants of the platform and jury and to vote for you</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {/if}
         <div class="tCenter">
-            <a class="b-official-rules" href="{$SITE_URL}rules/">Офіційні правила конкурсу</a>
+            <a class="b-official-rules" href="{$SITE_URL}rules/">{l}RULES_OFFICIAL{/l}</a>
         </div>
 
     </div>

@@ -60,7 +60,6 @@ class Twitter extends CI_Controller
 			// User is already authenticated. Add your user notification code here.
 			//redirect(base_url('/'));
             //$this->session->set_userdata(array('twitter_auth_status'=>'logged'));
-
             $twitter_id = $this->session->userdata('twitter_user_id');
             $twitter_auth_status = $this->session->userdata('twitter_auth_status');
 
@@ -75,6 +74,7 @@ class Twitter extends CI_Controller
 			$request_token = $this->connection->getRequestToken(base_url('/twitter/callback/'.$reason));
 
             if ($request_token && isset($request_token['oauth_token']) && $request_token['oauth_token'] && isset($request_token['oauth_token_secret']) && $request_token['oauth_token_secret']){
+
                 $this->session->set_userdata('request_token', $request_token['oauth_token']);
                 $this->session->set_userdata('request_token_secret', $request_token['oauth_token_secret']);
 
@@ -85,6 +85,7 @@ class Twitter extends CI_Controller
                 }
                 else
                 {
+
                     // An error occured. Make sure to put your error notification code here.
                     $this->session->set_userdata(array('twitter_auth_status'=>'error'));
                     setcookie('sl', 1, 0 , '/');
@@ -96,7 +97,7 @@ class Twitter extends CI_Controller
             } else {
                 $this->session->set_userdata(array('twitter_auth_status'=>'error'));
                 $this->reset_session();
-                echo '<script type="text/javascript">window.close();</script>';
+                echo '<script type="text/javascript">alert(\'Error: 99\');window.close();</script>';
                 return;
             }
 		}

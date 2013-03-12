@@ -1,1 +1,1 @@
-{l}_ALERTS_success_{$code}{/l}
+{l}ALERTS_success_{$code}{/l}

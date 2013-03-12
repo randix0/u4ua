@@ -8,14 +8,14 @@
     <div class="b-idea-item-more">
         <iframe width="644" height="483" src="http://www.youtube.com/embed/{$idea.youtube_code}" frameborder="0" allowfullscreen></iframe>
         <div class="b-idea-item-stripe">
-            <a class="b-idea-share-mini" onclick="{if !$idea.is_sample && !$idea.is_deleted}U4ua.idea.vote({$idea.id});{/if}">Поддержи</a>
-            <div class="b-idea-item-rating right">Судьи: <div class="b-idea-item-ratingStars s{$idea.rating_stars}"></div></div>
-            Поддержало: {$idea.rating}
+            <a class="b-idea-share-mini" onclick="{if !$idea.is_sample && !$idea.is_deleted}U4ua.idea.vote({$idea.id});{/if}">{l}IDEAS_SUPPORT{/l}</a>
+            <div class="b-idea-item-rating right">{l}IDEAS_JUDGES{/l}: <div class="b-idea-item-ratingStars s{$idea.rating_stars}"></div></div>
+            {l}IDEAS_SUPPORTED{/l}: {$idea.rating}
         </div>
         <div class="b-idea-item-idesc">{$idea.idesc}</div>
 
         {if $idea.attachments}
-            <div class="b-comments-header">Дополнения</div>
+            <div class="b-comments-header">{l}IDEA_ATTACHMENTS{/l}</div>
             <div id="idea_attachments" class="overhide">
                 {include file="global/idea/attachments/index.tpl" attachments=$idea.attachments}
             </div>
@@ -24,20 +24,20 @@
 
 
         {if $idea.team || $idea.is_can_edit}
-            <div class="b-comments-header">Команда</div>
+            <div class="b-comments-header">{l}IDEA_TEAM{/l}</div>
             <div class="b-idea-team">
                 {include file="global/idea/team/index.tpl" team=$idea.team}
             </div>
         {/if}
 
         <div class="b-comments">
-            <div class="b-comments-header">Комментарии (<span id="comments-number" class="b-comments-number">{$idea.comments_count}</span>)</div>
-            {if $idea.comments_count > 3}
-                <a class="b-comments-more" onclick="$('#comments_hidden').show(); $(this).hide();">Show all {$idea.comments_count} comments</a>
+            <div class="b-comments-header">{l}IDEAS_COMMENTS{/l} (<span id="comments-number" class="b-comments-number">{$idea.comments_count}</span>)</div>
+            {if $idea.comments_count > 5}
+                <a class="b-comments-more" onclick="$('#comments_hidden').show(); $(this).hide();">{l}IDEA_COMMENTS_SHOW_ALL_p1{/l} {$idea.comments_count} {l}IDEA_COMMENTS_SHOW_ALL_p2{/l}</a>
             {/if}
             <div class="b-comments-body" id="idea_comments">
                 {if $idea.comments_count && $idea.comments}
-                    {include file="global/idea/comments/index.tpl" comments = $idea.comments limit = 3}
+                    {include file="global/idea/comments/index.tpl" comments = $idea.comments limit = 5}
                 {/if}
             </div>
             <div class="b-comments-footer">
@@ -48,7 +48,7 @@
                             <input type="hidden" name="item[idea_id]" value="{$idea.id}">
                             <div class="in-textarea mB10px"><textarea name="item[idesc]"></textarea></div>
                             <div class="tRight">
-                                <a class="button" onclick="Comment.add();">Add</a>
+                                <a class="button" onclick="Comment.add();">{l}ADD{/l}</a>
                             </div>
                         </form>
                         <script type="text/javascript">
@@ -80,7 +80,7 @@
                     </div>
                 {else}
                     <div class="mB20px">
-                        You need to <a onclick="Window.load('/modal/login','win-login','');">{l}увійти{/l}</a> to post comments
+                        {l}IDEA_COMMENT_NOT_LOGGED_p1{/l} <a onclick="Window.load(SITE_URI+'modal/login','win-login','');">{l}HEADER_LOGIN{/l}</a>{l}IDEA_COMMENT_NOT_LOGGED_p2{/l}
                     </div>
                 {/if}
             </div>

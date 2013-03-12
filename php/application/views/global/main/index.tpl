@@ -3,7 +3,7 @@
     <div id="how_to_take_part" class="b-notice b-notice__size_small layout w1014px mB80pxi">
         <div class="b-notice-content">
             <a class="close" onclick="$('#how_to_take_part').hide();"></a>
-            <h3 class="b-section-h3">ВЗЯТИ УЧАСТЬ - ПРОСТО</h3>
+            <h3 class="b-section-h3">{l}MAIN_TAKE_PART_S0{/l}</h3>
             <div class="b-rules-steps">
                 <div class="b-rules-step step0">
                     <div class="b-rules-step-img"></div>

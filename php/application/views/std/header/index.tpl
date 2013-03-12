@@ -77,7 +77,7 @@
         </div>
     </div>
     <nav class="b-header-nav layout w976px">
-        <a class="b-logo" href="/">
+        <a class="b-logo" href="{$SITE_URI}">
             <span class="b-logo-beta">beta</span>
         </a>
         <a class="b-header-nav-item {if isset($__PAGE) && $__PAGE == 'main'}active{/if}" href="{$SITE_URL}">{l}NAV_MAIN{/l}</a>

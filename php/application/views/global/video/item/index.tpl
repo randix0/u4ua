@@ -1,8 +1,8 @@
 <section class="b-section b-section-idea">
     <div class="b-section-header layout w976px">
-        <div class="b-section-header-iname">Video</div>
+        <div class="b-section-header-iname">{l}VIDEOS_ONE{/l}</div>
     {if $LOGGED && $USER_DATA.access_level > 50}
-        <a class="" href="{$SITE_URL}video/edit/{$video.id}">edit</a>
+        <a class="" href="{$SITE_URL}video/edit/{$video.id}">{l}EDIT{/l}</a>
     {/if}
     </div>
     <div class="b-section-wrap layout w976px b-idea">

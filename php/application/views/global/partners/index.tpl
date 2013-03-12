@@ -1,8 +1,8 @@
 <section class="b-section b-section-partners">
     <div class="b-section-header layout w976px">
-        <div class="b-section-header-iname">Партнеры</div>
+        <div class="b-section-header-iname">{l}NAV_PARTNERS{/l}</div>
         {if isset($USER_DATA) && $USER_DATA && isset($USER_DATA.access_level) && $USER_DATA.access_level > 50}
-            <a class="" href="{$SITE_URL}partner/add">Add</a>
+            <a class="" href="{$SITE_URL}partner/add">{l}ADD{/l}</a>
         {/if}
     </div>
     <div class="b-section-body layout w1010px b-partners">

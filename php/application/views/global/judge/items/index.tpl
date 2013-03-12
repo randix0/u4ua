@@ -17,7 +17,7 @@
             </div>
             {if isset($USER_DATA) && $USER_DATA && isset($USER_DATA.access_level) && $USER_DATA.access_level > 50}
                 <div class="tCenter mB20px">
-                    <a href="/judge/edit/{$item.id}">edit</a>
+                    <a href="{$SITE_URL}judge/edit/{$item.id}">edit</a>
                 </div>
             {/if}
         </div>

@@ -11,17 +11,17 @@
             <input type="hidden" name="item[{$i}][idea_id]" value="{$file.idea_id}" />
             <div class="in-text mB25px"><input type="text" disabled="disabled" value="{$file.name}"></div>
 
-            <h4 class="b-section-h4">First name</h4>
-            <div class="in-text mB25px"><input type="text" name="item[{$i}][first_name]" placeholder="Тарас"></div>
-            <h4 class="b-section-h4">Last name</h4>
-            <div class="in-text mB25px"><input type="text" name="item[{$i}][last_name]" placeholder="Шевченко"></div>
-            <h4 class="b-section-h4">Role in project</h4>
-            <div class="in-text mB25px"><input type="text" name="item[{$i}][role]" placeholder="Программист"></div>
+            <h4 class="b-section-h4">{l}ADD_IDEA_CONTACT_FIRST_NAME{/l}</h4>
+            <div class="in-text mB25px"><input type="text" name="item[{$i}][first_name]" placeholder="Vasil"></div>
+            <h4 class="b-section-h4">{l}ADD_IDEA_CONTACT_LAST_NAME{/l}</h4>
+            <div class="in-text mB25px"><input type="text" name="item[{$i}][last_name]" placeholder="Pupkin"></div>
+            <h4 class="b-section-h4">{l}ADD_IDEA_CONTACT_ROLE{/l}</h4>
+            <div class="in-text mB25px"><input type="text" name="item[{$i}][role]" placeholder="Developer"></div>
             <hr>
         </div>
         {counter}
     {/foreach}
-    <a class="button" onclick="Team.save();">Добавить</a>
+    <a class="button" onclick="Team.save();">{l}ADD{/l}</a>
 </form>
 
 <script type="text/javascript">

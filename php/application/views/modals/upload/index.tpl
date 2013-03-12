@@ -46,13 +46,13 @@
 <section id="wrapper">
     <article>
         <div id="holder">
-            <h3 class="tCenter">Drag & drop {if $multiple}files{else}file{/if} or <a onclick="$('#input_userfile').trigger('click');">choose</a></h3>
+            <h3 class="tCenter">{l}FILE_DRAG_N_DROP{/l} {if $multiple}{l}FILE_MULTI{/l}{else}{l}FILE_ONE{/l}{/if} {l}OR{/l} <a onclick="$('#input_userfile').trigger('click');">FILE_CHOOSE</a></h3>
         </div>
-        <p id="upload" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input id="input_userfile" type="file" {if $multiple}multiple="multiple"{/if} /></label></p>
+        <p id="upload" class="hidden"><label>{l}FILE_ERROR_0{/l}:<br><input id="input_userfile" type="file" {if $multiple}multiple="multiple"{/if} /></label></p>
 
-        <p id="filereader">File API & FileReader API not supported</p>
-        <p id="formdata">XHR2's FormData is not supported</p>
-        <p id="progress">XHR2's upload progress isn't supported</p>
+        <p id="filereader">{l}FILE_ERROR_1{/l}</p>
+        <p id="formdata">{l}FILE_ERROR_2{/l}</p>
+        <p id="progress">{l}FILE_ERROR_3{/l}</p>
 
         <div><progress id="uploadprogress" min="0" max="100" value="0">0</progress></div>
     </article>

@@ -1,44 +1,3 @@
-ideas = {
-    tPrev: null,
-    tNext: null,
-    prev: function(){
-//        alert('prev');
-        Ideas.unbinder();
-        $('.p-idea.prev').remove();
-        $('.p-idea.active').removeClass('active').addClass('next');
-        $('.p-idea.prev').removeClass('prev').addClass('active');
-
-        Ideas.tPrev = '<div class="p-idea prev">Вот сюда мы пихаем блок 2</div>';
-        $('.p-ideas').prepend(Ideas.tPrev);
-        Ideas.tPrev = null;
-
-        Ideas.binder();
-    },
-    next: function(){
-//        alert('next');
-        Ideas.unbinder();
-        $('.p-idea.prev').hide();
-        $('.p-idea.prev').remove();
-        $('.p-idea.active').removeClass('active').addClass('prev');
-        $('.p-idea.next').removeClass('next').addClass('active');
-
-       Ideas.tNext = '<div class="p-idea next">Вот сюда мы пихаем блок 1</div>';
-        $('.p-ideas').append(Ideas.tNext);
-        Ideas.tNext = null;
-
-        Ideas.binder();
-    },
-    unbinder: function(){
-        $('.p-idea.prev').unbind();
-        $('.p-idea.next').unbind();
-    },
-    binder: function(){
-        $('.p-idea.prev').bind('click',function(){Ideas.prev();});
-        $('.p-idea.next').bind('click',function(){Ideas.next();});
-    }
-};
-
-
 U4ua = {
     partnersSlider: {
         offset: 0,
@@ -86,7 +45,7 @@ U4ua = {
             $('.p-idea.prev').removeClass('prev').addClass('active');
 
             $.ajax({
-                url: '/ajax/getIdea/'+U4ua.ideas.current_id+'/prev/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),
+                url: SITE_URI+'ajax/getIdea/'+U4ua.ideas.current_id+'/prev/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),
                 type: 'GET',
                 dataType: 'json',
                 success: function(data){
@@ -114,7 +73,7 @@ U4ua = {
             $('.p-idea.next').removeClass('next').addClass('active');
 
             $.ajax({
-                url: '/ajax/getIdea/'+U4ua.ideas.current_id+'/next/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),
+                url: SITE_URI+'ajax/getIdea/'+U4ua.ideas.current_id+'/next/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),
                 type: 'GET',
                 dataType: 'json',
                 success: function(data){
@@ -153,7 +112,7 @@ U4ua = {
         share: function(idea_id){
             $.ajax({
                 //'/ajax/shareIdea/facebook/'+idea_id,
-                url: '/modal/shareIdea/'+idea_id,
+                url: SITE_URI+'modal/shareIdea/'+idea_id,
                 type: 'GET',
                 dataType: 'json',
                 success: function(data){
@@ -170,14 +129,14 @@ U4ua = {
         vote: function(idea_id, handler_type){
             if (typeof(idea_id) == 'undefined' || !idea_id) return;
             if (typeof(handler_type) == 'undefined'){
-                Window.load('/modal/voteIdea/'+idea_id,'win-login','');
+                Window.load(SITE_URI+'modal/voteIdea/'+idea_id,'win-login','');
             } else {
                 //Cookie.get('ac_stop');
                 console.log('id='+idea_id+' handler_type='+handler_type);
 
                 var voteAjax = function(){
                     $.ajax({
-                        url: '/ajax/voteIdea',
+                        url: SITE_URI+'ajax/voteIdea',
                         type: 'POST',
                         dataType: 'json',
                         data: 'item[idea_id]='+idea_id+'&item[handler_type]='+handler_type,
@@ -185,15 +144,15 @@ U4ua = {
                             if (data.status == 'success'){
                                 //console.log('voting for idea#'+idea_id+' via '+handler_type+' is successful');
                                 if (LOGGED)
-                                    Window.load('/modal/alertSuccess/voteSuccess','win-alertSuccess','');
+                                    Window.load(SITE_URI+'modal/alertSuccess/voteSuccess','win-alertSuccess','');
                                 else
                                     window.location = window.location;
                             } else {
                                 if (data.code == 'isVoted') {
                                     //console.log('user`s already voted idea#'+idea_id+' via '+handler_type);
-                                    Window.load('/modal/alertError/'+data.code,'win-alertError','');
+                                    Window.load(SITE_URI+'modal/alertError/'+data.code,'win-alertError','');
                                 } else {
-                                    Window.load('/modal/alertError/'+data.code,'win-alertError','');
+                                    Window.load(SITE_URI+'modal/alertError/'+data.code,'win-alertError','');
                                 }
                             }
                         }
@@ -207,7 +166,7 @@ U4ua = {
                     data: 'item[idea_id]='+idea_id+'&item[handler_type]='+handler_type,
                     success: function(data){
                         if (data.status == 'success' && data.needed == 0){
-                            Window.closeAll();
+                            Window.close('win-login');
                             voteAjax();
                             console.log('user can vote for idea#'+idea_id+' via '+handler_type);
                         } else if (data.needed == 1){
@@ -217,7 +176,7 @@ U4ua = {
                             else if (handler_type == 'gp' || handler_type == 'google') var auth_status = Auth.google('merge');
                             else if (handler_type == 'tw' || handler_type == 'twitter') var auth_status = Auth.twitter('merge');
                             else {
-                                Window.closeAll();
+                                Window.close('win-login');
                                 console.log('error in check posibility voting for idea#'+idea_id+' via '+handler_type);
                             }
 
@@ -248,7 +207,7 @@ U4ua = {
             } else if (typeof(el) == 'string' || typeof(el) == 'number'){
                 idea_id = parseInt(el);
             } else return true;
-            Window.load(BASE_URL+'idea/ajaxItem/'+idea_id+'/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),'p-ideas','');
+            Window.load(SITE_URI+'idea/ajaxItem/'+idea_id+'/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),'p-ideas','');
             if (supports_history_api())
                 history.pushState(null, null, SITE_URI+'idea/'+idea_id);
             event.preventDefault();
