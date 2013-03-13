@@ -1,4 +1,4 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<? if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require "smarty/Smarty.class.php";
 
@@ -31,6 +31,9 @@ class Mysmarty extends Smarty
         }
 
         $this->CI->lang->load('', $lang);
+        $session_lang = $this->CI->session->userdata('lang');
+        if ($session_lang != $lang)
+            $this->CI->session->set_userdata(array('lang' => $lang));
 		
 		if(strpos($_SERVER['HTTP_USER_AGENT'], 'iPad') !== FALSE) {
 			$this->tablet = true;
@@ -84,6 +87,11 @@ class Mysmarty extends Smarty
 		$params['USER_DATA'] = array();
 		
 		$params['BASE_URL'] = $this->CI->config->item('base_url');
+
+        $config['FB_PAGE'] = $this->CI->config->item('facebook_page');
+        $config['VK_PAGE'] = $this->CI->config->item('vkontakte_page');
+        $config['GP_PAGE'] = $this->CI->config->item('google_page');
+        $config['TW_PAGE'] = $this->CI->config->item('twitter_page');
 		
 		$params['VK_APP_ID'] = $this->CI->config->item('vkontakte_app_id');
 		$params['FB_APP_ID'] = $this->CI->config->item('facebook_app_id');

@@ -20,9 +20,7 @@
                 <img src="/{$partner.avatar_b}" alt="">
             {/if}
 
-                <div class="b-idea-item-idesc js-tcMore">
-                    {$partner.idesc|tcMore}
-                </div>
+                <div class="b-idea-item-idesc js-tcMore">{$partner.idesc|tcMore}</div>
             </div>
         </div>
     </div>

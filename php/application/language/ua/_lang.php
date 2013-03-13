@@ -2,11 +2,11 @@
 //ukrainian
 $lang['ADD'] = 'Додати';
 $lang['EDIT'] = 'Редагувати';
-$lang['SAVE'] = 'Сохранити';
+$lang['SAVE'] = 'Зберегти';
 $lang['CANCEL'] = 'Скасувати';
 $lang['OR'] = 'або';
 $lang['FILE_UPLOAD'] = 'Додати файли';
-$lang['FILE_CHOOSE'] = 'Обрати';
+$lang['FILE_CHOOSE'] = 'обрати';
 $lang['FILE_IDESC'] = 'Опис файлу';
 $lang['FILE_DRAG_N_DROP'] = 'Перетягніть';
 $lang['FILE_MULTI'] = 'файли';
@@ -29,6 +29,7 @@ $lang['NAV_PARTNERS'] = 'Партнери';
 $lang['NAV_ABOUT'] = 'Про проект';
 $lang['NAV_RULES'] = 'Офіційні умови';
 $lang['NAV_VIDEO'] = 'Відео';
+$lang['NAV_SETTINGS'] = 'Налаштування';
 $lang['HEADER_SHARE_YOUR_IDEA'] = 'Поділись своєю ідеєю';
 $lang['HEADER_OR'] = 'або';
 $lang['HEADER_SUPPORT_IDEAS'] = 'ПІДТРИМАЙ ідеї людей, <br> хто перетворює Україну на краще';

@@ -40,4 +40,14 @@ class My extends CI_Controller {
         );
         $this->mysmarty->view('global/my/index.tpl', $ps);
     }
+
+    public function settings()
+    {
+        $this->load->model('m_settings');
+        $ps = array(
+            'settings' => $this->m_settings->getItems(),
+            'stored' => $this->settings->getAllData()
+        );
+        $this->mysmarty->view('global/settings/index.tpl', $ps);
+    }
 }

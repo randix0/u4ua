@@ -369,7 +369,6 @@ $config['resources_url'] = '/resources/';
 $config['resources_path'] = 'resources/';
 
 if ($config['base_url']	== 'http://db.devils.com.ua/') {
-
     $config['vkontakte_app_id'] = '3453337';
     $config['vkontakte_app_secret'] = 'tQ2waxDorAJTHNRZwboD';
     $config['facebook_app_id'] = '339999716100637';
@@ -393,6 +392,13 @@ elseif ($config['base_url']	== 'http://u4ua.newstrategies.ua/' || $config['base_
     $config['linkedin_app_id'] = '';
     $config['linkedin_app_secret'] = '';
 }
+
+$config['facebook_page'] = '';
+$config['vkontakte_page'] = '';
+$config['google_page'] = '';
+$config['twitter_page'] = '';
+
+
 $config['access_levels'] = array(
     'ACL_EDIT' => 50,
     'ACL_ADMIN' => 80

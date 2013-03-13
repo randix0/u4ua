@@ -46,7 +46,7 @@
 <section id="wrapper">
     <article>
         <div id="holder">
-            <h3 class="tCenter">{l}FILE_DRAG_N_DROP{/l} {if $multiple}{l}FILE_MULTI{/l}{else}{l}FILE_ONE{/l}{/if} {l}OR{/l} <a onclick="$('#input_userfile').trigger('click');">FILE_CHOOSE</a></h3>
+            <h3 class="tCenter">{l}FILE_DRAG_N_DROP{/l} {l}OR{/l} <a onclick="$('#input_userfile').trigger('click');">{l}FILE_CHOOSE{/l}</a> {if $multiple}{l}FILE_MULTI{/l}{else}{l}FILE_ONE{/l}{/if}</h3>
         </div>
         <p id="upload" class="hidden"><label>{l}FILE_ERROR_0{/l}:<br><input id="input_userfile" type="file" {if $multiple}multiple="multiple"{/if} /></label></p>
 

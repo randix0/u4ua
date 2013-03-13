@@ -10,7 +10,7 @@
 
 
             <div class="mB10px overhide">
-                <a id="partner_avatar_preview" class="b-chAvatar b-chAvatar__w216_h184 b-chAvatar__m5RB20 left" style="{if $partner.avatar_m}background-image: url(/{$partner.avatar_m});{/if}" onclick="Window.load('/modal/upload/partners/-1/-1','win-upload','');"></a>
+                <a id="partner_avatar_preview" class="b-chAvatar b-chAvatar__w216_h184 b-chAvatar__m5RB20 left" style="{if $partner.avatar_m}background-image: url(/{$partner.avatar_m});{/if}" onclick="Window.load('{$SITE_URI}modal/upload/partners/-1/-1','win-upload','');"></a>
                 <div class="overhide">
                     <h3 class="b-section-h3">{l}PARTNERS_ADD_VIDEO_OR_PHOTO{/l}:</h3>
                     <h4 class="b-section-h4">{l}PARTNERS_ADD_VIDEO_LINK{/l}:</h4>

@@ -10,7 +10,7 @@
 
 
             <div class="mB10px overhide">
-                <a id="judge_avatar_preview" class="b-chAvatar b-chAvatar__w216_h184 b-chAvatar__m5RB20 left" style="{if $judge.avatar_m}background-image: url(/{$judge.avatar_m});{/if}" onclick="Window.load('/modal/upload/judges/-1/-1','win-upload','');"></a>
+                <a id="judge_avatar_preview" class="b-chAvatar b-chAvatar__w216_h184 b-chAvatar__m5RB20 left" style="{if $judge.avatar_m}background-image: url(/{$judge.avatar_m});{/if}" onclick="Window.load('{$SITE_URI}modal/upload/judges/-1/-1','win-upload','');"></a>
                 <div class="overhide">
                     <h3 class="b-section-h3">{l}JUDGES_ADD_VIDEO_OR_PHOTO{/l}:</h3>
                     <h4 class="b-section-h4">{l}JUDGES_ADD_VIDEO_LINK{/l}:</h4>

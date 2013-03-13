@@ -71,7 +71,8 @@ class Ajax extends CI_Controller {
             return $this->json->parse($result);
 
         $item['iname'] = strip_tags($RAW['iname']);
-        $item['idesc'] = $RAW['idesc'];
+        $item['idesc'] = trim($RAW['idesc']);
+        $item['idesc'] = strip_tags($RAW['idesc']);
         $item['contact_first_name'] = strip_tags($RAW['contact_first_name']);
         $item['contact_last_name'] = strip_tags($RAW['contact_last_name']);
         $item['contact_email'] = strip_tags($RAW['contact_email']);
@@ -703,6 +704,40 @@ class Ajax extends CI_Controller {
         if ($video_id) {
             $result['status'] = 'success';
             $result['goto'] = base_url('/videos');
+        }
+
+        return $this->json->parse($result);
+    }
+
+
+    public function saveSettings()
+    {
+        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        //if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
+        $RAW = $this->input->post('item');
+        $settings_id = (int)$this->input->post('id');
+        if (!$RAW || !isset($RAW['value']) || !$RAW['value'] || !$settings_id)
+            return $this->json->parse($result);
+
+        /*
+        $item = array(
+            'iname' => strip_tags($RAW['iname']),
+            'idesc' => strip_tags($RAW['idesc'])
+        );
+        */
+        $item['value'] = strip_tags(trim($RAW['value']));
+        $item['ch_user_id'] = $this->user->uid();
+        $item['ch_date'] = time();
+
+
+        $this->load->model('m_settings');
+        if ($settings_id)
+            $this->m_settings->update($settings_id, $item);
+        else {
+            $settings_id = $this->m_settings->create($item);
+        }
+        if ($settings_id) {
+            $result['status'] = 'success';
         }
 
         return $this->json->parse($result);

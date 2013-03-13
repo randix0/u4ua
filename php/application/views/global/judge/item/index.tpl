@@ -22,9 +22,7 @@
             {elseif $judge.avatar_b}
                 <img src="/{$judge.avatar_b}" alt="">
             {/if}
-                <div class="b-idea-item-idesc js-tcMore">
-                    {$judge.idesc|tcMore}
-                </div>
+                <div class="b-idea-item-idesc js-tcMore">{$judge.idesc|tcMore}</div>
             </div>
         </div>
     </div>

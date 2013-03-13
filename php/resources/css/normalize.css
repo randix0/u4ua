@@ -132,6 +132,7 @@ a.disabled:hover {text-decoration: none; cursor: default;}
     background: #a4a4a4;
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 }
+.block {display: block;}
 .inline {display: inline;}
 .left {float: left;}
 .right {float: right;}

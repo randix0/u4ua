@@ -28,6 +28,7 @@
                 fb_app_id = '{$FB_APP_ID}',
                 gl_app_id = '{$GL_APP_ID}',
                 BASE_URL = '{$BASE_URL}',
+                SITE_URL = '{$SITE_URL}',
                 SITE_URI = '{$SITE_URI}',
                 LOGGED = {if $LOGGED}{$LOGGED}{else}0{/if};
     </script>
@@ -67,13 +68,15 @@
                     {$SESSION|var_dump}
                 </div>
             </div>
+            {if (isset($FB_PAGE) && $FB_PAGE) || (isset($GP_PAGE) && $GP_PAGE) || (isset($VK_PAGE) && $VK_PAGE) || (isset($TW_PAGE) && $TW_PAGE)}
             <div class="b-share">
                 {l}HEADER_SHARE{/l}
-                <a class="b-share-btn fb" href=""></a>
-                <a class="b-share-btn tw" href=""></a>
-                <a class="b-share-btn gp" href=""></a>
-                <a class="b-share-btn vk" href=""></a>
+                {if isset($FB_PAGE) && $FB_PAGE}<a class="b-share-btn fb" href="{$FB_PAGE}"></a>{/if}
+                {if isset($GP_PAGE) && $GP_PAGE}<a class="b-share-btn gp" href="{$GP_PAGE}"></a>{/if}
+                {if isset($VK_PAGE) && $VK_PAGE}<a class="b-share-btn vk" href="{$VK_PAGE}"></a>{/if}
+                {if isset($TW_PAGE) && $TW_PAGE}<a class="b-share-btn tw" href="{$TW_PAGE}"></a>{/if}
             </div>
+            {/if}
         </div>
     </div>
     <nav class="b-header-nav layout w976px">

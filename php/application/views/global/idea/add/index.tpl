@@ -52,7 +52,7 @@
             <div class="left w210px mR10px">
                 <div class="b-idea-putFile">
                     <div class="b-idea-putFile-desc">{l}FILE_UPLOAD{/l}</div>
-                    <a class="b-idea-putFile-choose" onclick="Window.load('/modal/upload/attachments/{$idea.id}','win-upload','');">{l}FILE_CHOOSE{/l}</a>
+                    <a class="b-idea-putFile-choose" onclick="Window.load('{$SITE_URI}modal/upload/attachments/{$idea.id}','win-upload','');">{l}FILE_CHOOSE{/l}</a>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
             <div id="idea_team" class="inline">
                 {include file="global/idea/team/index.tpl" team=$idea.team}
             </div>
-            <a class="b-idea-addPerson left" onclick="Window.load('/modal/upload/team/{$idea.id}','win-upload','');">{l}IDEA_TEAM_ADD{/l}</a>
+            <a class="b-idea-addPerson left" onclick="Window.load('{$SITE_URI}modal/upload/team/{$idea.id}','win-upload','');">{l}IDEA_TEAM_ADD{/l}</a>
         </div>
     {/if}
 

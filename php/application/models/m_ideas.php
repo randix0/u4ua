@@ -135,7 +135,7 @@ class M_ideas extends CI_Model
         }
 
 
-        $idea['rating_stars'] = $idea['rating_judges'];
+        $idea['rating_stars'] = (int)($idea['rating_judges']/$this->settings->star_weight);
 
         if ($user_id && $user_id != $idea['user_id']){
             $this->db->where(array( 'idea_id' => $idea_id, 'user_id' => $user_id));
@@ -190,7 +190,7 @@ class M_ideas extends CI_Model
             foreach($ideas as &$idea)
             {
                 if ($fetch)
-                    $idea['rating_stars'] = $idea['rating_judges'];
+                    $idea['rating_stars'] = (int)($idea['rating_judges']/$this->settings->star_weight);
                 if ($gen_raw_id){
                     $idea['raw_id'] = $raw_id;
                     $raw_id++;

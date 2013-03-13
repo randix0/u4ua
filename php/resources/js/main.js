@@ -109,22 +109,9 @@ U4ua = {
     idea: {
         filter: null,
         order_by: null,
-        share: function(idea_id){
-            $.ajax({
-                //'/ajax/shareIdea/facebook/'+idea_id,
-                url: SITE_URI+'modal/shareIdea/'+idea_id,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data){
-                    if (data.status == 'success'){
-                        console.log('Idea.save: success!');
-                        if (data.goto)
-                            window.location = data.goto;
-                    } else {
-                        console.log('Idea.save: error!');
-                    }
-                }
-            });
+        share: function(source, idea_id){
+            var url = SITE_URL+'modal/shareIdea/'+source+'/'+idea_id;
+            Window.popup(url);
         },
         vote: function(idea_id, handler_type){
             if (typeof(idea_id) == 'undefined' || !idea_id) return;

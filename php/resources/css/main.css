@@ -103,18 +103,19 @@ textarea {
     background-color: #ffe505;
     text-transform: uppercase;
     padding: 10px;
-    -webkit-transition: box-shadow .2s ease;
-    -moz-transition: box-shadow .2s ease;
-    -ms-transition: box-shadow .2s ease;
-    -o-transition: box-shadow .2s ease;
-    transition: box-shadow .2s ease;
+    -webkit-transition: all .2s ease;
+    -moz-transition: all .2s ease;
+    -ms-transition: all .2s ease;
+    -o-transition: all .2s ease;
+    transition: all .2s ease;
 }
 
 .button:hover {
     box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
     text-decoration: none;
 }
-
+.button_error {background: #D25752;}
+.button_success {background: #66D255;}
 .button_big {padding: 10px 15px; font-size: 30px;}
 .button_cancel {background: none; color: #d21e1e; font-weight: normal; text-transform: none;}
 
@@ -679,9 +680,7 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 }
 
 .b-idea-share {width: 124px;}
-.b-idea-share-soc {
-    width: 52px;
-}
+.b-idea-share-soc {/*width: 52px;*/}
 
 .b-idea-share-btn {
     display: inline-block;
@@ -792,6 +791,9 @@ a.b-ideas-item-img:hover .b-ideas-item-play {
 
 .b-idea-item-idesc {
     margin: 0 0 15px 0;
+    white-space:pre-wrap;
+    white-space:-moz-pre-wrap;
+    word-wrap:break-word;
 }
 
 .b-idea-team {overflow: hidden; margin: 0 0 15px;}

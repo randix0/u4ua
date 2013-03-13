@@ -35,11 +35,12 @@
             {/if}
             <h3 class="b-section-h3">{l}IDEA_SHARE{/l}:</h3>
             <div class="b-idea-share">
-                <a class="b-idea-share-btn email right" href=""></a>
+                {*<a class="b-idea-share-btn email right" href=""></a>*}
                 <div class="b-idea-share-soc">
-                    <a class="b-idea-share-btn fb mB20px left" href=""></a>
-                    <a class="b-idea-share-btn vk mB20px left" href=""></a>
-                    <a class="b-idea-share-btn tw mB20px left" href=""></a>
+                    <a class="b-idea-share-btn fb mR20px mB20px left" onclick="U4ua.idea.share('facebook',{$idea.id});"></a>
+                    <a class="b-idea-share-btn vk mB20px left" onclick="U4ua.idea.share('vkontakte',{$idea.id});"></a>
+                    <a class="b-idea-share-btn tw mR20px mB20px left" onclick="U4ua.idea.share('twitter',{$idea.id});"></a>
+                    <a class="b-idea-share-btn gp mB20px left" onclick="U4ua.idea.share('google',{$idea.id});"></a>
                 </div>
             </div>
         </aside>
@@ -63,9 +64,7 @@
                     <div class="b-idea-item-rating right">{l}IDEAS_JUDGES{/l}: <div class="b-idea-item-ratingStars s{$idea.rating_stars}"></div></div>
                     {l}IDEAS_SUPPORTED{/l}: {$idea.rating}
                 </div>
-                <div class="b-idea-item-idesc js-tcMore">
-                    {$idea.idesc|tcMore}
-                </div>
+                <div class="b-idea-item-idesc js-tcMore">{$idea.idesc|tcMore}</div>
 
                 {if $idea.comments_count < 10}
                 <div class="b-idea-notice">
