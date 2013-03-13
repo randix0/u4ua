@@ -713,7 +713,7 @@ class Ajax extends CI_Controller {
     public function saveSettings()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        //if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
         $RAW = $this->input->post('item');
         $settings_id = (int)$this->input->post('id');
         if (!$RAW || !isset($RAW['value']) || !$RAW['value'] || !$settings_id)
