@@ -113,6 +113,23 @@ U4ua = {
             var url = SITE_URL+'modal/shareIdea/'+source+'/'+idea_id;
             Window.popup(url);
         },
+        ignore: function(idea_id){
+            if (typeof(idea_id) == 'undefined' || !idea_id) return;
+            $.ajax({
+                url: SITE_URI+'ajax/ignoreIdea',
+                type: 'POST',
+                dataType: 'json',
+                data: 'item[idea_id]='+idea_id,
+                success: function(data){
+                    if (data.status == 'success'){
+                        $('#ideas-item_'+idea_id).remove();
+                        $('.b-ideas').masonry('reload');
+                    } else {
+                        Window.load(SITE_URI+'modal/alertError/'+data.error,'win-alertError','');
+                    }
+                }
+            });
+        },
         vote: function(idea_id, handler_type){
             if (typeof(idea_id) == 'undefined' || !idea_id) return;
             if (typeof(handler_type) == 'undefined'){
@@ -135,12 +152,10 @@ U4ua = {
                                 else
                                     window.location = window.location;
                             } else {
-                                if (data.code == 'isVoted') {
-                                    //console.log('user`s already voted idea#'+idea_id+' via '+handler_type);
-                                    Window.load(SITE_URI+'modal/alertError/'+data.code,'win-alertError','');
-                                } else {
-                                    Window.load(SITE_URI+'modal/alertError/'+data.code,'win-alertError','');
-                                }
+                                if (LOGGED)
+                                    Window.load(SITE_URI+'modal/alertError/'+data.error,'win-alertError','');
+                                else
+                                    window.location = window.location;
                             }
                         }
                     });
@@ -195,10 +210,12 @@ U4ua = {
                 idea_id = parseInt(el);
             } else return true;
             Window.load(SITE_URI+'idea/ajaxItem/'+idea_id+'/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),'p-ideas','');
+
+
             if (supports_history_api())
                 history.pushState(null, null, SITE_URI+'idea/'+idea_id);
             event.preventDefault();
-            console.log('idea_id='+idea_id);
+            console.log(SITE_URI+'idea/ajaxItem/'+idea_id+'/'+(U4ua.idea.filter?U4ua.idea.filter:'main'));
             return false;
         },
         binder: function(){

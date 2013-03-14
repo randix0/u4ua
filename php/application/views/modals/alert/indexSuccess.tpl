@@ -1,1 +1,1 @@
-{l}ALERTS_success_{$code}{/l}
+<h3>{l}ALERTS_success_{$code}{/l}!</h3>

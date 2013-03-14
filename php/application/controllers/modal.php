@@ -41,14 +41,32 @@ class Modal extends CI_Controller {
         $this->mysmarty->view('modals/voteIdea/index.tpl', $ps, false);
     }
 
-    public function alertSuccess($code = 0)
+    public function alertSuccess($code = '')
     {
         $this->mysmarty->view('modals/alert/indexSuccess.tpl', array('code'=>$code), false);
     }
 
-    public function alertError($code = 0)
+    public function alertError($code = '')
     {
-        $this->mysmarty->view('modals/alert/indexError.tpl', array('code'=>$code), false);
+        $errors = json_decode(base64_decode(urldecode($code)),true);
+
+        $ps = array(
+            '__PAGE' => 'main',
+            'errors' => $errors
+        );
+        $this->mysmarty->view('modals/alert/indexError.tpl', $ps, false);
+    }
+
+    public function success($code = '')
+    {
+        $messages = array();
+        if ($code)
+            $messages = json_decode(base64_decode(urldecode($code)),true);
+
+        $ps = array(
+            'messages' => $messages
+        );
+        $this->mysmarty->view('modals/success/index.tpl', $ps, false);
     }
 
     public function upload($upload_type = '', $id = 0, $multiple = 1)

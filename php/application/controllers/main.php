@@ -21,6 +21,7 @@ class Main extends CI_Controller {
 	{
         $this->load->helper('url');
         $this->load->model('m_ideas');
+        $this->load->model('m_partners');
         $where = array('is_sample'=>0);
         $order = array('id'=>'desc');
         $gen_raw_id = false;
@@ -45,6 +46,7 @@ class Main extends CI_Controller {
 
         $ps = array(
             '__PAGE' => 'main',
+            'main_partners' => $this->m_partners->getItems(),
             'ideas' => $this->m_ideas->getItems($getItems, true, $gen_raw_id),
             'order_by' => ($order_by)? $order_by : 'date'
         );

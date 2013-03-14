@@ -74,11 +74,11 @@
                 {/if}
 
                 <div class="b-comments">
-                    <div class="b-comments-header">{l}IDEAS_COMMENTS{/l} (<span id="comments-number" class="b-comments-number">{$idea.comments_count}</span>)</div>
+                    <div class="b-comments-header">{l}IDEAS_COMMENTS{/l} (<span id="comments-number_{$idea.id}" class="b-comments-number">{$idea.comments_count}</span>)</div>
                     {if $idea.comments_count > 5}
                         <a class="b-comments-more" onclick="$('#comments_hidden').show(); $(this).hide();">{l}IDEA_COMMENTS_SHOW_ALL_p1{/l} {$idea.comments_count} {l}IDEA_COMMENTS_SHOW_ALL_p2{/l}</a>
                     {/if}
-                    <div class="b-comments-body" id="idea_comments">
+                    <div class="b-comments-body" id="idea_comments_{$idea.id}">
                         {if $idea.comments_count && $idea.comments}
                             {include file="global/idea/comments/index.tpl" comments = $idea.comments limit = 5}
                         {/if}
@@ -86,7 +86,7 @@
                     <div class="b-comments-footer">
                         {if $LOGGED}
                             <div class="mB20px">
-                                <form method="post" id="ajaxSaveComment">
+                                <form method="post" id="ajaxSaveComment_{$idea.id}">
                                     <h4 class="b-section-h4">Add comment</h4>
                                     <input type="hidden" name="item[idea_id]" value="{$idea.id}">
                                     <div class="in-textarea mB10px"><textarea name="item[idesc]"></textarea></div>
@@ -99,19 +99,19 @@
                                         count: -1,
                                         add: function(){
                                             $.ajax({
-                                                url: '/ajax/saveComment',
+                                                url: SITE_URI+'ajax/saveComment',
                                                 type: 'POST',
-                                                data: $('#ajaxSaveComment').serialize(),
+                                                data: $('#ajaxSaveComment_{$idea.id}').serialize(),
                                                 dataType: 'json',
                                                 success: function(data){
                                                     if (data.status == 'success' && data.html){
-                                                        $('#idea_comments').append(data.html);
+                                                        $('#idea_comments_{$idea.id}').append(data.html);
                                                         if (Comment.count < 0) {
-                                                            Comment.count = parseInt($('#comments-number').html());
+                                                            Comment.count = parseInt($('#comments-number_{$idea.id}').html());
                                                         }
                                                         Comment.count++;
-                                                        $('#comments-number').html(Comment.count);
-                                                        $('#ajaxSaveComment textarea').val('');
+                                                        $('#comments-number_{$idea.id}').html(Comment.count);
+                                                        $('#ajaxSaveComment_{$idea.id} textarea').val('');
                                                     } else {
                                                         console.log('Idea.save: error!');
                                                     }

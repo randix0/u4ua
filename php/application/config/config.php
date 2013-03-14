@@ -15,8 +15,8 @@
 |
 */
 //$config['base_url']	= 'http://db.devils.com.ua/';
-//$config['base_url']	= 'http://u4ua.newstrategies.ua/';
-$config['base_url']	= 'http://u4ua.lo/';
+$config['base_url']	= 'http://u4ua.newstrategies.ua/';
+//$config['base_url']	= 'http://u4ua.lo/';
 
 /*
 |--------------------------------------------------------------------------

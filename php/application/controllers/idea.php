@@ -55,9 +55,11 @@ class Idea extends CI_Controller {
         $where_paging = array();
         $where_paging['is_deleted'] = 0;
 
+
+
         if (!$filter || $filter == 'main') {
             $where_paging['is_sample'] = 0;
-        } elseif ($filter == 'judges') {
+        } elseif ($filter == 'judging') {
             $where_paging['is_sample'] = 0;
             $where_paging['comments_count >'] = 9;
         } elseif ($filter == 'samples') {

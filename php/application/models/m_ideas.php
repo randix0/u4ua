@@ -172,6 +172,7 @@ class M_ideas extends CI_Model
         if (!$order)
             $order['id'] = 'desc';
 
+        $user_id = $this->user->uid();
 
         $this->db->where($where);
         if ($order){
@@ -189,8 +190,11 @@ class M_ideas extends CI_Model
         if ($ideas && ($fetch || $gen_raw_id)) {
             foreach($ideas as &$idea)
             {
-                if ($fetch)
+                if ($fetch){
                     $idea['rating_stars'] = (int)($idea['rating_judges']/$this->settings->star_weight);
+                    $idea['is_voted'] = $this->isVoted($idea['id'], $user_id);
+                    $idea['is_ignored'] = $this->isIgnored($idea['id'], $user_id);
+                }
                 if ($gen_raw_id){
                     $idea['raw_id'] = $raw_id;
                     $raw_id++;
@@ -226,7 +230,7 @@ class M_ideas extends CI_Model
         if (!$user_id) return false;
         $result = true;
 
-        $where = array( 'idea_id' => $idea_id, 'user_id' => $user_id);
+        $where = array('idea_id' => $idea_id, 'user_id' => $user_id);
         $this->db->where($where);
         $query = $this->db->get('ideas_votes', 1);
         $vote=$query->row_array();
@@ -276,6 +280,38 @@ class M_ideas extends CI_Model
 
 
         return $vote_id;
+
+    }
+
+    public function isIgnored($idea_id = 0, $user_id = 0)
+    {
+        if (!$idea_id) return false;
+        if (!$user_id) return false;
+        $result = false;
+
+        $where = array('idea_id' => $idea_id, 'user_id' => $user_id);
+        $this->db->where($where);
+        $query = $this->db->get('ideas_ignored', 1);
+        $ignore=$query->row_array();
+        if ($ignore) $result = true;
+        return $result;
+    }
+
+    public function ignore($idea_id = 0, $user_id = 0, $is_deleted = 0)
+    {
+        if (!$this->user->logged() || !$idea_id || !$user_id || $this->isIgnored($idea_id,$user_id)) return false;
+
+        $ignore = array(
+            'user_id' => $user_id,
+            'idea_id' => $idea_id,
+            'is_deleted' => $is_deleted,
+            'add_date' => time()
+        );
+
+        $this->db->insert('ideas_ignored', $ignore);
+        $ignored_id = $this->db->insert_id();
+
+        return $ignored_id;
 
     }
 }

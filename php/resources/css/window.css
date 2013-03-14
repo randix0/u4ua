@@ -1,5 +1,6 @@
 .win-login {width: 300px;}
 .win-signup-social {width: 500px;}
+.win-social-signup-msg {width: 500px;}
 .win-alertSuccess {width: 300px;}
 .win-alertError {width: 300px;}
 .win-upload {width: 300px;}
@@ -77,7 +78,7 @@
 
 .b-idea-item-more {display: none;}
 .p-idea .b-idea-item-video {height: 100px;}
-.p-idea.active .b-idea-item-video {display: none;}
+.p-idea.active .preview {display: none;}
 .p-idea.active .b-idea-item-more {display: block;}
 .p-idea.active .b-idea-item-video {height: 429px;}
 

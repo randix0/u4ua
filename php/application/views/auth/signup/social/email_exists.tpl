@@ -1,1 +1,1 @@
-{$hItem|var_dump}
+<h3>{l}ALERTS_error_auth_email_exists{/l}</h3>

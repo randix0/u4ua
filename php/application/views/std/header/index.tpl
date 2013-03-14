@@ -109,20 +109,19 @@
         </div>
     </div>
     <div class="b-header-footer">
+        {if isset($main_partners) && $main_partners}
         <div class="b-partnersBlock">
             <div class="b-partnersBlock-header">{l}HEADER_PARTNERS{/l}</div>
-            <a class="b-partnersBlock-prev"></a>
-            <a class="b-partnersBlock-next"></a>
-
+            {if $main_partners|count > 4}
+                <a class="b-partnersBlock-prev"></a>
+                <a class="b-partnersBlock-next"></a>
+            {/if}
             <div class="b-partnersBlock-body">
                 <div class="b-partnersBlock-wrap">
                     <div class="b-partnersBlock-sizer">
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/pinchuk.jpg);" href="{$SITE_URL}partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/eastlabs.jpg);" href="{$SITE_URL}partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/microsoft.jpg);" href="{$SITE_URL}partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/google.jpg);" href="{$SITE_URL}partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/microsoft.jpg);" href="{$SITE_URL}partners"></a>
-                        <a class="b-partnersBlock-item" style="background-image: url({$RESOURCES_URL}img/partners/google.jpg);" href="{$SITE_URL}partners"></a>
+                        {foreach from=$main_partners item=item}
+                            <a class="b-partnersBlock-item" style="background-image: url({if $item.youtube_img}{$item.youtube_img}{elseif $item.avatar_m}{$item.avatar_m}{/if});" href="{$SITE_URL}partner/{$item.id}"></a>
+                        {/foreach}
                     </div>
                 </div>
             </div>
@@ -132,6 +131,7 @@
                 });
             </script>
         </div>
+        {/if}
     </div>
     {/if}
 </header>

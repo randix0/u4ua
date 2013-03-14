@@ -43,6 +43,8 @@ class Mysmarty extends Smarty
 		$this->registerPlugin('modifier', 'minBr', array($this, 'smartyModifierMinBr'));
         $this->registerPlugin('modifier', 'actionTime', array($this, 'smartyActionTime'));
         $this->registerPlugin('modifier', 'tcMore', array($this, 'smartyModifierTruncateAndMore'));
+        $this->registerPlugin('modifier', 'tail', array($this, 'smartyModifierTail'));
+
 
 
 
@@ -182,18 +184,6 @@ class Mysmarty extends Smarty
 		return $content;
 	}
 
-    function lang($content)
-    {
-        if(isset($this->CI->lang)) {
-            $result = &$this->CI->lang->line($content);
-
-            if($result)
-                return $result;
-        }
-
-        return $content;
-    }
-
     function smartyActionTime($time = 0, $html_tag = 'time', $html_class = 'timestamp', $html_attr = 'data-date')
     {
         $action_time = '';
@@ -210,17 +200,17 @@ class Mysmarty extends Smarty
 
         if ($year == $now_year)
             if ($diff_time > 43200) // day and month --12hours ness
-                $action_time = strftime('%d %b',$time).' '.$this->lang('_at_oclock_').' '.$hours.':'.$minutes;
+                $action_time = strftime('%d %b',$time).' '.$this->CI->lang->line('ACTIONTIME_at').' '.$hours.':'.$minutes;
             elseif ($diff_hours > 1) // x hours ago -- 1hours ness
-                $action_time = $diff_hours.' '.$this->lang('ч. назад');
+                $action_time = $diff_hours.' '.$this->CI->lang->line('ACTIONTIME_hours_ago');
             elseif ($diff_hours == 1) // about hour
-                $action_time = $this->lang('около часа назад');
+                $action_time = $this->CI->lang->line('ACTIONTIME_hour_ago');
             elseif ($diff_minutes > 1) // about hour
-                $action_time = $diff_minutes.' '.$this->lang('мин. назад');
+                $action_time = $diff_minutes.' '.$this->CI->lang->line('ACTIONTIME_minutes_ago');
             elseif ($diff_minutes == 1) // about hour
-                $action_time = $this->lang('около минуты назад');
+                $action_time = $this->CI->lang->line('ACTIONTIME_minute_ago');
             else // about hour
-                $action_time = $this->lang('несколько секунд назад');
+                $action_time = $this->CI->lang->line('ACTIONTIME_seconds_ago');
         else
             $action_time = strftime('%d %b %Y',$time);
 
@@ -374,6 +364,46 @@ class Mysmarty extends Smarty
 
         return $half_1.$etc.$half_2.$end;
     }
+
+    /**
+     * Get segments file name
+     *
+     * @param integer $generation
+     * @return string
+     */
+    function smartyModifierTail($string, $one='', $some='', $many='', $wstring = true)
+    {
+        if(!$string)
+            $string = 0;
+
+        $string = (int)$string;
+
+        if($wstring)
+            return $string.' '.$this->getTail($string, $one, $some, $many);
+        else
+            return $this->getTail($string, $one, $some, $many);
+    }
+
+    function getTail($num, $one, $some, $many)
+    {
+        $x = $num % 10;
+        $xx = $num % 100;
+
+        if(1 == $x)
+            return $this->CI->lang->line($one);
+
+        if($x > 4 ||
+            ($xx > 4 && 21 > $xx) ||
+            0 == $x)
+            return $this->CI->lang->line($many);
+
+        if($x > 1 && 5 > $x)
+            return $this->CI->lang->line($some);
+
+        return $this->CI->lang->line($one);
+        //die('это невероятно! © getTail');
+    }
+
 } // END class smarty_library
 
 if(!function_exists('validURLExp')) {

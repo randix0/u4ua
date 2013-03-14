@@ -1,5 +1,5 @@
 {foreach from=$ideas item=item}
-<div class="b-ideas-item">
+<div id="ideas-item_{$item.id}" class="b-ideas-item">
     <a class="b-ideas-item-img" href="{$SITE_URL}idea/{$item.id}" style="background-image: url({$item.youtube_img});">
         <div class="b-ideas-item-play"></div>
     </a>

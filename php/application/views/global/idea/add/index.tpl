@@ -1,6 +1,7 @@
 <section class="b-section b-section-idea">
-    <div class="b-section-header layout w976px">
-        <div class="b-section-header-iname">{l}HEADER_SHARE_YOUR_IDEA{/l}</div>
+    <div class="b-section-header b-section-header__add_idea layout w976px">
+        <div class="b-section-header-iname b-section-header-iname__with_notice">{l}HEADER_SHARE_YOUR_IDEA{/l}</div>
+        <h4 class="b-section-header-notice">{l}FORM_ALL_INPUTS_REQUIRED{/l}</h4>
     </div>
     <div class="b-section-body layout w976px mB25px">
         <form id="ajaxSaveIdea" action="/ajax/saveIdea" method="post">
@@ -90,9 +91,10 @@
                         if (data.status == 'success'){
                             console.log('Idea.save: success!');
                             if (data.goto)
-                                window.location = data.goto;
+                                window.location = SITE_URI+data.goto;
                         } else {
                             console.log('Idea.save: error!');
+                            Window.load(SITE_URI+'modal/alertError/'+data.error,'win-alertError','');
                         }
                     }
                 });

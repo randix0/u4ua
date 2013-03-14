@@ -35,9 +35,16 @@ class Ajax extends CI_Controller {
 
     public function saveIdea()
     {
+        $this->load->helper('email');
         $result = array('status' => 'error', 'errors' => array());
+        $error_prefix = 'saveIdea_';
 
-        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
 
         $user_id = $this->user->uid();
 
@@ -58,48 +65,56 @@ class Ajax extends CI_Controller {
 
         foreach($required as $r)
         {
-            if (!isset($RAW[$r]) || !$RAW[$r]) $result['errors'][$r] = 1;
+            if (!isset($RAW[$r]) || !$RAW[$r]) $result['errors'][$r] = $error_prefix.$r.'_1';
         }
 
         if (!$idea_id) {
             $item['user_id'] = $user_id;
             $item['add_date'] = time();
-
         }
 
-        if ($result['errors'])
+        if (!$result['errors']){
+            $link = $RAW['link'];
+            $link = str_replace('http://', '', $link);
+            $link = str_replace('www.', '', $link);
+            preg_match('/([^\/]+)/', $link, $matches);
+            $hoster = $matches[1];
+            $result['$hoster']=$hoster;
+            $matches = array();
+            if($hoster == 'youtube.com' && preg_match('/(?:\?|\&)v\=([A-z0-9\-\_]+)/', $link, $matches)) {
+                $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
+                $item['youtube_code'] = $matches[1];
+            } else {
+                $result['errors']['link'] = $error_prefix.'link_2';
+            }
+
+            if (!valid_email($RAW['contact_email']))
+                $result['errors']['contact_email'] = $error_prefix.'contact_email_2';
+
+
+            $item['iname'] = strip_tags($RAW['iname']);
+            $item['idesc'] = trim($RAW['idesc']);
+            $item['idesc'] = strip_tags($RAW['idesc']);
+            $item['contact_first_name'] = strip_tags($RAW['contact_first_name']);
+            $item['contact_last_name'] = strip_tags($RAW['contact_last_name']);
+            $item['contact_email'] = strip_tags($RAW['contact_email']);
+            $item['contact_phone'] = strip_tags($RAW['contact_phone']);
+            $item['contact_role'] = strip_tags($RAW['contact_role']);
+
+            if ($this->user->access_level > 50 && isset($RAW['is_sample'])){
+                if ($RAW['is_sample'])
+                    $item['is_sample'] = 1;
+                else
+                    $item['is_sample'] = 0;
+            } elseif($this->user->access_level < 50 && isset($RAW['is_sample'])) {
+
+            }
+        }
+
+        if ($result['errors']){
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
             return $this->json->parse($result);
-
-        $item['iname'] = strip_tags($RAW['iname']);
-        $item['idesc'] = trim($RAW['idesc']);
-        $item['idesc'] = strip_tags($RAW['idesc']);
-        $item['contact_first_name'] = strip_tags($RAW['contact_first_name']);
-        $item['contact_last_name'] = strip_tags($RAW['contact_last_name']);
-        $item['contact_email'] = strip_tags($RAW['contact_email']);
-        $item['contact_phone'] = strip_tags($RAW['contact_phone']);
-        $item['contact_role'] = strip_tags($RAW['contact_role']);
-
-        if ($this->user->access_level > 50 && isset($RAW['is_sample'])){
-            if ($RAW['is_sample'])
-                $item['is_sample'] = 1;
-            else
-                $item['is_sample'] = 0;
         }
-
-        $link = $RAW['link'];
-        $link = str_replace('http://', '', $link);
-        $link = str_replace('www.', '', $link);
-        preg_match('/([^\/]+)/', $link, $matches);
-        $hoster = $matches[1];
-        $result['$hoster']=$hoster;
-        $matches = array();
-        if($hoster == 'youtube.com' && preg_match('/(?:\?|\&)v\=([A-z0-9\-\_]+)/', $link, $matches)) {
-            $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
-            $item['youtube_code'] = $matches[1];
-        } else {
-            $result['errors']['link'] = 2;
-        }
-
 
         if (!$result['errors']) {
             $created = false;
@@ -114,7 +129,7 @@ class Ajax extends CI_Controller {
                 $result = array(
                     'status' => 'success',
                     'item' => $item,
-                    'goto' => base_url('/idea/'.$idea_id)
+                    'goto' => 'idea/'.$idea_id
                 );
                 $qr_name = $this->m_ideas->generateQR($idea_id);
                 $this->m_ideas->update($idea_id,array('qr_code'=>$qr_name));
@@ -130,7 +145,14 @@ class Ajax extends CI_Controller {
 
     public function shareIdea($handler, $idea_id = 0)
     {
-        if (!$this->user->logged() || $this->user->is_deleted) return false;
+        $result = array('status' => 'error', 'errors' => array());
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
         $config	 = &get_config();
         $link = $config['base_url'].'idea/'.$idea_id;
         if ($handler == 'facebook') {
@@ -156,12 +178,23 @@ class Ajax extends CI_Controller {
 
     public function voteIdea()
     {
+        $result = array('status' => 'error', 'errors' => array());
         $this->load->helper('cookie');
-        $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
 
         $RAW = $this->input->post('item');
 
-        if (!$this->user->logged() || $this->user->is_deleted || !isset($RAW['handler_type']) || !$RAW['handler_type'] || !isset($RAW['idea_id']) || !$RAW['idea_id']) return $this->json->parse($result);
+        if (!isset($RAW['handler_type']) || !$RAW['handler_type'] || !isset($RAW['idea_id']) || !$RAW['idea_id']) {
+            if (!isset($RAW['handler_type']) || !$RAW['handler_type']) $result['errors'][] = 'vote_wrong_handler_type';
+            elseif (!isset($RAW['idea_id']) || !$RAW['idea_id']) $result['errors'][] = 'vote_wrong_idea_id';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
 
         $user_id = $this->user->uid();
         $is_judge = $this->user->is_judge;
@@ -170,7 +203,11 @@ class Ajax extends CI_Controller {
         $handler_type = $RAW['handler_type'];
         $is_deleted = 0;
 
-        if (!$is_judge && !preg_match('/^(fb|vk|gp|tw|facebook|vkontakte|google|twitter)$/',$handler_type)) return $this->json->parse($result);
+        if (!$is_judge && !preg_match('/^(fb|vk|gp|tw|facebook|vkontakte|google|twitter)$/',$handler_type)){
+            $result['errors'][] = 'vote_wrong_handler_type';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
         if (preg_match('/^(fb|vk|gp|tw)$/',$handler_type)) {
             if ($handler_type == 'fb') $handler_type = 'facebook';
             elseif ($handler_type == 'vk') $handler_type = 'vkontakte';
@@ -187,7 +224,11 @@ class Ajax extends CI_Controller {
         $idea = $this->m_ideas->getItem($idea_id);
 
         if ($isVoted || $idea['isVoted']) {
-            $result['code'] = 'isVoted';
+            $result['errors'][] = 'idea_is_voted';
+        }
+
+        if ($result['errors']){
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
             return $this->json->parse($result);
         }
 
@@ -195,10 +236,58 @@ class Ajax extends CI_Controller {
             $vote_id = $this->m_ideas->vote($idea_id, $handler_type, $this->user->uid(), $idea, $is_judge, $is_deleted);
             if ($vote_id) $result['status'] = 'success';
         } elseif ($idea['user_id'] == $user_id) {
-            $result['code'] = 'isVoted';
-            return $this->json->parse($result);
+            $result['errors'][] = 'idea_is_voted';
         } else {
-            $result['errors'][] = 'idea404';
+            $result['errors'][] = 'idea_404';
+        }
+
+        if ($result['errors']){
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+        }
+
+        return $this->json->parse($result);
+    }
+
+    public function ignoreIdea()
+    {
+        $result = array('status' => 'error', 'errors' => array());
+
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
+        $RAW = $this->input->post('item');
+
+        if (!isset($RAW['idea_id']) || !$RAW['idea_id']) {
+            $result['errors'][] = 'ignore_wrong_idea_id';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
+        $user_id = $this->user->uid();
+        $idea_id = (int)$RAW['idea_id'];
+        $is_deleted = 0;
+
+        $this->load->model('m_ideas');
+
+        $ignore_id = 0;
+        $isIgnored = $this->m_ideas->isIgnored($idea_id, $user_id);
+
+        if (!$isIgnored) {
+            $ignore_id = $this->m_ideas->ignore($idea_id, $user_id, $is_deleted);
+            if ($ignore_id)
+                $result['status'] = 'success';
+            else
+                $result['errors'][] = 'idea_404';
+        } else {
+            $result['errors'][] = 'idea_is_ignored';
+        }
+
+        if ($result['errors']){
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
 
         return $this->json->parse($result);
@@ -248,7 +337,7 @@ class Ajax extends CI_Controller {
         if (!$filter || $filter == 'main') {
             $where['is_deleted'] = 0;
             $where['is_sample'] = 0;
-        } elseif ($filter == 'judges') {
+        } elseif ($filter == 'judging') {
             $where['is_sample'] = 0;
             $where['comments_count >'] = 9;
         } elseif ($filter == 'samples') {
@@ -277,7 +366,14 @@ class Ajax extends CI_Controller {
     public function isAuthNeeded($handler = '')
     {
         $result = array('status'=>'error','needed' => 1);
-        if (!$handler || $this->user->is_deleted) return $this->json->parse($result);
+        
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
 
         $user_id = $this->user->uid();
 
@@ -309,7 +405,13 @@ class Ajax extends CI_Controller {
     {
         $this->load->helper('file');
         $result = array('status'=>'error');
-        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
 
         if (!$upload_type || !$item_id || !preg_match('/^(attachments|team|judges|partners)$/',$upload_type)) return $this->json->parse($result);
 
@@ -378,11 +480,14 @@ class Ajax extends CI_Controller {
             $files_i++;
         }
 
-        if ($files) {
+        if ($files && !$result['errors']) {
             $result['status'] = 'success';
             $result['files'] = $files;
             $result['upload_path'] = $upload_path;
             $result['html'] = $this->mysmarty->view('modals/upload/'.$upload_type.'.tpl', array('files' => &$files), false, true);
+        } else {
+            $result['errors'][] = 'files_no_matches_file_types';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
         return $this->json->parse($result);
     }
@@ -390,7 +495,13 @@ class Ajax extends CI_Controller {
     public function saveAttachments()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
         $this->load->model('m_ideas');
         $RAW = $this->input->post('item');
 
@@ -419,9 +530,12 @@ class Ajax extends CI_Controller {
             }
 
         }
-        if ($attachments) {
+        if ($attachments && !$result['errors']) {
             $result['status'] = 'success';
             $result['html'] = $this->mysmarty->view('global/idea/attachments/index.tpl', array('attachments' => &$attachments), false, true);
+        } else {
+            $result['errors'][] = 'add_attachments_array_empty';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
         return $this->json->parse($result);
     }
@@ -429,7 +543,13 @@ class Ajax extends CI_Controller {
     public function saveTeam()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
         $this->load->model('m_ideas');
         $RAW = $this->input->post('item');
 
@@ -489,11 +609,12 @@ class Ajax extends CI_Controller {
             }
 
         }
-        if ($team) {
+        if ($team && !$result['errors']) {
             $result['status'] = 'success';
             $result['html'] = $this->mysmarty->view('global/idea/team/index.tpl', array('team' => &$team), false, true);
         } else {
-            $result['errors'][] = 'array team is empty';
+            $result['errors'][] = 'add_team_array_empty';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
         return $this->json->parse($result);
     }
@@ -501,9 +622,16 @@ class Ajax extends CI_Controller {
     public function saveComment()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        if (!$this->user->logged() || $this->user->is_deleted) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
         $RAW = $this->input->post('item');
-        if (!$RAW || !isset($RAW['idea_id']) || !$RAW['idea_id'] || !isset($RAW['idesc']) || !$RAW['idesc']) return $this->json->parse($result);
+        if (!$RAW || !isset($RAW['idea_id']) || !$RAW['idea_id'] || !isset($RAW['idesc']) || !$RAW['idesc'])
+            return $this->json->parse($result);
 
         $this->load->model('m_ideas');
         $idea_id = (int)$RAW['idea_id'];
@@ -523,11 +651,12 @@ class Ajax extends CI_Controller {
         );
         $idea_comment_id = $this->m_ideas->create_comment($data, $idea_update);
 
-        if ($idea_comment_id) {
+        if ($idea_comment_id && !$result['errors']) {
             $result['status'] = 'success';
             $result['html'] = $this->mysmarty->view('global/idea/comments/index.tpl', array('comments' => array($data)), false, true);
         } else {
-            $result['errors'][] = 'comment add error';
+            $result['errors'][] = 'comment_add_error';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
         return $this->json->parse($result);
     }
@@ -535,7 +664,14 @@ class Ajax extends CI_Controller {
     public function saveJudge()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted || $this->user->access_level < 50) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            elseif ($this->user->access_level < 50) $result['errors'][] = 'user_access_denied';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
         $RAW = $this->input->post('item');
         $judge_id = (int)$this->input->post('id');
         $file = $this->input->post('file');
@@ -564,7 +700,7 @@ class Ajax extends CI_Controller {
                 $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
                 $item['youtube_code'] = $matches[1];
             } else {
-                $result['errors']['link'] = 2;
+                $result['errors']['link'] = 'saveIdea_link_2';
             }
         } elseif ($judge_id && !$RAW['link']){
             $item['youtube_img'] = '';
@@ -583,15 +719,23 @@ class Ajax extends CI_Controller {
         }
 
         $this->load->model('m_judges');
-        if ($judge_id)
-            $this->m_judges->update($judge_id, $item);
-        else {
-            $item['add_date'] = time();
-            $judge_id = $this->m_judges->create($item);
+        if (!$result['errors']) {
+            if ($judge_id)
+                $this->m_judges->update($judge_id, $item);
+            else {
+                $item['add_date'] = time();
+                $judge_id = $this->m_judges->create($item);
+            }
+            if ($judge_id) {
+                $result['status'] = 'success';
+                $result['goto'] = base_url('/judges');
+            }
+            else {
+                $result['errors'][] = 'save_judge_error';
+            }
         }
-        if ($judge_id) {
-            $result['status'] = 'success';
-            $result['goto'] = base_url('/judges');
+        if ($result['errors']) {
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
 
         return $this->json->parse($result);
@@ -600,7 +744,14 @@ class Ajax extends CI_Controller {
     public function savePartner()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted || $this->user->access_level < 50) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            elseif ($this->user->access_level < 50) $result['errors'][] = 'user_access_denied';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
         $RAW = $this->input->post('item');
         $partner_id = (int)$this->input->post('id');
         $file = $this->input->post('file');
@@ -626,7 +777,7 @@ class Ajax extends CI_Controller {
                 $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
                 $item['youtube_code'] = $matches[1];
             } else {
-                $result['errors']['link'] = 2;
+                $result['errors']['link'] = 'saveIdea_link_2';
             }
         } elseif ($partner_id && !$RAW['link']){
             $item['youtube_img'] = '';
@@ -649,15 +800,24 @@ class Ajax extends CI_Controller {
         }
 
         $this->load->model('m_partners');
-        if ($partner_id)
-            $this->m_partners->update($partner_id, $item);
-        else {
-            $item['add_date'] = time();
-            $partner_id = $this->m_partners->create($item);
+
+        if (!$result['errors']) {
+            if ($partner_id)
+                $this->m_partners->update($partner_id, $item);
+            else {
+                $item['add_date'] = time();
+                $partner_id = $this->m_partners->create($item);
+            }
+            if ($partner_id) {
+                $result['status'] = 'success';
+                $result['goto'] = base_url('/partners');
+            }
+            else {
+                $result['errors'][] = 'save_partner_error';
+            }
         }
-        if ($partner_id) {
-            $result['status'] = 'success';
-            $result['goto'] = base_url('/partners');
+        if ($result['errors']) {
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
 
         return $this->json->parse($result);
@@ -666,7 +826,14 @@ class Ajax extends CI_Controller {
     public function saveVideo()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted || $this->user->access_level < 50) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            elseif ($this->user->access_level < 50) $result['errors'][] = 'user_access_denied';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
+
         $RAW = $this->input->post('item');
         $video_id = (int)$this->input->post('id');
         if (!$RAW || !isset($RAW['iname']) || !$RAW['iname'] || !isset($RAW['idesc']) || !$RAW['idesc'])
@@ -690,20 +857,30 @@ class Ajax extends CI_Controller {
                 $item['youtube_img'] = 'http://i1.ytimg.com/vi/'.$matches[1].'/0.jpg';
                 $item['youtube_code'] = $matches[1];
             } else {
-                $result['errors']['link'] = 2;
+                $result['errors']['link'] = 'saveIdea_link_2';
             }
         }
 
         $this->load->model('m_videos');
-        if ($video_id)
-            $this->m_videos->update($video_id, $item);
-        else {
-            $item['add_date'] = time();
-            $video_id = $this->m_videos->create($item);
+
+
+        if (!$result['errors']) {
+            if ($video_id)
+                $this->m_videos->update($video_id, $item);
+            else {
+                $item['add_date'] = time();
+                $video_id = $this->m_videos->create($item);
+            }
+            if ($video_id) {
+                $result['status'] = 'success';
+                $result['goto'] = base_url('/partners');
+            }
+            else {
+                $result['errors'][] = 'save_video_error';
+            }
         }
-        if ($video_id) {
-            $result['status'] = 'success';
-            $result['goto'] = base_url('/videos');
+        if ($result['errors']) {
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
         }
 
         return $this->json->parse($result);
@@ -713,7 +890,13 @@ class Ajax extends CI_Controller {
     public function saveSettings()
     {
         $result = array('status' => 'error', 'errors' => array(), 'code' => 0);
-        if (!$this->user->logged() || $this->user->is_deleted || !$this->user->access_level < 50) return $this->json->parse($result);
+        if (!$this->user->logged() || $this->user->is_deleted || $this->user->access_level < 50) {
+            if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
+            elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
+            elseif ($this->user->access_level < 50) $result['errors'][] = 'user_access_denied';
+            $result['error'] = urlencode(base64_encode(json_encode($result['errors'])));
+            return $this->json->parse($result);
+        }
         $RAW = $this->input->post('item');
         $settings_id = (int)$this->input->post('id');
         if (!$RAW || !isset($RAW['value']) || !$RAW['value'] || !$settings_id)

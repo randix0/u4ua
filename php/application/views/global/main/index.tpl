@@ -49,8 +49,12 @@
             {/if}
         </div>
     </div>
-    <div class="b-section-body b-ideas layout w1010px">
-        {include file="global/idea/items/index.tpl"}
+    <div class="b-section-body b-ideas {if $order_by}b-ideas__{$order_by}{/if} layout w1010px">
+        {if isset($order_by) && $order_by == 'judging'}
+            {include file="global/idea/items/judging.tpl"}
+        {else}
+            {include file="global/idea/items/index.tpl"}
+        {/if}
     </div>
     <div class="b-section-footer layout w1010px tCenter"></div>
 </section>
