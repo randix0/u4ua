@@ -43,7 +43,7 @@ U4ua = {
             $('.p-idea.active').removeClass('active').addClass('next').attr('data-status','next');
             U4ua.ideas.current_id = $('.p-idea.prev').attr('data-id');
             $('.p-idea.prev').removeClass('prev').addClass('active');
-
+            event.preventDefault();
             $.ajax({
                 url: SITE_URI+'ajax/getIdea/'+U4ua.ideas.current_id+'/prev/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),
                 type: 'GET',
@@ -52,8 +52,10 @@ U4ua = {
                     if (data.status == 'success'){
                         if (typeof(data.html) != 'undefined' && data.html)
                             $('.p-ideas .modal-window-body').append(data.html);
-                        if (supports_history_api())
-                            history.pushState(null, null, SITE_URI+'idea/'+U4ua.ideas.current_id);
+                        if (supports_history_api()){
+                            history.pushState({action:'ajaxItem_prev',id:U4ua.ideas.current_id}, null, SITE_URI+'idea/'+U4ua.ideas.current_id);
+                            initialState = true;
+                        }
                     } else {
                         console.log('Idea.save: error!');
                     }
@@ -71,7 +73,7 @@ U4ua = {
             U4ua.ideas.current_id = $('.p-idea.next').attr('data-id');
             U4ua.ideas.current_raw_id = $('.p-idea.next').attr('data-raw-id');
             $('.p-idea.next').removeClass('next').addClass('active');
-
+            event.preventDefault();
             $.ajax({
                 url: SITE_URI+'ajax/getIdea/'+U4ua.ideas.current_id+'/next/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),
                 type: 'GET',
@@ -80,8 +82,10 @@ U4ua = {
                     if (data.status == 'success'){
                         if (typeof(data.html) != 'undefined' && data.html)
                             $('.p-ideas .modal-window-body').append(data.html);
-                        if (supports_history_api())
-                            history.pushState(null, null, SITE_URI+'idea/'+U4ua.ideas.current_id);
+                        if (supports_history_api()) {
+                            history.pushState({action:'ajaxItem_next',id:U4ua.ideas.current_id}, null, SITE_URI+'idea/'+U4ua.ideas.current_id);
+                            initialState = true;
+                        }
                     } else {
                         console.log('Idea.save: error!');
                     }
@@ -209,14 +213,17 @@ U4ua = {
             } else if (typeof(el) == 'string' || typeof(el) == 'number'){
                 idea_id = parseInt(el);
             } else return true;
+
             Window.load(SITE_URI+'idea/ajaxItem/'+idea_id+'/'+(U4ua.idea.filter?U4ua.idea.filter:'main'),'p-ideas','');
 
-
-            if (supports_history_api())
-                history.pushState(null, null, SITE_URI+'idea/'+idea_id);
-            event.preventDefault();
+            if (typeof(event) != 'undefined') {
+                event.preventDefault();
+                if (supports_history_api()){
+                    history.pushState({action:'ajaxItem',id:idea_id, back:location.pathname}, null, SITE_URI+'idea/'+idea_id);
+                }
+            }
             console.log(SITE_URI+'idea/ajaxItem/'+idea_id+'/'+(U4ua.idea.filter?U4ua.idea.filter:'main'));
-            return false;
+            //return false;
         },
         binder: function(){
             $('.b-ideas-item-click').bind('click',function(e){return U4ua.idea.click(this,e);});
@@ -230,15 +237,34 @@ function supports_history_api() {
     return !!(window.history && history.pushState);
 }
 
-window.onload = function() {
-    if (!supports_history_api()) { return; }
-    window.setTimeout(function() {
-        window.addEventListener("popstate", function(e) {
-            e.preventDefault();
-            window.location = location.pathname;
-        }, false);
-    }, 1);
+$('a.scrollTo').click(function(e){
+    $('html,body').scrollTo(this.hash, this.hash);
+    e.preventDefault();
+});
+
+function addEvent(elem, evType, fn) {
+    if (elem.addEventListener) {
+        elem.addEventListener(evType, fn, false);
+    }
+    else if (elem.attachEvent) {
+        elem.attachEvent('on' + evType, fn)
+    }
+    else {
+        elem['on' + evType] = fn
+    }
 }
+
+initialState = null;
+$(window).bind('popstate', function(e){
+    if (!initialState) {
+        initialState = true;
+        return;
+    }
+    //console.log(e);
+    window.location = location.pathname;
+});
+
+
 
 
 Upload = {

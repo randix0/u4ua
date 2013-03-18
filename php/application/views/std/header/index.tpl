@@ -18,10 +18,12 @@
     <script src="{$RESOURCES_URL}js/vendor/modernizr-2.6.2.min.js"></script>
     <script src="{$RESOURCES_URL}js/vendor/jquery-1.8.3.min.js"></script>
     <script src="{$RESOURCES_URL}js/plugins.js"></script>
+    {*<script src="{$RESOURCES_URL}js/History.js"></script>*}
     <script src="{$RESOURCES_URL}js/main.js"></script>
     <script src="{$RESOURCES_URL}js/modernizr-transitions.js"></script>
     <script src="{$RESOURCES_URL}js/jquery.masonry.min.js"></script>
-    {*<script src="{$RESOURCES_URL}js/jquery.history.js"></script>*}
+    <script src="{$RESOURCES_URL}js/jquery.scrollto.js"></script>
+
 
     <script>
         var vk_app_id = '{$VK_APP_ID}',
@@ -94,7 +96,7 @@
         <div class="layout w976px relative">
             <a class="b-header-button" {if $LOGGED}href="{$SITE_URL}idea/add/"{else}onclick="Window.load('{$SITE_URL}modal/login','win-login','');"{/if}>{l}HEADER_SHARE_YOUR_IDEA{/l}</a>
             <div class="b-header-btn-span0">{l}HEADER_OR{/l}</div>
-            <div class="b-header-btn-span1">{l}HEADER_SUPPORT_IDEAS{/l}</div>
+            <a href="#b-ideas" class="b-header-btn-span1 scrollTo">{l}HEADER_SUPPORT_IDEAS{/l}</a>
             <div class="b-header-video">
                 <a class="b-header-video-frame" href="">
                     <div class="b-header-video-play"></div>

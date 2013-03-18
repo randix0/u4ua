@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Мар 13 2013 г., 18:39
+-- Время создания: Мар 18 2013 г., 13:04
 -- Версия сервера: 5.5.25
 -- Версия PHP: 5.4.5
 
@@ -43,8 +43,8 @@ CREATE TABLE IF NOT EXISTS `u4ua_settings` (
 --
 
 INSERT INTO `u4ua_settings` (`id`, `iname`, `idesc`, `code`, `value`, `ch_user_id`, `ch_date`, `is_deleted`) VALUES
-(1, 'Вес голоса судьи', 'Количество баллов за голос судьи', 'judge_vote_weight', '20', 1, 1363192029, 0),
-(2, 'Вес звезды', 'Количество голосов судей на 1 звезду', 'star_weight', '1', 1, 1363192503, 0);
+(1, 'Вес голоса судьи', 'Количество баллов за голос судьи', 'judge_vote_weight', '20', 1, 1363255644, 0),
+(2, 'Вес звезды', 'Количество голосов судей на 1 звезду', 'star_weight', '1', 1, 1363255641, 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

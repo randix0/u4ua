@@ -24,10 +24,15 @@ class Modal extends CI_Controller {
         $this->load->library('json');
     }
 
-    public function login($reason = '')
+    public function login($reason = '', $goto = '')
     {
+        if ($reason == 'goto') {
+            $reason = '';
+            $this->session->set_userdata('goto',$goto);
+        }
         $ps = array(
-            'reason' => $reason
+            'reason' => $reason,
+            'goto' => $goto
         );
         $this->mysmarty->view('modals/login/index.tpl', $ps, false);
     }

@@ -9,7 +9,7 @@
                     <div class="b-rules-step-img"></div>
                     <div class="b-rules-step-wrap">
                         <div class="b-rules-step-number">1</div>
-                        <div class="b-rules-step-idesc">{l}MAIN_TAKE_PART_S1{/l} <br> «<a href="{$SITE_URL}idea/add/">{l}HEADER_SHARE_YOUR_IDEA{/l}</a>»</div>
+                        <div class="b-rules-step-idesc">{l}MAIN_TAKE_PART_S1{/l} <br> «<a {if $LOGGED}href="{$SITE_URL}idea/add/"{else}onclick="Window.load('{$SITE_URL}modal/login','win-login','');"{/if}>{l}HEADER_SHARE_YOUR_IDEA{/l}</a>»</div>
                     </div>
                 </div>
                 <div class="b-rules-step step1">
@@ -49,7 +49,7 @@
             {/if}
         </div>
     </div>
-    <div class="b-section-body b-ideas {if $order_by}b-ideas__{$order_by}{/if} layout w1010px">
+    <div id="b-ideas" class="b-section-body b-ideas {if $order_by}b-ideas__{$order_by}{/if} layout w1010px">
         {if isset($order_by) && $order_by == 'judging'}
             {include file="global/idea/items/judging.tpl"}
         {else}
