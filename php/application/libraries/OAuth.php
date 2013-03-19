@@ -52,13 +52,21 @@ class OAuth {
 		
 		
 		require_once($file);
-		//$this->handler_type = $params['handler_type'];
 		$this->handler = new $this->handler_type;
-		
-		
-		$this->handler->oa_access_token	= $this->CI->session->userdata('oa_access_token');
-		$this->handler->oa_valid_till	= $this->CI->session->userdata('oa_valid_till');
-		$this->handler->oa_user_id		= $this->CI->session->userdata('oa_user_id');
+        if ($this->oa_access_token)
+            $this->handler->oa_access_token = $this->oa_access_token;
+		elseif (!$this->handler->oa_access_token && $this->CI->session->userdata('oa_access_token'))
+		    $this->handler->oa_access_token	= $this->CI->session->userdata('oa_access_token');
+
+        if ($this->oa_valid_till)
+            $this->handler->oa_valid_till = $this->oa_valid_till;
+        elseif (!$this->handler->oa_valid_till && $this->CI->session->userdata('oa_valid_till'))
+		    $this->handler->oa_valid_till	= $this->CI->session->userdata('oa_valid_till');
+
+        if ($this->oa_user_id)
+            $this->handler->oa_user_id = $this->oa_user_id;
+        elseif (!$this->handler->oa_user_id && $this->CI->session->userdata('oa_user_id'))
+		    $this->handler->oa_user_id		= $this->CI->session->userdata('oa_user_id');
 	}	
 	
 	
@@ -116,32 +124,9 @@ class OAuth {
 	public function __call($name, $arguments) {
 		return call_user_func_array(array(&$this->handler, $name), $arguments);
 	}
-	
-	
-	/**
-     * Get segments file name
-     *
-     * @param integer $generation
-     * @return string
-     */	
-	/*public function step1() {
-		
-		$code = $this->CI->input->get('code');
-		
-		if(!$code) {
-			throw new Exception('Authorization grant code not set', AG_CODE_NOT_SET);
-		}
-		
-		$response = $this->getAccessToken($code);
-		
-		if($response) {
-			$result = array(
-				'oa_access_token'	=> $this->handler->oa_access_token,
-				'oa_valid_till'		=> $this->handler->oa_valid_till,
-				'oa_user_id'		=> $this->handler->oa_user_id
-			);
-			
-			
+
+}
+?>			
 			$this->CI->session->set_userdata($result);
 			
 			return true;

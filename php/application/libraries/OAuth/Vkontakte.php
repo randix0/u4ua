@@ -165,5 +165,48 @@ class Vkontakte extends OAuthAbstract {
 		
 		return false;
 	}
+
+
+    /**
+     * Get segments file name
+     *
+     * @param integer $generation
+     * @return string
+     */
+    public function invoke($name, array $params = array())
+    {
+        //echo $this->oa_access_token.'<br>';
+        //echo $this->oa_user_id;
+        //echo $this->oa_valid_till;
+        //exit();
+
+        if(!$this->oa_access_token || !$this->oa_user_id) {
+            throw new Exception('Token not valid', TOKEN_NOT_VALID);
+        }
+
+        if($this->oa_valid_till < time()) {
+            throw new Exception('Token expired', TOKEN_EXPIRED);
+        }
+
+        $params['access_token'] = $this->oa_access_token;
+        $result = array();
+
+        if($contents = @file_get_contents('https://api.vk.com/method/'.$name.'?'.http_build_query($params))) {
+
+            $response = json_decode($contents, true);
+            //$result = $response;
+
+            if(isset($response['response'])) {
+                $result = $response['response'];
+            } else {
+                throw new Exception('Get user data failed', CONNECTION_ERROR);
+            }
+
+        } else {
+            throw new Exception('Connection error', CONNECTION_ERROR);
+        }
+
+        return $result;
+    }
 }
 ?>
