@@ -365,7 +365,7 @@ class Ajax extends CI_Controller {
 
     public function isAuthNeeded($handler = '')
     {
-        $result = array('status'=>'error','needed' => 1);
+        $result = array('status'=>'error','needed' => 1, 'errors' => array());
         
         if (!$this->user->logged() || $this->user->is_deleted) {
             if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
@@ -404,7 +404,7 @@ class Ajax extends CI_Controller {
     public function uploadFile($upload_type = '', $item_id = 0)
     {
         $this->load->helper('file');
-        $result = array('status'=>'error');
+        $result = array('status'=>'error', 'errors' => array());
         if (!$this->user->logged() || $this->user->is_deleted) {
             if (!$this->user->logged()) $result['errors'][] = 'user_not_logged';
             elseif ($this->user->is_deleted) $result['errors'][] = 'user_is_deleted';
