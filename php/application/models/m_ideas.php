@@ -215,7 +215,7 @@ class M_ideas extends CI_Model
 
         $qr_name = $upload_path.'u4ua_idea_'.$idea_id.'.png';
 
-        $params['data'] = base_url('item/'.$idea_id);
+        $params['data'] = base_url('idea/'.$idea_id);
         $params['level'] = 'H';
         $params['size'] = 5;
         $params['savename'] = FCPATH.$qr_name;
