@@ -5,5 +5,6 @@ $config['oauth_handlers'] = array(
     'vkontakte',
     'facebook',
     'google',
+    'soundcloud',
     'twitter'
 );

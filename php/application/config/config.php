@@ -379,6 +379,8 @@ if ($config['base_url']	== 'http://db.devils.com.ua/') {
     $config['twitter_app_secret'] = '';
     $config['linkedin_app_id'] = 'bde94y49tt67';
     $config['linkedin_app_secret'] = 'O615zjLBO4OdjSam';
+    $config['soundcloud_app_id'] = 'df6cdffe8bfc4b09aa9a91004e39b151';
+    $config['soundcloud_app_secret'] = '7a5027149ba913be3285b8ee02670c71';
 }
 elseif ($config['base_url']	== 'http://u4ua.newstrategies.ua/' || $config['base_url']	== 'http://u4ua.lo/') {
     $config['vkontakte_app_id'] = '3470800';
@@ -391,6 +393,8 @@ elseif ($config['base_url']	== 'http://u4ua.newstrategies.ua/' || $config['base_
     $config['twitter_app_secret'] = '';
     $config['linkedin_app_id'] = '';
     $config['linkedin_app_secret'] = '';
+    $config['soundcloud_app_id'] = 'df6cdffe8bfc4b09aa9a91004e39b151';
+    $config['soundcloud_app_secret'] = '7a5027149ba913be3285b8ee02670c71';
 }
 
 $config['facebook_page'] = '';

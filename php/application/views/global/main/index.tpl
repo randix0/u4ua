@@ -69,7 +69,7 @@
         });
     });
 
-    onScrollLoader.init('/ajax/getIdeas/{if isset($order_by) && $order_by == 'rating'}rating{elseif isset($order_by) && $order_by == 'judging'}judging{elseif isset($order_by) && $order_by == 'samples'}samples{else}date{/if}/', '.b-ideas .b-ideas-item', function(){ $('.b-ideas').masonry('reload'); });
+    onScrollLoader.init('/ajax/getIdeas/{if isset($order_by) && $order_by == 'rating'}rating{elseif isset($order_by) && $order_by == 'judging'}judging{elseif isset($order_by) && $order_by == 'samples'}samples{else}date{/if}/', '.b-ideas .b-ideas-item', function(){ $('.b-ideas').masonry('reload'); U4ua.idea.binder();});
 
     U4ua.idea.filter = '{if isset($order_by) && $order_by == 'judging'}judging{elseif isset($order_by) && $order_by == 'samples'}samples{else}main{/if}';
     U4ua.idea.order_by = '{if isset($order_by) && $order_by == 'rating'}rating{else}date{/if}';

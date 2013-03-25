@@ -25,6 +25,15 @@ Auth = {
 		return Auth.popup(url, '/auth/step2/google/'+reason);
 		
 	},
+    soundcloud: function(reason) {
+        // https://soundcloud.com/connect?state=SoundCloud_Dialog_d6c11&client_id=609ae0b573913db156968e0ec38c1e26&redirect_uri=http%3A%2F%2Fdevelopers.soundcloud.com%2Fcallback.html&response_type=code_and_token&scope=non-expiring&display=popup
+        if(typeof(reason) == 'undefined')
+            reason = '';
+
+        var url='https://soundcloud.com/connect?client_id='+sc_app_id+'response_type=code&scope=non-expiring&display=popup&state=diy_devils_auth&redirect_uri='+encodeURIComponent('http://'+location.host+'/auth/step1/soundcloud/'+reason);
+
+        return Auth.popup(url, '/auth/step2/soundcloud/'+reason);
+    },
     twitter: function(reason) {
         if(typeof(reason) == 'undefined')
             reason = '';

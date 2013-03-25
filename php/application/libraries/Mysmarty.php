@@ -98,6 +98,7 @@ class Mysmarty extends Smarty
 		$params['VK_APP_ID'] = $this->CI->config->item('vkontakte_app_id');
 		$params['FB_APP_ID'] = $this->CI->config->item('facebook_app_id');
 		$params['GL_APP_ID'] = $this->CI->config->item('google_app_id');
+        $params['SC_APP_ID'] = $this->CI->config->item('soundcloud_app_id');
 
 
 		if($params['LOGGED']) {

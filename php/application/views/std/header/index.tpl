@@ -29,6 +29,7 @@
         var vk_app_id = '{$VK_APP_ID}',
                 fb_app_id = '{$FB_APP_ID}',
                 gl_app_id = '{$GL_APP_ID}',
+                sc_app_id = '{$SC_APP_ID}',
                 BASE_URL = '{$BASE_URL}',
                 SITE_URL = '{$SITE_URL}',
                 SITE_URI = '{$SITE_URI}',
